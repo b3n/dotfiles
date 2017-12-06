@@ -1,4 +1,6 @@
 setxkbmap us
+setxkbmap -option compose:ralt
+
 xsetroot -solid black
 
 while true; do

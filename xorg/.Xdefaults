@@ -1,4 +1,5 @@
 ! Use a nice truetype font and size by default... 
+xterm*locale: utf8
 xterm*faceName: DejaVu Sans Mono Book
 xterm*faceSize: 12
 
