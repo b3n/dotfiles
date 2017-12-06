@@ -1,4 +1,11 @@
 setxkbmap us
 xsetroot -solid black
 
-cwm
+while true; do
+    xsetroot -name "$( date +"%F %R" )"
+    sleep 60
+done &
+
+until dwm; do
+    sleep 1
+done
