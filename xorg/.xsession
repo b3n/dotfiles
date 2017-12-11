@@ -1,5 +1,6 @@
 setxkbmap us
 setxkbmap -option compose:ralt
+usbhidaction  -c ~/.usbhid.conf -f /dev/uhid1
 
 xsetroot -solid black
 
