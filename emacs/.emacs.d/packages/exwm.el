@@ -1,6 +1,7 @@
 (use-package exwm
   :init
   (menu-bar-mode -1)
+  (scroll-bar-mode -1)
   
   (setq mouse-autoselect-window t)
   (setq focus-follows-mouse t)
