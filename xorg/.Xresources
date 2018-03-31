@@ -1,0 +1,45 @@
+! Use a nice truetype font and size by default... 
+urxvt*font: xft:Source Code Pro:size=11
+
+! Every shell is a login shell by default (for inclusion of all necessary environment variables)
+urxvt*loginshell: true
+
+! I like a LOT of scrollback...
+urxvt*savelines: 16384
+
+! double-click to select whole URLs :D
+urxvt*charClass: 33:48,36-47:48,58-59:48,61:48,63-64:48,95:48,126:48
+
+! DOS-box colours...
+urxvt*foreground: rgb:a8/a8/a8
+urxvt*background: rgb:00/00/00
+urxvt*color0: rgb:00/00/00
+urxvt*color1: rgb:a8/00/00
+urxvt*color2: rgb:00/a8/00
+urxvt*color3: rgb:a8/54/00
+urxvt*color4: rgb:00/00/a8
+urxvt*color5: rgb:a8/00/a8
+urxvt*color6: rgb:00/a8/a8
+urxvt*color7: rgb:a8/a8/a8
+urxvt*color8: rgb:54/54/54
+urxvt*color9: rgb:fc/54/54
+urxvt*color10: rgb:54/fc/54
+urxvt*color11: rgb:fc/fc/54
+urxvt*color12: rgb:54/54/fc
+urxvt*color13: rgb:fc/54/fc
+urxvt*color14: rgb:54/fc/fc
+urxvt*color15: rgb:fc/fc/fc
+
+! right hand side scrollbar...
+urxvt*scrollBar_right: true
+
+! stop output to terminal from jumping down to bottom of scroll again
+urxvt*scrollTtyOutput: false
+
+! copy/paste
+urxvt*VT100.Translations: #override \
+                 Ctrl Shift <Key>V:    insert-selection(CLIPBOARD) \n\
+                 Ctrl Shift <Key>C:    copy-selection(CLIPBOARD)
+
+! let alt-key shortcuts work
+urxvt*metaSendsEscape: true
