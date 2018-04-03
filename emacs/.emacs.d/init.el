@@ -68,5 +68,5 @@
 (mapc 'load (file-expand-wildcards "~/.emacs.d/packages/*.el"))
 
 
-(when (memq window-system '(mac ns x))
+(when (eq window-system 'ns)
   (load "~/.emacs.d/platform/osx.el"))
