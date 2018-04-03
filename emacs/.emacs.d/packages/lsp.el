@@ -1,7 +1,9 @@
-(use-package lsp-mode)
+(use-package lsp-mode
+  :demand t)
 
 
 (use-package lsp-ui
+  :demand t
   :after (lsp-mode)
   :hook (lsp-mode . lsp-ui-mode)
 
@@ -15,6 +17,7 @@
 
 
 (use-package lsp-python
+  :demand t
   ;;:ensure-system-package pyls
   :after (lsp-ui)
   :hook (python-mode . lsp-python-enable))

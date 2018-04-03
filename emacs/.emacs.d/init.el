@@ -1,4 +1,6 @@
-(server-start)
+(require 'server)
+(unless (server-running-p)
+  (server-start))
 
 (package-initialize)
 (setq custom-file (make-temp-file "emacs-custom"))
@@ -64,3 +66,7 @@
 
 
 (mapc 'load (file-expand-wildcards "~/.emacs.d/packages/*.el"))
+
+
+(when (memq window-system '(mac ns x))
+  (load "~/.emacs.d/platform/osx.el"))
