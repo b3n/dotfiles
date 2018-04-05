@@ -14,6 +14,12 @@
 
   :config
   (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
+
+  (general-define-key :keymaps 'evil-window-map
+		      "u" #'winner-undo
+		      "C-r" #'winner-redo)
+  (winner-mode 1)
+
   (evil-mode))
 
 
@@ -30,17 +36,24 @@
 		    "-" #'evil-numbers/dec-at-pt))
 
 
-(use-package evil-collection
-  :after (evil)
-  :config (evil-collection-init))
-
-
 (use-package evil-visualstar
   :after (evil)
 
   :config
   (setq evil-visualstar/persistent t)
   (global-evil-visualstar-mode))
+
+
+(use-package evil-exchange
+  :after (evil)
+
+  :config
+  (evil-exchange-install))
+
+
+(use-package evil-collection
+  :after (evil)
+  :config (evil-collection-init))
 
 
 (use-package evil-org
