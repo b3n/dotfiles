@@ -9,7 +9,9 @@
 
 
 (use-package spaceline-all-the-icons 
+  :disabled
   :after (spaceline all-the-icons)
 
   :config
+  (spaceline-toggle-all-the-icons-projectile-off)
   (spaceline-all-the-icons-theme))
