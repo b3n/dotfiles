@@ -1,19 +1,11 @@
 (use-package exwm
   :init
-  (menu-bar-mode -1)
-  (scroll-bar-mode -1)
-  
-  (setq mouse-autoselect-window t)
-  (setq focus-follows-mouse t)
-  
-  (setq display-time-default-load-average nil)
-  (setq display-time-day-and-date t)
-  (setq display-time-24hr-format t)
-  (display-time-mode t)  
+  (setq mouse-autoselect-window t
+        focus-follows-mouse t)
   
   :config
-  (setq exwm-workspace-show-all-buffers t)
-  (setq exwm-layout-show-all-buffers t)
+  (setq exwm-workspace-show-all-buffers t
+	exwm-layout-show-all-buffers t)
   
   (exwm-input-set-key (kbd "<f5> R") #'exwm-reset)
   
@@ -41,4 +33,9 @@
 	    (lambda () (exwm-workspace-rename-buffer exwm-class-name)))
 
   (exwm-config-misc)
-  (exwm-enable))
+  (exwm-enable)
+
+  (setq display-time-default-load-average nil)
+  (setq display-time-day-and-date t)
+  (setq display-time-24hr-format t)
+  (display-time-mode t))

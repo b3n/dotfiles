@@ -23,6 +23,13 @@
   (global-evil-surround-mode 1))
 
 
+(use-package evil-numbers
+  :after (evil)
+  :general (:prefix my-prefix
+		    "+" #'evil-numbers/inc-at-pt
+		    "-" #'evil-numbers/dec-at-pt))
+
+
 (use-package evil-collection
   :after (evil)
   :config (evil-collection-init))
