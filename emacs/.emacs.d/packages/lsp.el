@@ -1,5 +1,4 @@
-(use-package lsp-mode
-  :demand t)
+(use-package lsp-mode)
 
 
 (use-package lsp-ui

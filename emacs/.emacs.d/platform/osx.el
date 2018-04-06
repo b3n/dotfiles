@@ -1,6 +1,4 @@
-(exec-path-from-shell-initialize)
-
-(set-face-attribute 'default nil :height 140)
+(set-face-attribute 'default nil :height 142)
 
 (setq powerline-default-separator 'bar)
 (spaceline-compile)
