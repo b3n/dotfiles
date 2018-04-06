@@ -17,6 +17,16 @@
 
 (use-package lsp-python
   :demand t
-  ;;:ensure-system-package pyls
+  :ensure-system-package (pyls . "pip install python-language-server")
   :after (lsp-ui)
-  :hook (python-mode . lsp-python-enable))
+  :hook (python-mode . lsp-python-enable)
+
+  :config
+  ;; Replace with my own traverser for now, as the current one is buggy.
+  (lsp-define-stdio-client lsp-python "python"
+			   (lsp-make-traverser #'(lambda (dir)
+						   (directory-files
+						    dir
+						    nil
+						    "\\.git\\|setup\\.py")))
+			   '("pyls")))
