@@ -1,9 +1,8 @@
 (use-package exwm
-  :init
+  :config
   (setq mouse-autoselect-window t
         focus-follows-mouse t)
-  
-  :config
+
   (setq exwm-workspace-show-all-buffers t
 	exwm-layout-show-all-buffers t)
   
