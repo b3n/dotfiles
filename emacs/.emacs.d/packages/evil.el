@@ -1,10 +1,11 @@
 (use-package evil
   :custom
-  (evil-search-module 'evil-search)
   (evil-ex-complete-emacs-commands nil)
-  (evil-vsplit-window-right t)
-  (evil-split-window-below t)
+  (evil-search-module 'evil-search)
   (evil-shift-round nil)
+  (evil-split-window-below t)
+  (evil-symbol-word-search t)
+  (evil-vsplit-window-right t)
   (evil-want-C-u-scroll t)
   (evil-want-Y-yank-to-eol t)
   (evil-want-integration nil)

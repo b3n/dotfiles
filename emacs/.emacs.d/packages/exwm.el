@@ -1,8 +1,5 @@
 (use-package exwm
   :config
-  (setq mouse-autoselect-window t
-        focus-follows-mouse t)
-
   (setq exwm-workspace-show-all-buffers t
 	exwm-layout-show-all-buffers t)
   
@@ -34,7 +31,12 @@
   (exwm-config-misc)
   (exwm-enable)
 
-  (setq display-time-default-load-average nil)
-  (setq display-time-day-and-date t)
-  (setq display-time-24hr-format t)
-  (display-time-mode t))
+  (add-hook 'exwm-init-hook
+	    (lambda ()
+	      (setq mouse-autoselect-window t
+		    focus-follows-mouse t)
+
+	      (setq display-time-default-load-average nil)
+	      (setq display-time-day-and-date t)
+	      (setq display-time-24hr-format t)
+	      (display-time-mode t))))

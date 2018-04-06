@@ -1,4 +1,6 @@
-(use-package lsp-mode)
+(use-package lsp-mode
+  :config
+  (general-define-key :states 'normal "gd" #'xref-find-definitions))
 
 
 (use-package lsp-ui
