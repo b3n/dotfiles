@@ -78,6 +78,10 @@
 (ad-activate 'ansi-term)
 
 
+(winner-mode 1)
+
+
+
 (mapc 'load (file-expand-wildcards "~/.emacs.d/packages/*.el"))
 
 

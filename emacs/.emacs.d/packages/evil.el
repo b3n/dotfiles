@@ -1,25 +1,19 @@
 (use-package evil
-  :demand t
-  :bind-keymap ("<f5> w" . evil-window-map)
-  
-  :init
-  (setq evil-search-module 'evil-search)
-  (setq evil-ex-complete-emacs-commands nil)
-  (setq evil-vsplit-window-right t)
-  (setq evil-split-window-below t)
-  (setq evil-shift-round nil)
-  (setq evil-want-C-u-scroll t)
-  (setq evil-want-Y-yank-to-eol t)
-  (setq evil-want-integration nil)
+  :custom
+  (evil-search-module 'evil-search)
+  (evil-ex-complete-emacs-commands nil)
+  (evil-vsplit-window-right t)
+  (evil-split-window-below t)
+  (evil-shift-round nil)
+  (evil-want-C-u-scroll t)
+  (evil-want-Y-yank-to-eol t)
+  (evil-want-integration nil)
 
   :config
   (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
-
   (general-define-key :keymaps 'evil-window-map
 		      "u" #'winner-undo
 		      "C-r" #'winner-redo)
-  (winner-mode 1)
-
   (evil-mode))
 
 
@@ -31,9 +25,9 @@
 
 (use-package evil-numbers
   :after (evil)
-  :general (:prefix my-prefix
-		    "+" #'evil-numbers/inc-at-pt
-		    "-" #'evil-numbers/dec-at-pt))
+  :general (:states 'normal
+		    "g+" #'evil-numbers/inc-at-pt
+		    "g-" #'evil-numbers/dec-at-pt))
 
 
 (use-package evil-visualstar

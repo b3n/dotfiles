@@ -6,12 +6,3 @@
         spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
   (spaceline-toggle-version-control-off)
   (spaceline-spacemacs-theme))
-
-
-(use-package spaceline-all-the-icons 
-  :disabled
-  :after (spaceline all-the-icons)
-
-  :config
-  (spaceline-toggle-all-the-icons-projectile-off)
-  (spaceline-all-the-icons-theme))
