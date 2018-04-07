@@ -4,5 +4,5 @@
   (setq spaceline-window-numbers-unicode t)
   (setq evil-echo-state nil
         spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
-  (spaceline-toggle-version-control-off)
-  (spaceline-spacemacs-theme))
+  (spaceline-spacemacs-theme)
+  (spaceline-toggle-version-control-off))
