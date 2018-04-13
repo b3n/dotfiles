@@ -30,5 +30,6 @@
 						   (directory-files
 						    dir
 						    nil
-						    "\\.git\\|setup\\.py")))
+						    "README\\.md\\|setup\\.py\\|\\.git.*")))
 			   '("pyls")))
+
