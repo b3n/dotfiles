@@ -46,6 +46,12 @@
   (evil-exchange-install))
 
 
+(use-package evil-anzu
+  :after (evil)
+  :custom
+  (anzu-cons-mode-line-p nil))  ;; This is handled by Spaceline
+
+
 (use-package evil-collection
   :after (evil)
   :config (evil-collection-init))
