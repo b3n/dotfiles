@@ -4,8 +4,6 @@
 
 
 (use-package lsp-ui
-  :demand t
-  :after (lsp-mode)
   :hook (lsp-mode . lsp-ui-mode)
 
   :custom
@@ -18,17 +16,19 @@
 
 
 (use-package lsp-python
-  :demand t
   :ensure-system-package (pyls . "pip install python-language-server")
-  :after (lsp-ui)
+  :after (lsp-mode)
   :hook (python-mode . lsp-python-enable)
 
   :config
   ;; Replace with my own traverser for now, as the current one is buggy.
+  (setq my-project-root-files '("README.md" "setup.py" ".git" "requirements.txt"))
   (lsp-define-stdio-client lsp-python "python"
-			   (lsp-make-traverser #'(lambda (dir)
-						   (directory-files
-						    dir
-						    nil
-						    "\\.git\\|setup\\.py")))
+			   (lsp-make-traverser
+			    #'(lambda (dir)
+				(directory-files
+				 dir
+				 nil
+				 (mapconcat #'regexp-quote my-project-root-files "\\|"))))
 			   '("pyls")))
+
