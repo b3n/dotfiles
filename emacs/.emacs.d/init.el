@@ -25,8 +25,11 @@
 
 (setq my-prefix "<f5>")
 
+(load "~/.emacs.d/funcs.el")
+
 (general-define-key :prefix my-prefix
 		    "f s" #'save-buffer
+		    "f y" #'my-show-buffer-file-name
 		    "<return>" #'ansi-term)
 
 (general-define-key :keymaps 'minibuffer-inactive-mode-map [mouse-1] nil) 
