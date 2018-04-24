@@ -1,2 +1,4 @@
-(use-package pdf-tools)
-
+(use-package pdf-tools
+  :magic ("%PDF" . pdf-view-mode)
+  :config
+  (pdf-tools-install))
