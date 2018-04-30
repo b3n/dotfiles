@@ -8,13 +8,13 @@
   (evil-vsplit-window-right t)
   (evil-want-C-u-scroll t)
   (evil-want-Y-yank-to-eol t)
-  (evil-want-integration nil)
+  (evil-want-integration nil)  ; Using evil-collection instead.
 
   :config
   (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
   (general-define-key :keymaps 'evil-window-map
-		      "u" #'winner-undo
-		      "C-r" #'winner-redo)
+                      "u" #'winner-undo
+                      "C-r" #'winner-redo)
   (evil-mode))
 
 
@@ -49,7 +49,7 @@
 (use-package evil-anzu
   :after (evil)
   :custom
-  (anzu-cons-mode-line-p nil))  ;; This is handled by Spaceline
+  (anzu-cons-mode-line-p nil))  ; This is handled by Spaceline
 
 
 (use-package evil-collection
