@@ -14,6 +14,7 @@
 
 (load "~/.emacs.d/funcs.el")
 
+(package-initialize)
 (my-use-package-initialize)
 
 (mapc 'load (file-expand-wildcards "~/.emacs.d/packages/*.el"))
@@ -23,9 +24,10 @@
 
 
 (general-define-key :prefix my-prefix
-		    "f s" #'save-buffer
-		    "f y" #'my-show-buffer-file-name
-		    "<return>" #'ansi-term)
+                    "f s" #'save-buffer
+                    "f y" #'my-show-buffer-file-name
+                    "<return>" #'eshell
+                    "!" #'shell-command)
 
 (general-define-key :keymaps 'minibuffer-inactive-mode-map [mouse-1] nil) 
 

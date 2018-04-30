@@ -14,8 +14,6 @@
 (defun my-use-package-initialize ()
   "Install/configure use-package and dependencies."
 
-  (package-initialize)
-
   (require 'package)
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
   (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
