@@ -6,7 +6,7 @@
 (setq custom-file (make-temp-file "emacs-custom")
       create-lockfiles nil
       make-backup-files nil)
-(setq my-prefix "<f5>")
+(setq my-prefix "C-t")
 (setq browse-url-generic-program "firefox")
 (setq-default tab-width 4
 	      indent-tabs-mode nil)
