@@ -1,12 +1,13 @@
 (use-package ivy
   :general (:prefix my-prefix
-		    "v a" #'ivy-push-view
-		    "v d" #'ivy-pop-view
-		    "v v" #'ivy-switch-view
-		    "B" #'ivy-switch-buffer)
+                    "v a" #'ivy-push-view
+                    "v d" #'ivy-pop-view
+                    "v v" #'ivy-switch-view
+                    "B" #'ivy-switch-buffer)
   :diminish ivy-mode
+  :custom
+  (ivy-use-virtual-buffers t)
   :init
-  (setq ivy-use-virtual-buffers t)
   (setq ivy-re-builders-alist '((t . ivy--regex-ignore-order)))
   (setq ivy-initial-inputs-alist nil)
   :config

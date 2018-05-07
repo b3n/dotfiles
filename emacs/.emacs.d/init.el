@@ -6,16 +6,18 @@
 (setq custom-file (make-temp-file "emacs-custom")
       create-lockfiles nil
       make-backup-files nil)
-(setq my-prefix "C-t")
 (setq browse-url-generic-program "firefox")
 (setq-default tab-width 4
-	      indent-tabs-mode nil)
-
+              indent-tabs-mode nil)
 
 (load "~/.emacs.d/funcs.el")
 
 (package-initialize)
 (my-use-package-initialize)
+
+(setq my-prefix "C-t")
+(general-define-key my-prefix nil)
+(general-define-key :states 'normal my-prefix nil)
 
 (mapc 'load (file-expand-wildcards "~/.emacs.d/packages/*.el"))
 
