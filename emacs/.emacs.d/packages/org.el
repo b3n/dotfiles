@@ -1,7 +1,8 @@
 (use-package org
   :ensure org-plus-contrib
-  :bind (("C-c a" . org-agenda)
-         ("C-c c" . org-capture))
+  :general (:prefix my-prefix
+                    "o a" #'org-agenda
+                    "o c" #'org-capture)
 
   :custom
   (org-startup-indented t) 

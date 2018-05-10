@@ -15,15 +15,7 @@
 (package-initialize)
 (my-use-package-initialize)
 
-(setq my-prefix "C-t")
-(general-define-key my-prefix nil)
-(general-define-key :states 'normal my-prefix nil)
-
-(mapc 'load (file-expand-wildcards "~/.emacs.d/packages/*.el"))
-
-(cond ((eq window-system 'ns) (load "~/.emacs.d/platform/osx.el"))
-      ((eq window-system 'x) (load "~/.emacs.d/platform/nix.el")))
-
+(setq my-prefix "<f5>")
 
 (general-define-key :prefix my-prefix
                     "f s" #'save-buffer
@@ -33,6 +25,10 @@
 
 (general-define-key :keymaps 'minibuffer-inactive-mode-map [mouse-1] nil) 
 
+(mapc 'load (file-expand-wildcards "~/.emacs.d/packages/*.el"))
+
+(cond ((eq window-system 'ns) (load "~/.emacs.d/platform/osx.el"))
+      ((eq window-system 'x) (load "~/.emacs.d/platform/nix.el")))
 
 (tool-bar-mode -1)
 (menu-bar-mode -1)
