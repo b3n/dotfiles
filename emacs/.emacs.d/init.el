@@ -16,13 +16,16 @@
 (my-use-package-initialize)
 
 (general-create-definer my-leader-def
+  :keymaps 'override
   :prefix "SPC"
-  :global-prefix "<f5>"
-  :keymaps 'normal)
+  :non-normal-prefix "C-SPC"
+  :global-prefix "<f5>")
 
 (my-leader-def
+  "f" '(:ignore t :which-key "File")
   "f s" #'save-buffer
   "f y" #'my-show-buffer-file-name
+
   "<return>" #'eshell
   "!" #'shell-command)
 
