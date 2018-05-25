@@ -26,6 +26,7 @@
   "f s" #'save-buffer
   "f y" #'my-show-buffer-file-name
 
+  "<tab>" #'evil-switch-to-windows-last-buffer
   "<return>" #'eshell
   "!" #'shell-command)
 
