@@ -1,8 +1,8 @@
 (use-package org
   :ensure org-plus-contrib
-  :general (:prefix my-prefix
-                    "o a" #'org-agenda
-                    "o c" #'org-capture)
+  :general (my-leader-def
+             "o a" #'org-agenda
+             "o c" #'org-capture)
 
   :custom
   (org-startup-indented t) 

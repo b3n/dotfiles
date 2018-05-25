@@ -15,13 +15,16 @@
 (package-initialize)
 (my-use-package-initialize)
 
-(setq my-prefix "<f5>")
+(general-create-definer my-leader-def
+  :prefix "SPC"
+  :global-prefix "<f5>"
+  :keymaps 'normal)
 
-(general-define-key :prefix my-prefix
-                    "f s" #'save-buffer
-                    "f y" #'my-show-buffer-file-name
-                    "<return>" #'eshell
-                    "!" #'shell-command)
+(my-leader-def
+  "f s" #'save-buffer
+  "f y" #'my-show-buffer-file-name
+  "<return>" #'eshell
+  "!" #'shell-command)
 
 (general-define-key :keymaps 'minibuffer-inactive-mode-map [mouse-1] nil) 
 

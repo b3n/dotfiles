@@ -1,9 +1,9 @@
 (use-package ivy
-  :general (:prefix my-prefix
-                    "v a" #'ivy-push-view
-                    "v d" #'ivy-pop-view
-                    "v v" #'ivy-switch-view
-                    "B" #'ivy-switch-buffer)
+  :general (my-leader-def
+             "v a" #'ivy-push-view
+             "v d" #'ivy-pop-view
+             "v v" #'ivy-switch-view
+             "B" #'ivy-switch-buffer)
   :diminish ivy-mode
   :custom
   (ivy-use-virtual-buffers t)
@@ -15,15 +15,14 @@
 
 
 (use-package counsel
-  :general (:prefix my-prefix
-		    "SPC" #'counsel-linux-app
-		    "i" #'ivy-resume
-		    "g f" #'counsel-git
-		    "g /" #'counsel-git-grep
-		    "/" #'counsel-ag
-		    "f f" #'counsel-find-file
-		    "f r" #'counsel-recentf
-		    "<f5>" #'counsel-M-x)
+  :general (my-leader-def
+             "i" #'ivy-resume
+             "g f" #'counsel-git
+             "g /" #'counsel-git-grep
+             "/" #'counsel-ag
+             "f f" #'counsel-find-file
+             "f r" #'counsel-recentf
+             "SPC" #'counsel-M-x)
   :diminish counsel-mode
   :config
   (counsel-mode))
