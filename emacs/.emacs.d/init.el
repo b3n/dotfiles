@@ -16,10 +16,10 @@
 (my-use-package-initialize)
 
 (general-create-definer my-leader-def
+  :states 'normal
   :keymaps 'override
   :prefix "SPC"
-  :non-normal-prefix "C-SPC"
-  :global-prefix "<f5>")
+  :non-normal-prefix "C-SPC")
 
 (my-leader-def
   "f" '(:ignore t :which-key "File")
