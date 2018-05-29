@@ -1,8 +1,3 @@
-(require 'server)
-(unless (server-running-p)
-  (server-start))
-
-
 (setq custom-file (make-temp-file "emacs-custom")
       create-lockfiles nil
       make-backup-files nil)
@@ -26,7 +21,7 @@
   "f s" #'save-buffer
   "f y" #'my-show-buffer-file-name
 
-  "<tab>" #'evil-switch-to-windows-last-buffer
+  "<tab>" #'my-alternate-buffer
   "<return>" #'eshell
   "!" #'shell-command)
 
