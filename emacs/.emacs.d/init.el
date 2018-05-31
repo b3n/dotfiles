@@ -37,6 +37,5 @@
 (scroll-bar-mode -1)
 
 (show-paren-mode 1)
-(winner-mode 1)
 (recentf-mode 1)
 (flyspell-mode)

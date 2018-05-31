@@ -10,8 +10,12 @@
   (evil-want-Y-yank-to-eol t)
   (evil-want-integration nil)  ; Using evil-collection instead.
 
+  :init
+  (winner-mode 1)
+
   :config
   (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
+  (define-key key-translation-map (kbd "SPC w") (kbd "C-w"))
   (general-define-key :keymaps 'evil-window-map
                       "u" #'winner-undo
                       "C-r" #'winner-redo)
