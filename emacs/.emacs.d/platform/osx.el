@@ -4,3 +4,5 @@
 (spaceline-compile)
 
 (setq my-term-shell "/bin/zsh")
+
+(menu-bar-mode -1)

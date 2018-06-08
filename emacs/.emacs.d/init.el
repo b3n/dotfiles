@@ -18,6 +18,7 @@
 
 (my-leader-def
   "f" '(:ignore t :which-key "File")
+  "f d" #'dired-jump
   "f s" #'save-buffer
   "f y" #'my-show-buffer-file-name
 
@@ -33,7 +34,6 @@
       ((eq window-system 'x) (load "~/.emacs.d/platform/nix.el")))
 
 (tool-bar-mode -1)
-(menu-bar-mode -1)
 (scroll-bar-mode -1)
 
 (show-paren-mode 1)
