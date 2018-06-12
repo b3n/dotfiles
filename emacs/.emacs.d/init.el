@@ -1,3 +1,6 @@
+(load "server")
+(unless (server-running-p) (server-start))
+
 (setq custom-file (make-temp-file "emacs-custom")
       create-lockfiles nil
       make-backup-files nil)
