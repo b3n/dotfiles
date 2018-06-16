@@ -8,7 +8,7 @@
   (evil-vsplit-window-right t)
   (evil-want-C-u-scroll t)
   (evil-want-Y-yank-to-eol t)
-  (evil-want-integration nil)  ; Using evil-collection instead.
+  (evil-want-integration nil)
 
   :init
   (winner-mode 1)
@@ -24,6 +24,7 @@
 
 (use-package evil-surround
   :after (evil)
+
   :config
   (global-evil-surround-mode 1))
 
@@ -52,13 +53,16 @@
 
 (use-package evil-anzu
   :after (evil)
+
   :custom
   (anzu-cons-mode-line-p nil))  ; This is handled by Spaceline
 
 
 (use-package evil-collection
   :after (evil)
-  :config (evil-collection-init))
+
+  :config
+  (evil-collection-init))
 
 
 (use-package evil-org
