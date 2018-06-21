@@ -19,6 +19,7 @@
   :prefix "SPC"
   :non-normal-prefix "C-SPC")
 
+(define-key key-translation-map (kbd "SPC c") (kbd "C-c"))
 (my-leader-def
   "f" '(:ignore t :which-key "File")
   "f d" #'dired-jump

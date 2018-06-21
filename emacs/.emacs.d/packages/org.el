@@ -1,6 +1,7 @@
 (use-package org
   :ensure org-plus-contrib
   :general (my-leader-def
+             "o" '(:ignore t :which-key "Org")
              "o a" #'org-agenda
              "o c" #'org-capture)
 
