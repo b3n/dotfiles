@@ -34,8 +34,14 @@
 
 (mapc 'load (file-expand-wildcards "~/.emacs.d/packages/*.el"))
 
-(cond ((eq window-system 'ns) (load "~/.emacs.d/platform/osx.el"))
-      ((eq window-system 'x) (load "~/.emacs.d/platform/nix.el")))
+(let ((ws-config (concat
+                  "~/.emacs.d/window-system/"
+                  (symbol-name window-system)
+                  ".el")))
+  (when (file-readable-p ws-config)
+    (load ws-config)))
+
+
 
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
