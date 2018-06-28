@@ -30,7 +30,7 @@
   "<return>" #'eshell
   "!" #'shell-command)
 
-(general-define-key :keymaps 'minibuffer-inactive-mode-map [mouse-1] nil) 
+(general-define-key :keymaps 'minibuffer-inactive-mode-map [mouse-1] nil)
 
 (mapc 'load (file-expand-wildcards "~/.emacs.d/packages/*.el"))
 
@@ -40,7 +40,6 @@
                   ".el")))
   (when (file-readable-p ws-config)
     (load ws-config)))
-
 
 
 (tool-bar-mode -1)

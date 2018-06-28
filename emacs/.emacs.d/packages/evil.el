@@ -52,6 +52,7 @@
 
 
 (use-package evil-anzu
+  :disabled
   :after (evil)
 
   :custom
