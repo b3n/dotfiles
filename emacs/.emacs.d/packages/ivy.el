@@ -1,22 +1,31 @@
 (use-package ivy
   :general (my-leader-def
-             "v a" #'ivy-push-view
-             "v d" #'ivy-pop-view
-             "v v" #'ivy-switch-view
+             "DEL" #'ivy-resume
              "B" #'ivy-switch-buffer)
+
   :diminish ivy-mode
+
   :custom
   (ivy-use-virtual-buffers t)
+  (ivy-count-format "(%d/%d) ")
+
   :init
   (setq ivy-re-builders-alist '((t . ivy--regex-ignore-order)))
   (setq ivy-initial-inputs-alist nil)
+
   :config
   (ivy-mode 1))
 
+(use-package amx
+  :config
+  (amx-mode))
 
 (use-package counsel
+  :init
+  (setq recentf-max-saved-items 999)
+  (recentf-mode 1)
+  
   :general (my-leader-def
-             "i" #'ivy-resume
              "g f" #'counsel-git
              "g /" #'counsel-git-grep
              "/" #'counsel-ag
