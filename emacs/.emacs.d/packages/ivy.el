@@ -28,7 +28,6 @@
   :general (my-leader-def
              "g f" #'counsel-git
              "g /" #'counsel-git-grep
-             "/" #'counsel-ag
              "f f" #'counsel-find-file
              "f r" #'counsel-recentf
              "SPC" #'counsel-M-x)
