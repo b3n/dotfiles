@@ -2,4 +2,4 @@
   :general (my-leader-def
              "/" #'deadgrep)
   :config
-  (evil-set-initial-state 'deadgrep-mode 'emacs))
+  (evil-make-overriding-map deadgrep-mode-map 'normal))
