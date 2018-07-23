@@ -14,7 +14,7 @@
 (my-use-package-initialize)
 
 (general-create-definer my-leader-def
-  :states 'normal
+  :states '(normal visual)
   :keymaps 'override
   :prefix "SPC"
   :non-normal-prefix "C-SPC")
