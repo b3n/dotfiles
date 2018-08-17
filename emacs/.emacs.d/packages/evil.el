@@ -8,10 +8,10 @@
   (evil-vsplit-window-right t)
   (evil-want-C-u-scroll t)
   (evil-want-Y-yank-to-eol t)
-  (evil-want-integration nil)
 
   :init
   (winner-mode 1)
+  (setq evil-want-integration nil)
 
   :config
   (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
@@ -19,6 +19,7 @@
   (general-define-key :keymaps 'evil-window-map
                       "u" #'winner-undo
                       "C-r" #'winner-redo)
+  (my-leader-def "q c" (general-simulate-key ('evil-ex "%s///gn <S-left> <left> <left>")))
   (evil-mode))
 
 
@@ -32,8 +33,8 @@
 (use-package evil-numbers
   :after (evil)
   :general (:states 'normal
-		    "g+" #'evil-numbers/inc-at-pt
-		    "g-" #'evil-numbers/dec-at-pt))
+                    "C-a" #'evil-numbers/inc-at-pt
+                    "C-S-a" #'evil-numbers/dec-at-pt))
 
 
 (use-package evil-visualstar
@@ -49,14 +50,6 @@
 
   :config
   (evil-exchange-install))
-
-
-(use-package evil-anzu
-  :disabled
-  :after (evil)
-
-  :custom
-  (anzu-cons-mode-line-p nil))  ; This is handled by Spaceline
 
 
 (use-package evil-collection

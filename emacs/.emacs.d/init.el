@@ -14,12 +14,17 @@
 (my-use-package-initialize)
 
 (general-create-definer my-leader-def
-  :states '(normal visual)
+  :states '(normal visual insert emacs)
   :keymaps 'override
   :prefix "SPC"
-  :non-normal-prefix "C-SPC")
+  :non-normal-prefix "M-SPC")
 
 (define-key key-translation-map (kbd "SPC c") (kbd "C-c"))
+(define-key key-translation-map (kbd "SPC x") (kbd "C-x"))
+
+(my-leader-def "h" '(:ignore t :which-key "Help"))
+(define-key key-translation-map (kbd "SPC h") (kbd "C-h"))
+
 (my-leader-def
   "f" '(:ignore t :which-key "File")
   "f d" #'dired-jump
