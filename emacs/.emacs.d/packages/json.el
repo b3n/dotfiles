@@ -2,8 +2,8 @@
 
 
 (use-package jq-mode
+  :disabled
   :after (json-mode)
-  :ensure-system-package jq
 
   :config
   (define-key json-mode-map (kbd "C-c C-j") #'jq-interactively))

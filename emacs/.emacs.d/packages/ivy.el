@@ -30,6 +30,7 @@
              "g /" #'counsel-git-grep
              "f f" #'counsel-find-file
              "f r" #'counsel-recentf
+             "u" #'counsel-unicode-char
              "SPC" #'counsel-M-x)
   :diminish counsel-mode
   :config

@@ -12,6 +12,7 @@
   :init
   (winner-mode 1)
   (setq evil-want-integration nil)
+  (setq evil-want-keybinding nil)
 
   :config
   (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
@@ -54,6 +55,9 @@
 
 (use-package evil-collection
   :after (evil)
+
+  :init
+  (setq evil-want-keybinding nil)
 
   :config
   (evil-collection-init))

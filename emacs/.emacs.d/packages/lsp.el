@@ -16,7 +16,7 @@
 
 
 (use-package lsp-python
-  :ensure-system-package (pyls . "pip install python-language-server")
+  ;:ensure-system-package (pyls . "pip install python-language-server")
   :after (lsp-mode)
   :hook (python-mode . lsp-python-enable)
 

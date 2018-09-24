@@ -10,7 +10,6 @@
 
 (load "~/.emacs.d/funcs.el")
 
-(package-initialize)
 (my-use-package-initialize)
 
 (general-create-definer my-leader-def
