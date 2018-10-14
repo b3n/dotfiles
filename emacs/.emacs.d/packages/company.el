@@ -7,3 +7,8 @@
   :after '(company)
   :config
   (add-to-list 'company-backends 'company-jedi))
+
+(use-package company-lsp
+  :after '(company)
+  :config
+  (add-to-list 'company-backends 'company-lsp))
