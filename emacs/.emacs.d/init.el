@@ -50,6 +50,7 @@
 (scroll-bar-mode -1)
 
 (show-paren-mode 1)
+
 (setq dired-dwim-target t)
 
 (add-hook 'text-mode-hook 'flyspell-mode)
