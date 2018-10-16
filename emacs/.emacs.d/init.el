@@ -4,7 +4,6 @@
 (setq custom-file (make-temp-file "emacs-custom")
       create-lockfiles nil
       make-backup-files nil)
-(setq browse-url-generic-program "firefox")
 (setq-default tab-width 4
               indent-tabs-mode nil)
 
@@ -50,8 +49,6 @@
 (scroll-bar-mode -1)
 
 (show-paren-mode 1)
-
-(setq dired-dwim-target t)
 
 (add-hook 'text-mode-hook 'flyspell-mode)
 (add-hook 'prog-mode-hook 'flyspell-prog-mode)
