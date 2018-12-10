@@ -1,6 +1,9 @@
 (load "server")
 (unless (server-running-p) (server-start))
 
+(setq enable-local-variables nil)
+(setq network-security-level 'paranoid)
+
 (setq custom-file (make-temp-file "emacs-custom")
       create-lockfiles nil
       make-backup-files nil)
