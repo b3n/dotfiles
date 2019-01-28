@@ -1,9 +1,13 @@
 (use-package org
   :ensure org-plus-contrib
+
   :general (my-leader-def
              "o" '(:ignore t :which-key "Org")
              "o a" #'org-agenda
              "o c" #'org-capture)
+
+  :init
+  (setq org-src-lang-modes nil) ; For some reason org-mode fails to load without this being initiated.
 
   :custom
   (org-startup-indented t) 

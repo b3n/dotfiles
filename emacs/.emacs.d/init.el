@@ -1,12 +1,13 @@
 (load "server")
 (unless (server-running-p) (server-start))
 
-(setq enable-local-variables nil)
-(setq network-security-level 'paranoid)
+(setq enable-local-variables nil
+      network-security-level 'paranoid)
 
 (setq custom-file (make-temp-file "emacs-custom")
       create-lockfiles nil
       make-backup-files nil)
+
 (setq-default tab-width 4
               indent-tabs-mode nil)
 
@@ -53,4 +54,7 @@
 (show-paren-mode 1)
 
 (add-hook 'text-mode-hook 'flyspell-mode)
+(setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
+(add-hook 'text-mode-hook 'turn-on-visual-line-mode)
+
 (add-hook 'prog-mode-hook 'flyspell-prog-mode)
