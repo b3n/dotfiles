@@ -13,6 +13,8 @@
   (org-startup-indented t) 
 
   :config
+  (setq initial-major-mode 'org-mode)
+
   (add-hook 'org-mode-hook '(lambda () (visual-line-mode 1)))
   (setq org-capture-templates '(("t" "Todo [inbox]" entry
                                  (file+headline "~/gtd/gtd.org" "Inbox")
