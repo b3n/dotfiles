@@ -33,9 +33,7 @@
   "f s" #'save-buffer
   "f y" #'my-show-buffer-file-name
 
-  "<tab>" #'my-alternate-buffer
-  "<return>" #'eshell
-  "!" #'shell-command)
+  "<tab>" #'my-alternate-buffer)
 
 (general-define-key :keymaps 'minibuffer-inactive-mode-map [mouse-1] nil)
 

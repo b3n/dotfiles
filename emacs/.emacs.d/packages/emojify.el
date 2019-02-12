@@ -1,3 +1,2 @@
 (use-package emojify
-  :config
-  (global-emojify-mode))
+  :hook (text-mode . emojify-mode))
