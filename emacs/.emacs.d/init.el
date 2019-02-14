@@ -1,9 +1,13 @@
 (load "server")
 (unless (server-running-p) (server-start))
 
+(setq enable-local-variables nil
+      network-security-level 'paranoid)
+
 (setq custom-file (make-temp-file "emacs-custom")
       create-lockfiles nil
       make-backup-files nil)
+
 (setq-default tab-width 4
               indent-tabs-mode nil)
 
@@ -29,9 +33,7 @@
   "f s" #'save-buffer
   "f y" #'my-show-buffer-file-name
 
-  "<tab>" #'my-alternate-buffer
-  "<return>" #'eshell
-  "!" #'shell-command)
+  "<tab>" #'my-alternate-buffer)
 
 (general-define-key :keymaps 'minibuffer-inactive-mode-map [mouse-1] nil)
 
@@ -46,9 +48,11 @@
 
 
 (tool-bar-mode -1)
-(scroll-bar-mode -1)
 
 (show-paren-mode 1)
 
 (add-hook 'text-mode-hook 'flyspell-mode)
+(setq visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
+(add-hook 'text-mode-hook 'turn-on-visual-line-mode)
+
 (add-hook 'prog-mode-hook 'flyspell-prog-mode)

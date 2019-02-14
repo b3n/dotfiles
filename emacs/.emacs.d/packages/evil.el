@@ -31,11 +31,14 @@
   (global-evil-surround-mode 1))
 
 
+;; https://github.com/janpath/evil-numbers
 (use-package evil-numbers
   :after (evil)
   :general (:states 'normal
                     "C-a" #'evil-numbers/inc-at-pt
-                    "C-S-a" #'evil-numbers/dec-at-pt))
+                    "C-S-a" #'evil-numbers/dec-at-pt
+                    "g C-a" #'evil-numbers/inc-at-pt-incremental
+                    "g C-S-a" #'evil-numbers/dec-at-pt-incremental))
 
 
 (use-package evil-visualstar
