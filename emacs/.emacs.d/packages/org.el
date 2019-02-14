@@ -1,12 +1,14 @@
 (use-package org
   :ensure org-plus-contrib
+  :init (setq org-src-lang-modes nil)
   :general (my-leader-def
              "o" '(:ignore t :which-key "Org")
              "o a" #'org-agenda
              "o c" #'org-capture)
 
   :custom
-  (org-startup-indented t) 
+  (org-startup-indented t)
+  (org-log-done 'time)
 
   :config
   (setq initial-major-mode 'org-mode)
