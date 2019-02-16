@@ -1,4 +1,5 @@
 (use-package persp-mode
+  :disabled
   :general (my-leader-def
              "b" #'persp-switch-to-buffer
              "k" #'persp-kill-buffer
@@ -12,6 +13,7 @@
   :custom
   (persp-auto-resume-time -1)
   (persp-emacsclient-init-frame-behaviour-override nil)
+  ;;(persp-init-frame-behaviour nil)
 
   :init
   (setq my-last-persp "none")

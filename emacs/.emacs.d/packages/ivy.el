@@ -1,7 +1,9 @@
 (use-package ivy
   :general (my-leader-def
              "DEL" #'ivy-resume
-             "B" #'ivy-switch-buffer)
+             "b" #'ivy-switch-buffer
+             "v" #'ivy-push-view
+             "V" #'ivy-pop-view)
 
   :diminish ivy-mode
 
@@ -30,6 +32,7 @@
              "g /" #'counsel-git-grep
              "f f" #'counsel-find-file
              "f r" #'counsel-recentf
+             "t p" #'counsel-linux-app
              "u" #'counsel-unicode-char
              "SPC" #'counsel-M-x)
   :diminish counsel-mode
