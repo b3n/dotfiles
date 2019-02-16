@@ -34,7 +34,8 @@
              "f r" #'counsel-recentf
              "t p" #'counsel-linux-app
              "u" #'counsel-unicode-char
-             "SPC" #'counsel-M-x)
+             my-prefix #'counsel-M-x
+             (concat "M-" my-prefix) #'counsel-M-x)
   :diminish counsel-mode
   :config
   (counsel-mode))

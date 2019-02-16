@@ -16,7 +16,7 @@
 
   :config
   (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
-  (define-key key-translation-map (kbd "SPC w") (kbd "C-w"))
+  (my-leader-map "w" "C-w")
   (general-define-key :keymaps 'evil-window-map
                       "u" #'winner-undo
                       "C-r" #'winner-redo)

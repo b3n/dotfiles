@@ -15,17 +15,21 @@
 
 (my-use-package-initialize)
 
+(setq my-prefix "SPC")
+
 (general-create-definer my-leader-def
   :states '(normal visual insert emacs)
   :keymaps 'override
-  :global-prefix "M-SPC"
-  :prefix "SPC")
+  :global-prefix (concat "M-" my-prefix)
+  :prefix my-prefix)
 
-(define-key key-translation-map (kbd "SPC c") (kbd "C-c"))
-(define-key key-translation-map (kbd "SPC x") (kbd "C-x"))
+(defun my-leader-map (key map)
+  (define-key key-translation-map (kbd (concat my-prefix " " key)) (kbd map))
+  (define-key key-translation-map (kbd (concat "M-" my-prefix " " key)) (kbd map)))
 
-(my-leader-def "h" '(:ignore t :which-key "Help"))
-(define-key key-translation-map (kbd "SPC h") (kbd "C-h"))
+(my-leader-map "c" "C-c")
+(my-leader-map "x" "C-x")
+(my-leader-map "h" "C-h")
 
 (my-leader-def
   "f" '(:ignore t :which-key "File")
