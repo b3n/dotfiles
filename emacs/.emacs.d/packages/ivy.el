@@ -16,7 +16,17 @@
   (setq ivy-initial-inputs-alist nil)
 
   :config
-  (ivy-mode 1))
+  (ivy-mode 1)
+
+  (defun setup-eshell-ivy-completion ()
+    (define-key eshell-mode-map [remap eshell-pcomplete] 'completion-at-point)
+    ;; only if you want to use the minibuffer for completions instead of the
+    ;; in-buffer interface
+    (setq-local ivy-display-functions-alist
+                (remq (assoc 'ivy-completion-in-region ivy-display-functions-alist)
+                      ivy-display-functions-alist)))
+
+  (add-hook 'eshell-mode-hook #'setup-eshell-ivy-completion))
 
 (use-package amx
   :config

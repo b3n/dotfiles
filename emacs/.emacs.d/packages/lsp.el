@@ -20,11 +20,12 @@
   :hook (python-mode . lsp-python-enable))
 
 
+(use-package lsp-java
+  :hook (java-mode . lsp-java-enable))
+
 (use-package dap-mode
+  :after (lsp-java)
   :config
   (dap-mode t)
   (dap-ui-mode t)
   (require 'dap-java))
-
-(use-package lsp-java
-  :hook (java-mode . lsp-java-enable))
