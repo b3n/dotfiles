@@ -1,18 +1,19 @@
-setxkbmap us
+xrandr --output DP1 --auto --output HDMI2 --auto --right-of DP1
+redshift -l 55.94:-3.21 -t 6500K:3500K &
+
 setxkbmap -option compose:ralt
 xbindkeys
 
-redshift -l 55.94:-3.21 &
+ibus-daemon -drx
+export GTK_IM_MODULE=ibus
+export XMODIFIERS=@im=ibus
+export QT_IM_MODULE=ibus
 
-xrdb .Xresources
+export VISUAL=emacsclient
+export EDITOR="$VISUAL"
 
-#thunar --daemon &
-#source /etc/X11/xinit/xinitrc.d/50-systemd-user.sh
+pulseaudio -D
+thunar --daemon &
 
-while true; do
-   xsetroot -name "$( date +"%F %R" )"
-   sleep 1m
-done &
-
-#compton -cf --backend xr_glx_hybrid --vsync opengl --xrender-sync-fence --vsync-aggressive --xrender-sync -m .9 &
-exec dwm
+compton -cf --backend xr_glx_hybrid --vsync opengl --xrender-sync-fence --vsync-aggressive --xrender-sync -m .9 &
+exec emacs

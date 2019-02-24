@@ -42,7 +42,7 @@
              "g /" #'counsel-git-grep
              "f f" #'counsel-find-file
              "f r" #'counsel-recentf
-             "t p" #'counsel-linux-app
+             "p" #'counsel-linux-app
              "u" #'counsel-unicode-char
              my-prefix #'counsel-M-x
              (concat "M-" my-prefix) #'counsel-M-x)

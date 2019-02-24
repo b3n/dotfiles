@@ -32,6 +32,7 @@
 (my-leader-map "h" "C-h")
 
 (my-leader-def
+  "B" #'ibuffer-list-buffers
   "f" '(:ignore t :which-key "File")
   "f d" #'dired-jump
   "f s" #'save-buffer
