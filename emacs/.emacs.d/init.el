@@ -25,7 +25,8 @@
 
 (defun my-leader-map (key map)
   (define-key key-translation-map (kbd (concat my-prefix " " key)) (kbd map))
-  (define-key key-translation-map (kbd (concat "M-" my-prefix " " key)) (kbd map)))
+  ;;(define-key key-translation-map (kbd (concat "M-" my-prefix " " key)) (kbd map))
+  )
 
 (my-leader-map "c" "C-c")
 (my-leader-map "x" "C-x")
