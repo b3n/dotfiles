@@ -38,7 +38,7 @@
   "f s" #'save-buffer
   "f y" #'my-show-buffer-file-name
 
-  "<tab>" #'my-alternate-buffer)
+  "<tab>" #'mode-line-other-buffer)
 
 (general-define-key :keymaps 'minibuffer-inactive-mode-map [mouse-1] nil)
 

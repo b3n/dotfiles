@@ -1,3 +1,5 @@
+;;; -*- lexical-binding: t -*-
+
 ;; http://camdez.com/blog/2013/11/14/emacs-show-buffer-file-name/
 (defun my-show-buffer-file-name ()
   "Show the full path to the current file in the minibuffer."
@@ -29,20 +31,31 @@
   (use-package general))
 
 
-(defun my-alternate-buffer (&optional window)
-  "Switch back and forth between current and last buffer in the
-current window."
+(require 'cl-lib)
+(require 'seq)
+
+(defun my-mode-next-buffer ()
   (interactive)
-  (let ((current-buffer (window-buffer window))
-        (buffer-predicate
-         (frame-parameter (window-frame window) 'buffer-predicate)))
-    ;; switch to first buffer previously shown in this window that matches
-    ;; frame-parameter `buffer-predicate'
-    (switch-to-buffer
-     (or (cl-find-if (lambda (buffer)
-                       (and (not (eq buffer current-buffer))
-                            (or (null buffer-predicate)
-                                (funcall buffer-predicate buffer))))
-                     (mapcar #'car (window-prev-buffers window)))
-         ;; `other-buffer' honors `buffer-predicate' so no need to filter
-         (other-buffer current-buffer t)))))
+  (my--mode-buffer #'next-buffer))
+
+(defun my-mode-previous-buffer ()
+  (interactive)
+  (my--mode-buffer #'previous-buffer))
+
+(defun my--mode-buffer (buffer-change-function)
+  (let ((orig-window-next-buffers (symbol-function #'window-next-buffers))
+        (orig-window-prev-buffers (symbol-function #'window-prev-buffers))
+        (orig-buffer-list (symbol-function #'buffer-list)))
+    (cl-letf* (((symbol-function #'filter) (lambda (f)
+                                             (lambda (&rest args)
+                                               (my--mode-filter-buffers (apply f args)))))
+               ((symbol-function #'window-next-buffers) (filter orig-window-next-buffers))
+               ((symbol-function #'window-prev-buffers) (filter orig-window-prev-buffers))
+               ((symbol-function #'buffer-list) (filter orig-buffer-list)))
+      (call-interactively buffer-change-function))))
+
+(defun my--mode-filter-buffers (buffers &optional mode)
+  (let ((mode (or mode major-mode)))
+    (seq-filter
+     (lambda (b) (and (bufferp b) (string= (buffer-local-value 'major-mode b) mode)))
+     buffers)))
