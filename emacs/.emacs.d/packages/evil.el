@@ -15,7 +15,7 @@
   (setq evil-want-keybinding nil)
 
   :config
-  (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
+  ;;(define-key key-translation-map (kbd "ESC") (kbd "C-g"))
   (my-leader-map "w" "C-w")
   (general-define-key :keymaps 'evil-window-map
                       "u" #'winner-undo

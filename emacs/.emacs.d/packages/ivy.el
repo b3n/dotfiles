@@ -49,3 +49,8 @@
   :diminish counsel-mode
   :config
   (counsel-mode))
+
+(use-package all-the-icons-ivy
+  :after (all-the-icons ivy)
+  :config
+  (all-the-icons-ivy-setup))
