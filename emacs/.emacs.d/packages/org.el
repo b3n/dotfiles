@@ -1,5 +1,5 @@
 (use-package org
-  :ensure org-plus-contrib
+  ;;:ensure org-plus-contrib
 
   :general (my-leader-def
              "o" '(:ignore t :which-key "Org")

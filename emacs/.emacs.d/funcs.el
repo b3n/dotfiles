@@ -1,5 +1,9 @@
 ;;; -*- lexical-binding: t -*-
 
+(require 'cl-lib)
+(require 'seq)
+
+
 ;; http://camdez.com/blog/2013/11/14/emacs-show-buffer-file-name/
 (defun my-show-buffer-file-name ()
   "Show the full path to the current file in the minibuffer."
@@ -16,54 +20,72 @@
 (defun my-use-package-initialize ()
   "Install/configure use-package and dependencies."
 
-  (require 'package)
-  (setq package-archives
-        '(("GNU ELPA"     . "https://elpa.gnu.org/packages/")
-          ("MELPA Stable" . "https://stable.melpa.org/packages/")
-          ("MELPA"        . "https://melpa.org/packages/")
-          ("ORG"          . "https://orgmode.org/elpa/"))
-        package-archive-priorities
-        '(("MELPA Stable" . 10)
-          ("ORG"          . 6)
-          ("GNU ELPA"     . 5)
-          ("MELPA"        . 0)))
-  (package-initialize)
+  (defvar bootstrap-version)
+  (let ((bootstrap-file
+         (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+        (bootstrap-version 5))
+    (unless (file-exists-p bootstrap-file)
+      (with-current-buffer
+          (url-retrieve-synchronously
+           "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+           'silent 'inhibit-cookies)
+        (goto-char (point-max))
+        (eval-print-last-sexp)))
+    (load bootstrap-file nil 'nomessage))
 
-  (unless (package-installed-p 'use-package)
-    (package-refresh-contents)
-    (package-install 'use-package))
-  (eval-when-compile (require 'use-package))
-  (setq use-package-always-ensure t)
-
+  (straight-use-package 'use-package)
+  (setq straight-use-package-by-default t)
   (use-package diminish)
-  (use-package general))
+  (use-package general)
+
+  ;; Below is a hack to make org-mode work nicely
+  (require 'subr-x)
+  (straight-use-package 'git)
+  (defun org-git-version ()
+    "The Git version of org-mode.
+Inserted by installing org-mode or when a release is made."
+    (require 'git)
+    (let ((git-repo (expand-file-name
+                     "straight/repos/org/" user-emacs-directory)))
+      (string-trim
+       (git-run "describe"
+                "--match=release\*"
+                "--abbrev=6"
+                "HEAD"))))
+  (defun org-release ()
+    "The release version of org-mode.
+Inserted by installing org-mode or when a release is made."
+    (require 'git)
+    (let ((git-repo (expand-file-name
+                     "straight/repos/org/" user-emacs-directory)))
+      (string-trim
+       (string-remove-prefix
+        "release_"
+        (git-run "describe"
+                 "--match=release\*"
+                 "--abbrev=0"
+                 "HEAD")))))
+  (provide 'org-version)
+  (straight-use-package 'org-plus-contrib))
 
 
-(require 'cl-lib)
-(require 'seq)
-
-(defun my-mode-next-buffer ()
-  (interactive)
-  (my--mode-buffer #'next-buffer))
-
-(defun my-mode-previous-buffer ()
-  (interactive)
-  (my--mode-buffer #'previous-buffer))
-
-(defun my--mode-buffer (buffer-change-function)
-  (let ((orig-window-next-buffers (symbol-function #'window-next-buffers))
-        (orig-window-prev-buffers (symbol-function #'window-prev-buffers))
-        (orig-buffer-list (symbol-function #'buffer-list)))
-    (cl-letf* (((symbol-function #'filter) (lambda (f)
-                                             (lambda (&rest args)
-                                               (my--mode-filter-buffers (apply f args)))))
-               ((symbol-function #'window-next-buffers) (filter orig-window-next-buffers))
-               ((symbol-function #'window-prev-buffers) (filter orig-window-prev-buffers))
-               ((symbol-function #'buffer-list) (filter orig-buffer-list)))
-      (call-interactively buffer-change-function))))
-
-(defun my--mode-filter-buffers (buffers &optional mode)
+(defun my--same-mode-buffer-list (&optional mode)
+  "List buffers of mode `mode' that are not already visible"
   (let ((mode (or mode major-mode)))
-    (seq-filter
-     (lambda (b) (and (bufferp b) (string= (buffer-local-value 'major-mode b) mode)))
-     buffers)))
+    (seq-filter (lambda (buffer) 
+                  (and (not (get-buffer-window buffer 'visible))
+                       (eq (buffer-local-value 'major-mode buffer) mode)))
+                (buffer-list))))
+
+(defun my-same-mode-next-buffer ()
+  "Select next buffer of the same type"
+  (interactive)
+  (let ((new-buffer (car (my--same-mode-buffer-list))))
+    (bury-buffer)
+    (switch-to-buffer new-buffer)))
+
+(defun my-same-mode-previous-buffer ()
+  "Select previous buffer of the same type"
+  (interactive)
+  (let ((new-buffer (car (last (my--same-mode-buffer-list)))))
+    (switch-to-buffer new-buffer)))

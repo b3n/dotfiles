@@ -16,7 +16,6 @@
 
   :config
   (push ?\M-\s  exwm-input-prefix-keys)
-  (exwm-input-set-key (kbd "<f5> R") #'exwm-reset)
 
   (require 'exwm-randr)
   (add-hook 'exwm-randr-screen-change-hook

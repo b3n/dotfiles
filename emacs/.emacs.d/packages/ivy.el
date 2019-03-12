@@ -54,3 +54,7 @@
   :after (all-the-icons ivy)
   :config
   (all-the-icons-ivy-setup))
+
+(use-package ivy-prescient
+  :config
+  (ivy-prescient-mode))
