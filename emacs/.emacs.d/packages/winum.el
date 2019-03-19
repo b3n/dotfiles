@@ -9,12 +9,5 @@
              "7" #'winum-select-window-7
              "8" #'winum-select-window-8
              "9" #'winum-select-window-9
-             "0" #'winum-select-window-0
-             "m" #'winum-select-window-1
-             "," #'winum-select-window-2
-             "." #'winum-select-window-3
-             "n" #'winum-select-window-4
-             "e" #'winum-select-window-5
-             "i" #'winum-select-window-6)
-  :custom (winum-auto-setup-mode-line nil)
+             "0" #'winum-select-window-0)
   :config (winum-mode))
