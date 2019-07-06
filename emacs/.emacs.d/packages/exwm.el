@@ -16,6 +16,7 @@
 
   :config
   (push ?\M-\s  exwm-input-prefix-keys)
+  (push ?\C-w exwm-input-prefix-keys)
 
   (require 'exwm-randr)
   (add-hook 'exwm-randr-screen-change-hook

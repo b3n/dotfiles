@@ -1,5 +1,6 @@
-(use-package all-the-icons)
+(setq dired-listing-switches "-aBhl  --group-directories-first")
 
+(use-package all-the-icons)
 
 (use-package all-the-icons-dired
   :after (all-the-icons)
