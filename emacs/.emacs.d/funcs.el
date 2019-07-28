@@ -24,21 +24,19 @@
   (setq package-archives
         '(("GNU ELPA"     . "https://elpa.gnu.org/packages/")
           ("MELPA Stable" . "https://stable.melpa.org/packages/")
-          ("MELPA"        . "https://melpa.org/packages/")
-          ("ORG"          . "https://orgmode.org/elpa/"))
+          ("MELPA"        . "https://melpa.org/packages/"))
         package-archive-priorities
-        '(("MELPA Stable" . 7)
-          ("ORG"          . 9)
-          ("GNU ELPA"     . 8)
-          ("MELPA"        . 0)))
+        '(("MELPA Stable" . 5)
+          ("GNU ELPA"     . 9)
+          ("MELPA"        . 1)))
   (package-initialize)
   (unless (package-installed-p 'use-package)
     (package-refresh-contents)
     (package-install 'use-package))
   (eval-when-compile (require 'use-package))
   (setq use-package-always-ensure t)
-  (use-package diminish)
   (use-package general))
+
 
 (defun my-same-mode-next-buffer ()
   "Select next buffer of the same type"
@@ -48,11 +46,13 @@
       (bury-buffer)
       (switch-to-buffer new-buffer))))
 
+
 (defun my-same-mode-previous-buffer ()
   "Select previous buffer of the same type"
   (interactive)
   (let ((new-buffer (car (last (my--same-mode-buffer-list)))))
     (when new-buffer (switch-to-buffer new-buffer))))
+
 
 (defun my--same-mode-buffer-list (&optional mode)
   "List buffers of mode `mode' that are not already visible"
@@ -61,6 +61,7 @@
                   (and (not (get-buffer-window buffer 'visible))
                        (eq (buffer-local-value 'major-mode buffer) mode)))
                 (buffer-list))))
+
 
 (defun my-read-file (filepath)
   "Return filePath's file content."

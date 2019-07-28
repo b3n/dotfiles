@@ -9,7 +9,7 @@
   (exwm-update-class . (lambda () (exwm-workspace-rename-buffer exwm-class-name)))
 
   :custom
-  (exwm-randr-workspace-output-plist '(1 "HDMI2"))
+  (exwm-randr-workspace-output-plist '(1 "HDMI-2"))
   (exwm-workspace-number 2)
   (exwm-workspace-show-all-buffers t)
   (exwm-layout-show-all-buffers t)
@@ -22,7 +22,7 @@
   (add-hook 'exwm-randr-screen-change-hook
             (lambda ()
               (start-process-shell-command
-               "xrandr" nil "xrandr --output DP1 --auto --output HDMI2 --auto --right-of DP1")))
+               "xrandr" nil "xrandr --output DP-1 --auto --output HDMI-2 --auto --right-of DP-1")))
   (exwm-randr-enable)
 
   (require 'exwm-config)

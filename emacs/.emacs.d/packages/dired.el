@@ -1,4 +1,4 @@
-(setq dired-listing-switches "-aBhl  --group-directories-first")
+(setq dired-listing-switches "-hal")
 
 (use-package all-the-icons)
 

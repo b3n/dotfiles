@@ -11,7 +11,7 @@
 
   :init
   (winner-mode 1)
-  (setq evil-want-integration t)
+  (setq evil-want-integration nil)
   (setq evil-want-keybinding nil)
 
   :config

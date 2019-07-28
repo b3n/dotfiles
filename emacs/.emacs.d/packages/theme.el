@@ -1,4 +1,5 @@
 (use-package leuven-theme
+  :disable
   :init
   (setq org-fontify-whole-heading-line t)
   :config

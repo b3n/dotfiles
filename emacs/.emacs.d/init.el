@@ -37,7 +37,7 @@
   "f d" #'dired-jump
   "f s" #'save-buffer
   "f y" #'my-show-buffer-file-name
-
+  "!" #'shell-command
   "<tab>" #'mode-line-other-buffer)
 
 (general-define-key :keymaps 'minibuffer-inactive-mode-map [mouse-1] nil)
@@ -62,4 +62,4 @@
 
 (add-hook 'prog-mode-hook 'flyspell-prog-mode)
 
-(setq delete-by-moving-to-trash t)
+(savehist-mode)
