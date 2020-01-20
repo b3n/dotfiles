@@ -8,8 +8,9 @@
   :diminish ivy-mode
 
   :custom
-  (ivy-use-virtual-buffers t)
   (ivy-count-format "(%d/%d) ")
+  (ivy-use-selectable-prompt t)
+  (ivy-use-virtual-buffers t)
 
   :init
   (setq ivy-re-builders-alist '((t . ivy--regex-ignore-order)))
@@ -58,3 +59,7 @@
 (use-package ivy-prescient
   :config
   (ivy-prescient-mode))
+
+(use-package avy
+  :general (my-leader-def
+             "a" #'avy-goto-char))

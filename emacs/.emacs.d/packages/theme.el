@@ -1,18 +1,14 @@
-(use-package leuven-theme
-  :disable
-  :init
-  (setq org-fontify-whole-heading-line t)
+(use-package doom-themes
   :config
-  (load-theme 'leuven t))
+  (doom-themes-visual-bell-config)
+  (doom-themes-org-config)
+  (load-theme 'doom-one t))
 
 (use-package minions
   :config (minions-mode 1))
 
-(use-package evil-anzu
-  :config (global-anzu-mode +1))
-
 (use-package doom-modeline
-  :defer 9
+  :after (minions)
   :init
   (global-set-key [mode-line mouse-4] #'my-same-mode-previous-buffer)
   (global-set-key [mode-line mouse-5] #'my-same-mode-next-buffer)

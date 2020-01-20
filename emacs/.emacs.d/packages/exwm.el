@@ -2,8 +2,19 @@
   :if (eq window-system 'x)
 
   :init
+  (menu-bar-mode -1)
+  (tool-bar-mode -1)
+  (scroll-bar-mode -1)
+
+  (fringe-mode 1)
+
   (setq mouse-autoselect-window t
         focus-follows-mouse t)
+
+  (setq display-time-default-load-average nil
+        display-time-day-and-date t
+        display-time-24hr-format t)
+  (display-time-mode t)
 
   :hook
   (exwm-update-class . (lambda () (exwm-workspace-rename-buffer exwm-class-name)))
@@ -15,6 +26,9 @@
   (exwm-layout-show-all-buffers t)
 
   :config
+  (setq mouse-autoselect-window t
+        focus-follows-mouse t)
+
   (push ?\M-\s  exwm-input-prefix-keys)
   (push ?\C-w exwm-input-prefix-keys)
 
@@ -28,13 +42,7 @@
   (require 'exwm-config)
   (exwm-config-misc)
   
-  (exwm-enable)
-
-  (menu-bar-mode -1)
-  (setq display-time-default-load-average nil
-        display-time-day-and-date t
-        display-time-24hr-format t)
-  (display-time-mode t))
+  (exwm-enable))
 
 
 (use-package exwm-edit

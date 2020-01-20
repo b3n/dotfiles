@@ -24,11 +24,11 @@
   (setq package-archives
         '(("GNU ELPA"     . "https://elpa.gnu.org/packages/")
           ("MELPA Stable" . "https://stable.melpa.org/packages/")
-          ("MELPA"        . "https://melpa.org/packages/"))
+          ("MELPA"        . "https://melpa.org/packages/")
+          ("ORG"          . "https://orgmode.org/elpa/"))
         package-archive-priorities
-        '(("MELPA Stable" . 5)
-          ("GNU ELPA"     . 9)
-          ("MELPA"        . 1)))
+        '(("MELPA Stable" . 1)
+          ("GNU ELPA"     . 9)))
   (package-initialize)
   (unless (package-installed-p 'use-package)
     (package-refresh-contents)

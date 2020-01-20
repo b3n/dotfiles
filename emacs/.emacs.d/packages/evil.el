@@ -11,17 +11,20 @@
 
   :init
   (winner-mode 1)
-  (setq evil-want-integration nil)
+  (setq evil-want-integration t)
   (setq evil-want-keybinding nil)
 
   :config
-  ;;(define-key key-translation-map (kbd "ESC") (kbd "C-g"))
   (my-leader-map "w" "C-w")
   (general-define-key :keymaps 'evil-window-map
                       "u" #'winner-undo
                       "C-r" #'winner-redo)
-  (my-leader-def "q c" (general-simulate-key ('evil-ex "%s///gn <S-left> <left> <left>")))
-  (evil-mode))
+  (evil-mode 1))
+
+
+(use-package evil-collection
+  :after evil
+  :config (evil-collection-init))
 
 
 (use-package evil-surround
@@ -31,39 +34,11 @@
   (global-evil-surround-mode 1))
 
 
-;; https://github.com/janpath/evil-numbers
-(use-package evil-numbers
-  :after (evil)
-  :general (:states 'normal
-                    "C-a" #'evil-numbers/inc-at-pt
-                    "C-S-a" #'evil-numbers/dec-at-pt
-                    "g C-a" #'evil-numbers/inc-at-pt-incremental
-                    "g C-S-a" #'evil-numbers/dec-at-pt-incremental))
-
-
-(use-package evil-visualstar
-  :after (evil)
-
-  :config
-  (setq evil-visualstar/persistent t)
-  (global-evil-visualstar-mode))
-
-
 (use-package evil-exchange
   :after (evil)
 
   :config
   (evil-exchange-install))
-
-
-(use-package evil-collection
-  :after (evil)
-
-  :init
-  (setq evil-want-keybinding nil)
-
-  :config
-  (evil-collection-init))
 
 
 (use-package evil-org
@@ -77,3 +52,8 @@
 
 (use-package evil-magit
   :after (evil magit))
+
+
+(use-package evil-anzu
+  :after (evil)
+  :config (global-anzu-mode +1))
