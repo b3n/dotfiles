@@ -4,6 +4,7 @@
 
 (defun password-gen ()
   (interactive)
+  (unless (boundp 'password-gen-password) (setq password-gen-password (read-passwd "Master: ")))
   (let ((prev-state evil-state))
     (when (bound-and-true-p evil-mode) (evil-append 1))
     (execute-kbd-macro

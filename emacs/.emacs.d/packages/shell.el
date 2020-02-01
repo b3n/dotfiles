@@ -4,6 +4,8 @@
   "s" '((lambda () (interactive) (eshell 'N)) :which-key "Eshell"))
 
 (setq inhibit-read-only t)
+(setq eshell-hist-ignoredups t)
+(setq eshell-history-size 9999)
 
 (use-package fish-completion
   :config
@@ -14,3 +16,9 @@
 
 (use-package esh-autosuggest
   :hook (eshell-mode . esh-autosuggest-mode))
+
+(defun eshell/in-term (prog &rest args)
+  "Run shell command in term buffer."
+  (switch-to-buffer (apply #'make-term prog prog nil args))
+  (term-mode)
+  (term-char-mode))

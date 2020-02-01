@@ -2,8 +2,9 @@
   :general (my-leader-def
              "DEL" #'ivy-resume
              "b" #'ivy-switch-buffer
-             "v" #'ivy-push-view
-             "V" #'ivy-pop-view)
+             "v v" #'ivy-switch-view
+             "v p" #'ivy-push-view
+             "v k" #'ivy-pop-view)
 
   :diminish ivy-mode
 

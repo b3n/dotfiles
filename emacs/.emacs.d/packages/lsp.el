@@ -1,9 +1,11 @@
 (use-package lsp-mode
+  :disabled
   :config
   (general-define-key :states 'normal "gd" #'xref-find-definitions))
 
 
 (use-package lsp-ui
+  :disabled
   :hook (lsp-mode . lsp-ui-mode)
 
   :custom
@@ -17,13 +19,16 @@
 
 
 (use-package lsp-python
+  :disabled
   :hook (python-mode . lsp-python-enable))
 
 
 (use-package lsp-java
+  :disabled
   :hook (java-mode . lsp-java-enable))
 
 (use-package dap-mode
+  :disabled
   :after (lsp-java)
   :config
   (dap-mode t)

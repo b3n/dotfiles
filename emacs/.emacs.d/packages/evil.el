@@ -18,7 +18,8 @@
   (my-leader-map "w" "C-w")
   (general-define-key :keymaps 'evil-window-map
                       "u" #'winner-undo
-                      "C-r" #'winner-redo)
+                      "C-r" #'winner-redo
+                      "d" #'evil-delete-buffer)
   (evil-mode 1))
 
 
