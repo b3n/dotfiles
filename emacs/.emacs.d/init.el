@@ -4,9 +4,18 @@
 (setq enable-local-variables nil
       network-security-level 'paranoid)
 
-(setq custom-file (make-temp-file "emacs-custom")
-      create-lockfiles nil
-      make-backup-files nil)
+;;; Avoid littering filesystem
+(auto-save-visited-mode)
+(setq
+ custom-file (make-temp-file "emacs-custom")
+ create-lockfiles nil
+ backup-by-copying t
+ backup-directory-alist '((".*" . "~/.emacs.d/saves/"))
+ version-control t
+ delete-old-versions t)
+
+(setq initial-major-mode 'fundamental-mode)
+(setq initial-scratch-message "")
 
 (setq-default tab-width 4
               indent-tabs-mode nil)
@@ -32,15 +41,14 @@
 (my-leader-map "h" "C-h")
 
 (my-leader-def
-  "B" #'ibuffer-list-buffers
   "f" '(:ignore t :which-key "File")
-  "f d" #'dired-jump
-  "f s" #'save-buffer
   "f y" #'my-show-buffer-file-name
   "!" #'shell-command
   "<tab>" #'mode-line-other-buffer)
 
 (general-define-key :keymaps 'minibuffer-inactive-mode-map [mouse-1] nil)
+
+(fset 'yes-or-no-p 'y-or-n-p)
 
 (mapc 'load (file-expand-wildcards "~/.emacs.d/packages/*.el"))
 

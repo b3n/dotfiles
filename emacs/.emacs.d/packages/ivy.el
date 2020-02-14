@@ -38,6 +38,9 @@
   :init
   (setq recentf-max-saved-items 999)
   (recentf-mode 1)
+
+  :custom
+  (counsel-root-command "doas")
   
   :general (my-leader-def
              "g f" #'counsel-git
@@ -58,6 +61,8 @@
   (all-the-icons-ivy-setup))
 
 (use-package ivy-prescient
+  :custom
+  (prescient-persist-mode t)
   :config
   (ivy-prescient-mode))
 

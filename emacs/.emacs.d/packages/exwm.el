@@ -2,9 +2,9 @@
   :if (eq window-system 'x)
 
   :init
-  (menu-bar-mode -1)
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
+  (setq frame-inhibit-implied-resize t)
 
   (fringe-mode 1)
 
@@ -26,6 +26,8 @@
   (exwm-layout-show-all-buffers t)
 
   :config
+  (menu-bar-mode -1)
+
   (setq mouse-autoselect-window t
         focus-follows-mouse t)
 

@@ -1,17 +1,39 @@
 (use-package org
   :ensure org-plus-contrib
 
+  :init
+  (setq org-src-lang-modes nil) ; For some reason org-mode fails to load without this being initiated.
+
   :general (my-leader-def
              "o" '(:ignore t :which-key "Org")
              "o a" #'org-agenda
-             "o c" #'org-capture)
-
-  :init
-  (setq org-src-lang-modes nil) ; For some reason org-mode fails to load without this being initiated.
+             "o c" #'org-capture
+             "o l n" #'org-next-link
+             "o l N" #'org-previous-link
+             "o l o" #'org-open-at-point-global
+             "o l l" '((lambda () (interactive) (org-insert-link '(4))) :which-key "Insert file link")
+             "o l d" '((lambda ()
+                         (interactive)
+                         (org-insert-link nil
+                                          (format-time-string
+                                           "file:%Y-%m-%d.org"
+                                           (org-read-date "" 'totime nil nil (current-time) ""))))
+                       :which-key "Insert date file link")
+             "o l f" '((lambda ()
+                         (interactive)
+                         (counsel-rg (concat "\\[\\[file:" (regexp-quote (file-name-nondirectory buffer-file-name)))))
+                       :which-key "Find links to this file"))
 
   :custom
   (org-startup-indented t)
   (org-log-done 'time)
+  (org-return-follows-link t)
+  (org-link-frame-setup '((file . find-file)))
+  (org-link-make-description-function
+   (lambda (link desc)
+     (if (string-equal (substring link 0 5) "file:")
+         (file-name-base (substring link 5))
+       desc)))
 
   :config
   (setq initial-major-mode 'org-mode)

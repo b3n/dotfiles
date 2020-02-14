@@ -15,6 +15,7 @@
   (setq evil-want-keybinding nil)
 
   :config
+  (define-key evil-motion-state-map (kbd "RET") nil)
   (my-leader-map "w" "C-w")
   (general-define-key :keymaps 'evil-window-map
                       "u" #'winner-undo

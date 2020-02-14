@@ -22,3 +22,7 @@
   (switch-to-buffer (apply #'make-term prog prog nil args))
   (term-mode)
   (term-char-mode))
+
+(use-package exec-path-from-shell
+  :commands (exec-path-from-shell-initialize))
+
