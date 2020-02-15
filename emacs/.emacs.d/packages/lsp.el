@@ -1,11 +1,20 @@
 (use-package lsp-mode
-  :disabled
+  :init
+  (setq gc-cons-threshold 100000000)
+  (setq read-process-output-max (* 1024 1024))
+
+  :hook
+  (ruby-hook . lsp) ;; gem install solargraph
+
   :config
-  (general-define-key :states 'normal "gd" #'xref-find-definitions))
+  (general-define-key :states 'normal "gd" #'xref-find-definitions)
+
+  :commands lsp)
 
 
 (use-package lsp-ui
   :disabled
+
   :hook (lsp-mode . lsp-ui-mode)
 
   :custom
@@ -18,19 +27,8 @@
   (lsp-ui-sideline-update-mode 'point))
 
 
-(use-package lsp-python
-  :disabled
-  :hook (python-mode . lsp-python-enable))
-
-
-(use-package lsp-java
-  :disabled
-  :hook (java-mode . lsp-java-enable))
-
 (use-package dap-mode
   :disabled
-  :after (lsp-java)
   :config
   (dap-mode t)
-  (dap-ui-mode t)
-  (require 'dap-java))
+  (dap-ui-mode t))

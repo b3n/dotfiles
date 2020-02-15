@@ -1,6 +1,5 @@
 (use-package flycheck
-  :hook ((emacs-lisp-mode . flycheck-mode)
-	 (python-mode . flycheck-mode))
+  :hook (prog-mode-hook . flycheck-mode)
   :custom
   (flycheck-flake8-maximum-line-length 100)
   :init
