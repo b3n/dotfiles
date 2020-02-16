@@ -2,7 +2,8 @@
   :ensure org-plus-contrib
 
   :init
-  (setq org-src-lang-modes nil) ; For some reason org-mode fails to load without this being initiated.
+  (setq org-src-lang-modes nil) ;; For some reason org-mode fails to load without this being initiated.
+  (setq x-selection-timeout 10) ;; https://omecha.info/blog/org-capture-freezes-emacs.html
 
   :general (my-leader-def
              "o" '(:ignore t :which-key "Org")
@@ -16,7 +17,7 @@
                          (interactive)
                          (org-insert-link nil
                                           (format-time-string
-                                           "file:%Y-%m-%d.org"
+                                           "file:%F.org"
                                            (org-read-date "" 'totime nil nil (current-time) ""))))
                        :which-key "Insert date file link")
              "o l f" '((lambda ()
@@ -35,60 +36,28 @@
          (file-name-base (substring link 5))
        desc)))
 
+  :hook (org-mode visual-line-mode)
+
   :config
   (setq initial-major-mode 'org-mode)
 
-  (add-hook 'org-mode-hook '(lambda () (visual-line-mode 1)))
-  (setq org-capture-templates '(("t" "Todo [inbox]" entry
-                                 (file+headline "~/gtd/gtd.org" "Inbox")
-                                 "* %i%?")
-                                ("T" "Tickler" entry
-                                 (file+headline "~/gtd/gtd.org" "Tickler")
-                                 "* %i%? \n %^t")))
-  (setq org-agenda-hide-tags-regexp "projects")
-  (setq org-agenda-prefix-format '((agenda . "%?-12t% s")
-                                   (timeline . "  % s")
-                                   (todo . "%i %-12:c")
-                                   (tags . "%-40>(car (last (org-get-outline-path)))")
-                                   (search . "%i %-12:c")))
+  (defun my-todo-scheduled-string ()
+    (format-time-string (concat "%F" (when org-time-was-given " %T")) my-last-todo-date))
+  (setq org-capture-templates
+        `(("t" "Todo" entry
+           (file+headline
+            ,(lambda ()
+               (setq my-last-todo-date (org-read-date nil t))
+               (format-time-string "~/zettelkasten/%F.org" my-last-todo-date))
+            "Agenda")
+           "* TODO %?\nSCHEDULED: <%(my-todo-scheduled-string)>\n")
+          ("j" "Journal" entry
+           (file+headline ,(lambda ()
+                             (format-time-string "~/zettelkasten/%Y-%m-%d.org"))
+                          "Journal")
+           "* %<%H:%M>\n%?\n")))
 
-  (setq org-agenda-custom-commands
-        '(("g" "Getting things done" tags-todo "projects"
-           ((org-agenda-files '("~/gtd/gtd.org"))
-            (org-agenda-overriding-header "Projects")
-            (org-agenda-skip-function 'my-org-agenda-skip-all-siblings-but-first)
-            (org-agenda-cmp-user-defined 'my-org-todo-state-sort)
-            (org-agenda-sorting-strategy '(priority-down user-defined-up))))))
-
-  (defun my-org-todo-state-sort (a b)
-    "Order by IN-PROGRESS first, then TODO."
-    (let* ((state-a (or (get-text-property 1 'todo-state a) ""))
-           (state-b (or (get-text-property 1 'todo-state b) "")))
-      (or
-       (if (string= state-b "IN-PROGRESS") 1)
-       (if (string= state-a "IN-PROGRESS") -1)
-       (if (string= state-b "TODO") 1)
-       (if (string= state-a "TODO") -1))))
-
-  (defun my-org-agenda-skip-all-siblings-but-first ()
-    "Skip all but the first non-done entry."
-    (let (should-skip-entry)
-      (unless (org-current-is-todo)
-        (setq should-skip-entry t))
-      (save-excursion
-        (while (and (not should-skip-entry) (org-goto-sibling t))
-          (when (org-current-is-todo)
-            (setq should-skip-entry t))))
-      (when should-skip-entry
-        (or (outline-next-heading)
-            (goto-char (point-max))))))
-
-  (defun org-current-is-todo ()
-    (or (string= "TODO" (org-get-todo-state))
-        (string= "IN-PROGRESS" (org-get-todo-state))
-        (string= "BLOCKED" (org-get-todo-state))))
-
-  (setq org-agenda-files '("~/gtd/gtd.org" "~/gtd/contacts.org"))
+  (setq org-agenda-files '("~/zettelkasten/"))
 
   (setq org-todo-keywords '((sequence "TODO" "IN-PROGRESS" "BLOCKED" "|" "DONE" "CANCELLED")
                             (sequence "TO-READ" "CURRENTLY-READING" "|" "READ"))))

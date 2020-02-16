@@ -14,6 +14,8 @@
   (setq evil-want-integration t)
   (setq evil-want-keybinding nil)
 
+  :hook (org-capture-mode . evil-insert-state)
+
   :config
   (define-key evil-motion-state-map (kbd "RET") nil)
   (my-leader-map "w" "C-w")

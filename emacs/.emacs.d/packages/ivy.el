@@ -1,6 +1,6 @@
 (use-package ivy
   :general (my-leader-def
-             "DEL" #'ivy-resume
+             "i" #'ivy-resume
              "b" #'ivy-switch-buffer
              "v v" #'ivy-switch-view
              "v p" #'ivy-push-view
@@ -22,8 +22,6 @@
 
   (defun setup-eshell-ivy-completion ()
     (define-key eshell-mode-map [remap eshell-pcomplete] 'completion-at-point)
-    ;; only if you want to use the minibuffer for completions instead of the
-    ;; in-buffer interface
     (setq-local ivy-display-functions-alist
                 (remq (assoc 'ivy-completion-in-region ivy-display-functions-alist)
                       ivy-display-functions-alist)))
@@ -40,7 +38,7 @@
   (recentf-mode 1)
 
   :custom
-  (counsel-root-command "doas")
+  (counsel-root-command "doas")  ;; OpenBSD
   
   :general (my-leader-def
              "g f" #'counsel-git
@@ -67,5 +65,5 @@
   (ivy-prescient-mode))
 
 (use-package avy
-  :general (my-leader-def
-             "a" #'avy-goto-char))
+  :custom (avy-keys '(?a ?r ?s ?t ?n ?e ?i ?o))
+  :general (my-leader-def "a" #'avy-goto-char-timer))

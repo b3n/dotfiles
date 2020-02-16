@@ -5,4 +5,4 @@
   :general (my-leader-def
              "g" '(:ignore t :which-key "Git")
              "g s" #'magit-status
-             "g b" #'magit-blame))
+             "g b" #'magit-blame-addition))
