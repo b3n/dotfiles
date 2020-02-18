@@ -1,4 +1,9 @@
 (use-package evil
+  :init
+  (winner-mode 1)
+  (setq evil-want-integration t)
+  (setq evil-want-keybinding nil)
+
   :custom
   (evil-ex-complete-emacs-commands nil)
   (evil-search-module 'evil-search)
@@ -9,16 +14,9 @@
   (evil-want-C-u-scroll t)
   (evil-want-Y-yank-to-eol t)
 
-  :init
-  (winner-mode 1)
-  (setq evil-want-integration t)
-  (setq evil-want-keybinding nil)
-
-  :hook (org-capture-mode . evil-insert-state)
-
   :config
   (define-key evil-motion-state-map (kbd "RET") nil)
-  (my-leader-map "w" "C-w")
+  ;; (my-leader-map "w" "C-w")
   (general-define-key :keymaps 'evil-window-map
                       "u" #'winner-undo
                       "C-r" #'winner-redo

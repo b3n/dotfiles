@@ -36,10 +36,8 @@
          (file-name-base (substring link 5))
        desc)))
 
-  :hook (org-mode visual-line-mode)
-
   :config
-  (setq initial-major-mode 'org-mode)
+  (add-hook 'org-mode-hook '(lambda () (visual-line-mode 1)))
 
   (defun my-todo-scheduled-string ()
     (format-time-string (concat "%F" (when org-time-was-given " %T")) my-last-todo-date))

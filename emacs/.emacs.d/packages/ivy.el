@@ -6,16 +6,10 @@
              "v p" #'ivy-push-view
              "v k" #'ivy-pop-view)
 
-  :diminish ivy-mode
-
   :custom
   (ivy-count-format "(%d/%d) ")
   (ivy-use-selectable-prompt t)
   (ivy-use-virtual-buffers t)
-
-  :init
-  (setq ivy-re-builders-alist '((t . ivy--regex-ignore-order)))
-  (setq ivy-initial-inputs-alist nil)
 
   :config
   (ivy-mode 1)
@@ -49,14 +43,13 @@
              "u" #'counsel-unicode-char
              my-prefix #'counsel-M-x
              (concat "M-" my-prefix) #'counsel-M-x)
-  :diminish counsel-mode
   :config
   (counsel-mode))
 
 (use-package all-the-icons-ivy
   :after (all-the-icons ivy)
-  :config
-  (all-the-icons-ivy-setup))
+  :custom (all-the-icons-ivy-buffer-commands '(ivy-switch-buffer counsel-find-file))
+  :config (all-the-icons-ivy-setup))
 
 (use-package ivy-prescient
   :custom
@@ -65,5 +58,10 @@
   (ivy-prescient-mode))
 
 (use-package avy
-  :custom (avy-keys '(?a ?r ?s ?t ?n ?e ?i ?o))
-  :general (my-leader-def "a" #'avy-goto-char-timer))
+  :custom
+  (avy-keys '(?a ?r ?s ?t ?n ?e ?i ?o))
+  (avy-timeout-seconds 0.2)
+
+  :config
+  (general-define-key :states 'normal "s" #'avy-goto-char-timer)
+  (general-define-key :states 'normal "S" #'avy-pop-mark))

@@ -31,7 +31,7 @@
   (setq mouse-autoselect-window t
         focus-follows-mouse t)
 
-  (push ?\M-\s  exwm-input-prefix-keys)
+  (push ?\M-\s exwm-input-prefix-keys)
   (push ?\C-w exwm-input-prefix-keys)
 
   (require 'exwm-randr)
