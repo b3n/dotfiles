@@ -4,12 +4,10 @@
   (setq read-process-output-max (* 1024 1024))
 
   :hook
-  (ruby-hook . lsp) ;; gem install solargraph
+  (ruby-mode . lsp) ;; gem install solargraph
 
   :config
-  (general-define-key :states 'normal "gd" #'xref-find-definitions)
-
-  :commands lsp)
+  (general-define-key :states 'normal "gd" #'xref-find-definitions))
 
 
 (use-package lsp-ui

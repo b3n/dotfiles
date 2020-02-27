@@ -9,8 +9,8 @@
   :config (minions-mode 1))
 
 (use-package doom-modeline
-  :after (minions)
   :init
+  (column-number-mode)
   (global-set-key [mode-line mouse-4] #'my-same-mode-previous-buffer)
   (global-set-key [mode-line mouse-5] #'my-same-mode-next-buffer)
   :hook

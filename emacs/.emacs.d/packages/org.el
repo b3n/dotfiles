@@ -12,7 +12,6 @@
              "o l n" #'org-next-link
              "o l N" #'org-previous-link
              "o l o" #'org-open-at-point-global
-             "o l l" '((lambda () (interactive) (org-insert-link '(4))) :which-key "Insert file link")
              "o l d" '((lambda ()
                          (interactive)
                          (org-insert-link nil
@@ -26,6 +25,7 @@
                        :which-key "Find links to this file"))
 
   :custom
+  (org-enforce-todo-dependencies t)
   (org-startup-indented t)
   (org-log-done 'time)
   (org-return-follows-link t)
@@ -38,24 +38,23 @@
 
   :config
   (add-hook 'org-mode-hook '(lambda () (visual-line-mode 1)))
+  (add-hook 'org-capture-mode-hook 'evil-insert-state)
 
   (defun my-todo-scheduled-string ()
     (format-time-string (concat "%F" (when org-time-was-given " %T")) my-last-todo-date))
   (setq org-capture-templates
-        `(("t" "Todo" entry
+        `(("i" "Todo inbox" entry (file+headline "~/todo.org" "Inbox") "* %?")
+          ("t" "Todo" entry
            (file+headline
             ,(lambda ()
                (setq my-last-todo-date (org-read-date nil t))
-               (format-time-string "~/zettelkasten/%F.org" my-last-todo-date))
+               (format-time-string "~/wiki/%F.org" my-last-todo-date))
             "Agenda")
            "* TODO %?\nSCHEDULED: <%(my-todo-scheduled-string)>\n")
           ("j" "Journal" entry
-           (file+headline ,(lambda ()
-                             (format-time-string "~/zettelkasten/%Y-%m-%d.org"))
-                          "Journal")
+           (file ,(lambda () (format-time-string "~/journal/%Y-%m-%d.org")))
            "* %<%H:%M>\n%?\n")))
 
-  (setq org-agenda-files '("~/zettelkasten/"))
+  (setq org-agenda-files '("~/todo.org" "~/wiki/"))
 
-  (setq org-todo-keywords '((sequence "TODO" "IN-PROGRESS" "BLOCKED" "|" "DONE" "CANCELLED")
-                            (sequence "TO-READ" "CURRENTLY-READING" "|" "READ"))))
+  (setq org-todo-keywords '((sequence "TODO" "IN-PROGRESS" "BLOCKED" "|" "DONE" "CANCELLED"))))

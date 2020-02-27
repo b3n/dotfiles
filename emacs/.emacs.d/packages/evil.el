@@ -5,13 +5,8 @@
   (setq evil-want-keybinding nil)
 
   :custom
-  (evil-ex-complete-emacs-commands nil)
-  (evil-search-module 'evil-search)
   (evil-shift-round nil)
-  (evil-split-window-below t)
   (evil-symbol-word-search t)
-  (evil-vsplit-window-right t)
-  (evil-want-C-u-scroll t)
   (evil-want-Y-yank-to-eol t)
 
   :config

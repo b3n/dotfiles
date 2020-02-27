@@ -14,6 +14,7 @@
  version-control t
  delete-old-versions t)
 
+(setq inhibit-startup-screen t)
 (setq initial-major-mode 'fundamental-mode)
 (setq initial-scratch-message "")
 
@@ -36,15 +37,11 @@
   (define-key key-translation-map (kbd (concat my-prefix " " key)) (kbd map))
   (define-key key-translation-map (kbd (concat "M-" my-prefix " " key)) (kbd map)))
 
-(my-leader-map "c" "C-c")
-(my-leader-map "x" "C-x")
-(my-leader-map "h" "C-h")
-
 (my-leader-def
   "f" '(:ignore t :which-key "File")
   "f y" #'my-show-buffer-file-name
   "!" #'shell-command
-  "<tab>" #'mode-line-other-buffer)
+  )
 
 (general-define-key :keymaps 'minibuffer-inactive-mode-map [mouse-1] nil)
 

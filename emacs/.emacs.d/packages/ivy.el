@@ -14,6 +14,8 @@
   :config
   (ivy-mode 1)
 
+  (general-define-key :map ivy-minibuffer-map "s-<return>" #'ivy-done)
+
   (defun setup-eshell-ivy-completion ()
     (define-key eshell-mode-map [remap eshell-pcomplete] 'completion-at-point)
     (setq-local ivy-display-functions-alist
@@ -60,8 +62,8 @@
 (use-package avy
   :custom
   (avy-keys '(?a ?r ?s ?t ?n ?e ?i ?o))
-  (avy-timeout-seconds 0.2)
 
   :config
-  (general-define-key :states 'normal "s" #'avy-goto-char-timer)
+  (general-define-key :states 'normal "s" #'avy-goto-char)
   (general-define-key :states 'normal "S" #'avy-pop-mark))
+
