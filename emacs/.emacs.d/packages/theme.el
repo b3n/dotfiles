@@ -1,9 +1,17 @@
 (use-package doom-themes
+  :disable
   :config
   (doom-themes-visual-bell-config)
   (doom-themes-org-config)
   (load-theme 'doom-one-light t t)
   (load-theme 'doom-one t))
+
+(use-package modus-operandi-theme ;; Light
+  :ensure t)
+
+(use-package modus-vivendi-theme ;; Dark
+  :config
+  (load-theme 'modus-vivendi t))
 
 (use-package minions
   :config (minions-mode 1))

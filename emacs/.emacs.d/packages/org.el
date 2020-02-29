@@ -37,6 +37,8 @@
        desc)))
 
   :config
+  (require 'org-habit)
+
   (add-hook 'org-mode-hook '(lambda () (visual-line-mode 1)))
   (add-hook 'org-capture-mode-hook 'evil-insert-state)
 

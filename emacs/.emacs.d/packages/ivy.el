@@ -61,7 +61,7 @@
 
 (use-package avy
   :custom
-  (avy-keys '(?a ?r ?s ?t ?n ?e ?i ?o))
+  (avy-keys '(?n ?t ?e ?s ?i ?r ?o ?a))
 
   :config
   (general-define-key :states 'normal "s" #'avy-goto-char)
