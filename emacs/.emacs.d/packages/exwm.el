@@ -24,17 +24,10 @@
   (exwm-workspace-show-all-buffers t)
   (exwm-layout-show-all-buffers t)
   (exwm-input-global-keys '(
-    ([?\s-m] . winum-select-window-1)
-    ([?\s-,] . winum-select-window-2)
-    ([?\s-.] . winum-select-window-3)
-    ([?\s-n] . winum-select-window-4)
-    ([?\s-e] . winum-select-window-5)
-    ([?\s-i] . winum-select-window-6)
-    ([?\s-l] . winum-select-window-7)
-    ([?\s-u] . winum-select-window-8)
-    ([?\s-y] . winum-select-window-9)
+    ([?\s-w] . ace-window)
     ([?\s-p] . counsel-linux-app)
     ([?\s-b] . ivy-switch-buffer)
+    ([?\s-f] . counsel-find-file)
   ))
 
   :config

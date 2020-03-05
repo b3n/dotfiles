@@ -1,16 +1,29 @@
 (use-package doom-themes
-  :disable
+  :disabled
   :config
   (doom-themes-visual-bell-config)
   (doom-themes-org-config)
-  (load-theme 'doom-one-light t t)
+  (load-theme 'doom-one-light t)
   (load-theme 'doom-one t))
 
 (use-package modus-operandi-theme ;; Light
-  :ensure t)
+  :custom
+  (modus-operandi-theme-slanted-constructs t)
+  (modus-operandi-theme-bold-constructs t)
+  (modus-operandi-theme-scale-headings t))
 
 (use-package modus-vivendi-theme ;; Dark
+  :custom
+  (modus-vivendi-theme-slanted-constructs t)
+  (modus-vivendi-theme-bold-constructs t)
+  (modus-vivendi-theme-scale-headings t)
+
   :config
+  (custom-theme-set-faces
+   'modus-vivendi
+   '(flyspell-duplicate ((t (:foreground "#ffffff" :inherit unspecified))))
+   '(flyspell-incorrect ((t (:foreground "#ffffff" :inherit unspecified)))))
+
   (load-theme 'modus-vivendi t))
 
 (use-package minions

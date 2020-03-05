@@ -25,7 +25,7 @@
 
 (my-use-package-initialize)
 
-(setq my-prefix "SPC")
+(setq my-prefix "<f5>")
 
 (general-create-definer my-leader-def
   :states '(normal visual insert emacs)
@@ -68,3 +68,6 @@
 (add-hook 'prog-mode-hook 'flyspell-prog-mode)
 
 (savehist-mode)
+
+(setq display-buffer-alist
+      '(("\\*shell" (display-buffer-reuse-window display-buffer-same-window))))
