@@ -5,15 +5,7 @@
   (tool-bar-mode -1)
   (scroll-bar-mode -1)
   (setq frame-inhibit-implied-resize t)
-
   (fringe-mode 1)
-
-  (setq
-    display-time-default-load-average nil
-    display-time-day-and-date t
-    display-time-24hr-format t
-  )
-  (display-time-mode t)
 
   :hook
   (exwm-update-class . (lambda () (exwm-workspace-rename-buffer exwm-class-name)))
@@ -24,7 +16,6 @@
   (exwm-workspace-show-all-buffers t)
   (exwm-layout-show-all-buffers t)
   (exwm-input-global-keys '(
-    ([?\s-w] . ace-window)
     ([?\s-p] . counsel-linux-app)
     ([?\s-b] . ivy-switch-buffer)
     ([?\s-f] . counsel-find-file)

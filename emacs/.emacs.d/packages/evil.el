@@ -8,13 +8,14 @@
   (evil-shift-round nil)
   (evil-symbol-word-search t)
   (evil-want-Y-yank-to-eol t)
+  (evil-want-C-w-delete nil)
 
   :config
   (define-key evil-motion-state-map (kbd "RET") nil)
-  ;; (my-leader-map "w" "C-w")
   (general-define-key :keymaps 'evil-window-map
                       "u" #'winner-undo
                       "C-r" #'winner-redo
+                      "f" #'other-frame
                       "d" #'evil-delete-buffer)
   (evil-mode 1))
 
@@ -29,13 +30,6 @@
 
   :config
   (global-evil-surround-mode 1))
-
-
-(use-package evil-exchange
-  :after (evil)
-
-  :config
-  (evil-exchange-install))
 
 
 (use-package evil-org

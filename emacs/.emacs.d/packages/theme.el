@@ -1,11 +1,3 @@
-(use-package doom-themes
-  :disabled
-  :config
-  (doom-themes-visual-bell-config)
-  (doom-themes-org-config)
-  (load-theme 'doom-one-light t)
-  (load-theme 'doom-one t))
-
 (use-package modus-operandi-theme ;; Light
   :custom
   (modus-operandi-theme-slanted-constructs t)
@@ -19,11 +11,6 @@
   (modus-vivendi-theme-scale-headings t)
 
   :config
-  (custom-theme-set-faces
-   'modus-vivendi
-   '(flyspell-duplicate ((t (:foreground "#ffffff" :inherit unspecified))))
-   '(flyspell-incorrect ((t (:foreground "#ffffff" :inherit unspecified)))))
-
   (load-theme 'modus-vivendi t))
 
 (use-package minions
@@ -31,10 +18,18 @@
 
 (use-package doom-modeline
   :init
+  (setq
+    display-time-default-load-average nil
+    display-time-day-and-date t
+    display-time-24hr-format t
+  )
+  (display-time-mode t)
   (column-number-mode)
   (global-set-key [mode-line mouse-4] #'my-same-mode-previous-buffer)
   (global-set-key [mode-line mouse-5] #'my-same-mode-next-buffer)
-  :hook
-  (after-init . doom-modeline-mode)
+
+  :custom
+  (doom-modeline-minor-modes t)
+
   :config
-  (setq doom-modeline-minor-modes t))
+  (doom-modeline-mode 1))
