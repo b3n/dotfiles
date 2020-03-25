@@ -1,5 +1,5 @@
 (use-package dired
-  :ensure f
+  :straight f
   :hook ((dired-mode . dired-hide-details-mode)
          (dired-mode . hl-line-mode))
   :custom
@@ -7,12 +7,12 @@
   (dired-dwim-target t))
 
 (use-package image-dired
-  :ensure f
+  :straight f
   :custom
   (image-dired-thumb-size 500))
 
 (use-package dired-x
-  :ensure f
+  :straight f
   :general (my-leader-def
              "f d" #'dired-jump))
 
@@ -25,7 +25,7 @@
 (use-package async)
 
 (use-package dired-async
-  :ensure f
+  :straight f
   :after (dired async)
   :hook (dired-mode . dired-async-mode))
 

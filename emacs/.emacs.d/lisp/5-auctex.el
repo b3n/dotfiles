@@ -1,6 +1,6 @@
 (use-package auctex
   :defer t
-  :ensure auctex
+  :straight auctex
 
   :custom
   (latex-run-command "pdflatex")

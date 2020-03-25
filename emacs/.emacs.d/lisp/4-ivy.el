@@ -1,10 +1,8 @@
 (use-package ivy
-  :general (my-leader-def
-             "i" #'ivy-resume
-             "b" #'ivy-switch-buffer
-             "v v" #'ivy-switch-view
-             "v p" #'ivy-push-view
-             "v k" #'ivy-pop-view)
+  :bind (("C-c C-r" . ivy-resume)
+         ("C-c b" . ivy-switch-buffer)
+         ("C-c v" . ivy-push-view)
+         ("C-c V" . ivy-pop-view))
 
   :custom
   (ivy-count-format "(%d/%d) ")
@@ -30,8 +28,13 @@
 
 (use-package counsel
   :init
-  (setq recentf-max-saved-items 999)
-  (recentf-mode 1)
+  ;;(setq recentf-max-saved-items 999)
+  ;;(recentf-mode 1)
+
+  :bind (
+         ("C-c k" . counsel-rg)
+         ("C-c p" . counsel-linux-app)
+         ("C-x f" . counsel-find-file))
 
   :custom
   (counsel-root-command "doas")  ;; OpenBSD
@@ -39,12 +42,8 @@
   :general (my-leader-def
              "g f" #'counsel-git
              "g /" #'counsel-git-grep
-             "f f" #'counsel-find-file
-             "f r" #'counsel-recentf
-             "p" #'counsel-linux-app
              "u" #'counsel-unicode-char
-             my-prefix #'counsel-M-x
-             (concat "M-" my-prefix) #'counsel-M-x)
+             )
   :config
   (counsel-mode))
 
@@ -64,6 +63,8 @@
   (avy-keys '(?n ?t ?e ?s ?i ?r ?o ?a))
 
   :config
-  (general-define-key :states 'normal "s" #'avy-goto-char)
-  (general-define-key :states 'normal "S" #'avy-pop-mark))
+  (general-define-key :states 'motion
+                      "s" #'avy-goto-char
+                      "S" #'avy-pop-mark))
 
+(use-package ivy-hydra)

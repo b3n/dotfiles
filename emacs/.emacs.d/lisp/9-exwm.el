@@ -1,5 +1,16 @@
+(use-package modus-vivendi-theme ;; Dark
+  :if (eq (system-name) "beastie")
+  :custom
+  (modus-vivendi-theme-slanted-constructs t)
+  (modus-vivendi-theme-bold-constructs t)
+  (modus-vivendi-theme-scale-headings t)
+
+  :config
+  (load-theme 'modus-vivendi t))
+
+
 (use-package exwm
-  :if (eq window-system 'x)
+  :if (eq (system-name) "beastie")
 
   :init
   (tool-bar-mode -1)
@@ -15,16 +26,16 @@
   (exwm-workspace-number 2)
   (exwm-workspace-show-all-buffers t)
   (exwm-layout-show-all-buffers t)
-  (exwm-input-global-keys '(
-    ([?\s-p] . counsel-linux-app)
-    ([?\s-b] . ivy-switch-buffer)
-    ([?\s-f] . counsel-find-file)
-  ))
+  (exwm-input-global-keys
+   (loop for c from ?a to ?z collect
+         (cons
+          (kbd (format "s-%c" c))
+          (lookup-key (current-global-map) (kbd (format "C-c %c" c))))))
 
   :config
   (menu-bar-mode -1)
 
-  (push ?\M-\s exwm-input-prefix-keys)
+  ;;(push ?\M-\s exwm-input-prefix-keys)
   (push ?\C-w exwm-input-prefix-keys)
 
   (require 'exwm-randr)
@@ -39,8 +50,7 @@
   (require 'exwm-config)
   (exwm-config-misc)
 
-  (exwm-enable)
-)
+  (exwm-enable))
 
 
 (use-package exwm-edit

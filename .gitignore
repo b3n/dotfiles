@@ -1,5 +1,5 @@
 !emacs/.emacs.d/
 emacs/.emacs.d/*
 !emacs/.emacs.d/*.el
-!emacs/.emacs.d/packages/
+!emacs/.emacs.d/lisp/
 !emacs/.emacs.d/window-system/

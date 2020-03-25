@@ -1,5 +1,5 @@
 (use-package org
-  :ensure org-plus-contrib
+  :straight org-plus-contrib
 
   :init
   (setq org-src-lang-modes nil) ;; For some reason org-mode fails to load without this being initiated.
