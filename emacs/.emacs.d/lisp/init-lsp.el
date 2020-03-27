@@ -29,3 +29,6 @@
   :config
   (dap-mode t)
   (dap-ui-mode t))
+
+
+(provide 'init-lsp)

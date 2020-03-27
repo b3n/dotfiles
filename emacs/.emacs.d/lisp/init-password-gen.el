@@ -17,3 +17,6 @@
       0
       (read-number "Length: ")))
     (when (bound-and-true-p evil-mode) (evil-change-state prev-state))))
+
+
+(provide 'init-password-gen)

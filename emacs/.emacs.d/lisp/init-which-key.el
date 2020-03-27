@@ -4,3 +4,6 @@
   (which-key-show-operator-state-maps t)
   :config
   (which-key-mode))
+
+
+(provide 'init-which-key)

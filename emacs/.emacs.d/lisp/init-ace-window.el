@@ -12,3 +12,5 @@
   (add-to-list 'avy-key-to-char-alist '(?\s-l . ?l))
   (add-to-list 'avy-key-to-char-alist '(?\s-u . ?u))
   (add-to-list 'avy-key-to-char-alist '(?\s-y . ?y)))
+
+(provide 'init-ace-window)

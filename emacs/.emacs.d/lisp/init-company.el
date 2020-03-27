@@ -6,3 +6,5 @@
 (use-package company-lsp
   :config
   (add-to-list 'company-backends #'company-lsp))
+
+(provide 'init-company)

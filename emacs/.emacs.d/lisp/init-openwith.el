@@ -7,3 +7,6 @@
                           '(("mpv" . ("mkv" "mp4" "mp3" "avi" "m4v" "wmv" "mov")))))
   :config
   (openwith-mode t))
+
+
+(provide 'init-openwith)

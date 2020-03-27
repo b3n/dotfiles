@@ -25,3 +25,6 @@
 
   :config
   (doom-modeline-mode 1))
+
+
+(provide 'init-theme)

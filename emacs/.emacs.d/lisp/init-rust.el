@@ -13,3 +13,6 @@
   (require 'rust-mode)
   (define-key rust-mode-map (kbd "TAB") #'company-indent-or-complete-common)
   (setq company-tooltip-align-annotations t))
+
+
+(provide 'init-rust)

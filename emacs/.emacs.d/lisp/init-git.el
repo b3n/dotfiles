@@ -6,3 +6,6 @@
              "g" '(:ignore t :which-key "Git")
              "g s" #'magit-status
              "g b" #'magit-blame-addition))
+
+
+(provide 'init-git)

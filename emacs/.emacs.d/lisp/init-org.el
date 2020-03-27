@@ -60,3 +60,6 @@
   (setq org-agenda-files '("~/todo.org" "~/wiki/"))
 
   (setq org-todo-keywords '((sequence "TODO" "IN-PROGRESS" "BLOCKED" "|" "DONE" "CANCELLED"))))
+
+
+(provide 'init-org)

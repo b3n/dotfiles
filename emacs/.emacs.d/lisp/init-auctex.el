@@ -12,9 +12,9 @@
                               TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view))
                               TeX-source-correlate-start-server t)
   :init
+  (setq doc-view-continuous t)
   (require 'tex)
   (add-hook 'TeX-after-compilation-finished-functions
             #'TeX-revert-document-buffer))
 
-
-(setq doc-view-continuous t)
+(provide 'init-auctex)

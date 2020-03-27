@@ -68,3 +68,6 @@
                       "S" #'avy-pop-mark))
 
 (use-package ivy-hydra)
+
+
+(provide 'init-ivy)

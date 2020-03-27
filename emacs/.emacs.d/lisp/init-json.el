@@ -7,3 +7,6 @@
 
   :config
   (define-key json-mode-map (kbd "C-c C-j") #'jq-interactively))
+
+
+(provide 'init-json)
