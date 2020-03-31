@@ -1,7 +1,4 @@
 (use-package lsp-mode
-  :init
-  (setq read-process-output-max (* 1024 1024))
-
   :hook
   (ruby-mode . lsp) ;; gem install solargraph
 

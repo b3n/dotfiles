@@ -1,8 +1,5 @@
 (use-package emacs
   :straight nil
-  :custom
-  (create-lockfiles nil)
-  (gc-cons-threshold 9999999)
   :config
   (fset 'yes-or-no-p 'y-or-n-p)
   (setq-default indent-tabs-mode nil)
@@ -58,12 +55,6 @@
   (inhibit-startup-screen t)
   (initial-major-mode 'fundamental-mode)
   (initial-scratch-message ""))
-
-
-(use-package tool-bar
-  :straight nil
-  :config
-  (tool-bar-mode -1))
 
 
 (use-package paren

@@ -1,14 +1,3 @@
-(use-package modus-vivendi-theme ;; Dark
-  :if (eq (system-name) "beastie")
-  :custom
-  (modus-vivendi-theme-slanted-constructs t)
-  (modus-vivendi-theme-bold-constructs t)
-  (modus-vivendi-theme-scale-headings t)
-
-  :config
-  (load-theme 'modus-vivendi t))
-
-
 (use-package exwm
   :if (eq (system-name) "beastie")
 
@@ -40,16 +29,16 @@
 
   (require 'exwm-randr)
   (add-hook
-    'exwm-randr-screen-change-hook
-    (lambda ()
-      (start-process-shell-command
-        "xrandr" nil "xrandr --output DP-1 --auto --output HDMI-2 --auto --right-of DP-1"
-  )))
+   'exwm-randr-screen-change-hook
+   (lambda ()
+     (start-process-shell-command
+      "xrandr" nil "xrandr --output DP-1 --auto --output HDMI-2 --auto --right-of DP-1"
+      )))
   (exwm-randr-enable)
 
-(my-leader-def
-  "C-z" '((lambda () (interactive) (shell-command "slock")) :which-key "Sleep")
-  "C-x" '((lambda () (interactive) (shell-command "xrandr --output HDMI-2 --auto")) :which-key "Screen on"))
+  (my-leader-def
+    "C-z" '((lambda () (interactive) (shell-command "slock")) :which-key "Sleep")
+    "C-x" '((lambda () (interactive) (shell-command "xrandr --output HDMI-2 --auto")) :which-key "Screen on"))
 
   (require 'exwm-config)
   (exwm-config-misc)

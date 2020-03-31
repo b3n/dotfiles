@@ -7,6 +7,19 @@
   :config
   (load-theme 'modus-operandi t))
 
+(use-package modus-vivendi-theme ;; Dark
+  :if
+  (let ((hour (string-to-number (substring (current-time-string) 11 13))))
+    (or (< hour 9) (> hour 17)))
+
+  :custom
+  (modus-vivendi-theme-slanted-constructs t)
+  (modus-vivendi-theme-bold-constructs t)
+  (modus-vivendi-theme-scale-headings t)
+
+  :config
+  (load-theme 'modus-vivendi t))
+
 (use-package minions
   :config (minions-mode 1))
 
