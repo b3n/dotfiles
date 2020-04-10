@@ -5,6 +5,7 @@
   (setq evil-want-keybinding nil)
 
   :custom
+  (evil-search-module 'evil-search)
   (evil-shift-round nil)
   (evil-symbol-word-search t)
   (evil-want-Y-yank-to-eol t)
@@ -12,11 +13,10 @@
 
   :config
   (define-key evil-motion-state-map (kbd "RET") nil)
-  (general-define-key :keymaps 'evil-window-map
-                      "u" #'winner-undo
-                      "C-r" #'winner-redo
-                      "f" #'other-frame
-                      "d" #'evil-delete-buffer)
+  (define-key evil-window-map "u" #'winner-undo)
+  (define-key evil-window-map (kbd "C-r") #'winner-redo)
+  (define-key evil-window-map "f" #'other-frame)
+  (define-key evil-window-map "d" #'evil-delete-buffer)
   (evil-mode 1))
 
 

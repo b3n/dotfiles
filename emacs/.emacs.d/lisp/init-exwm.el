@@ -1,9 +1,9 @@
 (use-package exwm
-  :if (eq (system-name) "beastie")
+  :if (eq window-system 'x)
 
   :init
-  (tool-bar-mode -1)
-  (scroll-bar-mode -1)
+  (scroll-bar-mode 0)
+  (horizontal-scroll-bar-mode 0)
   (setq frame-inhibit-implied-resize t)
   (fringe-mode 1)
 
@@ -11,7 +11,7 @@
   (exwm-update-class . (lambda () (exwm-workspace-rename-buffer exwm-class-name)))
 
   :custom
-  (exwm-randr-workspace-output-plist '(1 "HDMI-2"))
+  (exwm-randr-workspace-monitor-plist '(1 "HDMI-2"))
   (exwm-workspace-number 2)
   (exwm-workspace-show-all-buffers t)
   (exwm-layout-show-all-buffers t)
@@ -24,7 +24,6 @@
   :config
   (menu-bar-mode -1)
 
-  ;;(push ?\M-\s exwm-input-prefix-keys)
   (push ?\C-w exwm-input-prefix-keys)
 
   (require 'exwm-randr)
@@ -36,18 +35,14 @@
       )))
   (exwm-randr-enable)
 
-  (my-leader-def
-    "C-z" '((lambda () (interactive) (shell-command "slock")) :which-key "Sleep")
-    "C-x" '((lambda () (interactive) (shell-command "xrandr --output HDMI-2 --auto")) :which-key "Screen on"))
+  ;;(my-leader-def
+  ;;  "C-z" '((lambda () (interactive) (shell-command "slock")) :which-key "Sleep")
+  ;;  "C-x" '((lambda () (interactive) (shell-command "xrandr --output HDMI-2 --auto")) :which-key "Screen on"))
 
   (require 'exwm-config)
   (exwm-config-misc)
 
   (exwm-enable))
-
-
-(use-package exwm-edit
-  :general (my-leader-def "E" #'exwm-edit--compose))
 
 
 (provide 'init-exwm)

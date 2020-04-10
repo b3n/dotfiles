@@ -13,8 +13,7 @@
 
 (use-package dired-x
   :straight f
-  :general (my-leader-def
-             "f d" #'dired-jump))
+  :bind ("C-c d" . dired-jump))
 
 (use-package all-the-icons)
 

@@ -26,11 +26,8 @@
   (org-log-done 'time)
   (org-return-follows-link t)
   (org-link-frame-setup '((file . find-file)))
-  (org-link-make-description-function
-   (lambda (link desc)
-     (if (string-equal (substring link 0 5) "file:")
-         (replace-regexp-in-string "-" " " (file-name-base (substring link 5)))
-       desc)))
+  (org-image-actual-width 300)
+  (org-startup-with-inline-images t)
 
   :config
   (require 'org-habit)

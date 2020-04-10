@@ -3,7 +3,7 @@
   (ruby-mode . lsp) ;; gem install solargraph
 
   :config
-  (general-define-key :states 'normal "gd" #'xref-find-definitions))
+  (evil-global-set-key 'normal "gd" #'xref-find-definitions))
 
 
 (use-package lsp-ui

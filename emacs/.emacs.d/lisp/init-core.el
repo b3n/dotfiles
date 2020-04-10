@@ -6,26 +6,6 @@
   (setq-default tab-width 4))
 
 
-(use-package server
-  :disabled
-  :straight nil
-  :config
-  (unless (server-running-p) (server-start)))
-
-
-(use-package general ; TODO: Deprecate
-  :init
-  (setq my-prefix "<f5>")
-
-  :config
-  (general-define-key :keymaps 'minibuffer-inactive-mode-map [mouse-1] nil)
-  (general-create-definer my-leader-def
-    :states '(normal visual insert emacs)
-    :keymaps 'override
-    :global-prefix (concat "M-" my-prefix)
-    :prefix my-prefix))
-
-
 (use-package files
   :straight nil
   :custom
@@ -36,11 +16,7 @@
   (delete-old-versions t)
 
   :config
-  (auto-save-visited-mode)
-  (my-leader-def
-    "f" '(:ignore t :which-key "File")
-    "f y" #'my-show-buffer-file-name
-    "!" #'shell-command))
+  (auto-save-visited-mode))
 
 
 (use-package cus-edit
@@ -67,7 +43,10 @@
   :straight nil
   :hook (text-mode . turn-on-visual-line-mode)
   :custom
-  (visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow)))
+  (visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
+  :config
+  (size-indication-mode)
+  (column-number-mode))
 
 
 (use-package flyspell
@@ -87,6 +66,12 @@
   :custom
   (display-buffer-alist
    '(("\\*shell" (display-buffer-reuse-window display-buffer-same-window)))))
+
+
+(use-package tab-bar
+  :straight nil
+  :custom
+  (tab-bar-show nil))
 
 
 (provide 'init-core)

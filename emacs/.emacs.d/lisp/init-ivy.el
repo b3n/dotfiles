@@ -12,7 +12,7 @@
   :config
   (ivy-mode 1)
 
-  (general-define-key :map ivy-minibuffer-map "s-<return>" #'ivy-done)
+  (define-key ivy-minibuffer-map (kbd "s-<return>") #'ivy-done)
 
   (defun setup-eshell-ivy-completion ()
     (define-key eshell-mode-map [remap eshell-pcomplete] 'completion-at-point)
@@ -27,23 +27,16 @@
   (amx-mode))
 
 (use-package counsel
-  :init
-  ;;(setq recentf-max-saved-items 999)
-  ;;(recentf-mode 1)
-
-  :bind (
-         ("C-c k" . counsel-rg)
+  :bind (("C-c k" . counsel-rg)
          ("C-c p" . counsel-linux-app)
+         ("C-c u" . counsel-unicode-char)
+         ("C-c g f" . counsel-git)
+         ("C-c g /" . counsel-git-grep)
          ("C-x f" . counsel-find-file))
 
   :custom
-  (counsel-root-command "doas")  ;; OpenBSD
+  (counsel-root-command "doas")
   
-  :general (my-leader-def
-             "g f" #'counsel-git
-             "g /" #'counsel-git-grep
-             "u" #'counsel-unicode-char
-             )
   :config
   (counsel-mode))
 
@@ -63,9 +56,9 @@
   (avy-keys '(?n ?t ?e ?s ?i ?r ?o ?a))
 
   :config
-  (general-define-key :states 'motion
-                      "s" #'avy-goto-char
-                      "S" #'avy-pop-mark))
+  (evil-define-key '(normal visual) 'global
+    "s" #'avy-goto-char
+    "S" #'avy-pop-mark))
 
 (use-package ivy-hydra)
 

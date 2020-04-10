@@ -1,12 +1,10 @@
 (use-package openwith
-  :custom
-  ;; TODO: Use openwith-make-extension-regexp function 
-  (openwith-associations ((lambda (asocs)
-                            (cl-loop for (prog . exts) in asocs
-                                     collect (list (concat "\\." (regexp-opt exts) "\\'") prog '(file))))
-                          '(("mpv" . ("mkv" "mp4" "mp3" "avi" "m4v" "wmv" "mov")))))
   :config
-  (openwith-mode t))
+  (openwith-mode t)
+  (customize-set-variable 'openwith-associations
+      `((,(openwith-make-extension-regexp '("mkv" "mp4" "mp3" "avi" "m4v" "wmv" "mov"))
+         "mpv"
+         (file)))))
 
 
 (provide 'init-openwith)
