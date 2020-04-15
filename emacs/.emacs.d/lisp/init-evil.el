@@ -8,6 +8,7 @@
   (evil-search-module 'evil-search)
   (evil-shift-round nil)
   (evil-symbol-word-search t)
+  (evil-want-minibuffer t)
   (evil-want-Y-yank-to-eol t)
   (evil-want-C-w-delete nil)
 
@@ -21,33 +22,29 @@
 
 
 (use-package evil-collection
-  :after evil
-  :config (evil-collection-init))
+  :config
+  (evil-collection-init))
 
 
 (use-package evil-surround
-  :after (evil)
-
   :config
   (global-evil-surround-mode 1))
 
 
 (use-package evil-org
-  :after (evil org)
-  :diminish evil-org-mode
+  :after org
 
   :config
   (add-hook 'org-mode-hook 'evil-org-mode)
   (add-hook 'evil-org-mode-hook (lambda () (evil-org-set-key-theme))))
 
 
-(use-package evil-magit
-  :after (evil magit))
+(use-package evil-magit)
 
 
 (use-package evil-anzu
-  :after (evil)
-  :config (global-anzu-mode +1))
+  :config
+  (global-anzu-mode +1))
 
 
 (provide 'init-evil)

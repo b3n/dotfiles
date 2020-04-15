@@ -8,6 +8,7 @@
 
 (use-package files
   :straight nil
+
   :custom
   (enable-local-variables nil)
   (backup-by-copying t)
@@ -41,9 +42,13 @@
 
 (use-package simple
   :straight nil
+  :bind ("s-p" . async-shell-command)
   :hook (text-mode . turn-on-visual-line-mode)
+
   :custom
   (visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
+  (async-shell-command-buffer 'new-buffer)
+
   :config
   (size-indication-mode)
   (column-number-mode))
@@ -55,23 +60,33 @@
          (prog-mode . flyspell-prog-mode)))
 
 
-(use-package savehist
+(use-package saveplace
   :straight nil
+
   :config
-  (savehist-mode))
+  (save-place-mode 1))
 
 
 (use-package emacs ;window
   :straight nil
+  :demand
+  :bind ("s-b" . switch-to-buffer)
+
   :custom
   (display-buffer-alist
-   '(("\\*shell" (display-buffer-reuse-window display-buffer-same-window)))))
+   '(("\\*shell" (display-buffer-reuse-window display-buffer-same-window))
+     ("\\*Async Shell Command" (display-buffer-no-window)))))
 
 
-(use-package tab-bar
+(use-package recentf
   :straight nil
+  
   :custom
-  (tab-bar-show nil))
+  (recentf-max-menu-items 99)
+  (recentf-max-saved-items 999)
+
+  :config
+  (recentf-mode))
 
 
 (provide 'init-core)

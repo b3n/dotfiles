@@ -21,7 +21,7 @@
 (require 'init-dired)
 (require 'init-theme)
 (require 'init-evil)
-(require 'init-ivy)
+(require 'init-icomplete)
 (require 'init-undo-tree)
 (require 'init-which-key)
 (require 'init-openwith)
@@ -29,6 +29,8 @@
 (require 'init-flycheck)
 (require 'init-company)
 (require 'init-yasnippet)
+(require 'init-avy)
+(require 'init-grep)
 
 (require 'init-lsp)
 (require 'init-org)

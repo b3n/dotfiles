@@ -1,12 +1,6 @@
 (use-package exwm
   :if (eq window-system 'x)
 
-  :init
-  (scroll-bar-mode 0)
-  (horizontal-scroll-bar-mode 0)
-  (setq frame-inhibit-implied-resize t)
-  (fringe-mode 1)
-
   :hook
   (exwm-update-class . (lambda () (exwm-workspace-rename-buffer exwm-class-name)))
 
