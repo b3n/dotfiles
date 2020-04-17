@@ -1,5 +1,5 @@
 (use-package dired
-  :straight f
+  :straight nil
   :hook ((dired-mode . dired-hide-details-mode)
          (dired-mode . hl-line-mode))
   :custom
@@ -7,13 +7,13 @@
   (dired-dwim-target t))
 
 (use-package image-dired
-  :straight f
+  :straight nil
   :custom
   (image-dired-thumb-size 500))
 
 (use-package dired-x
-  :straight f
-  :bind ("C-c d" . dired-jump))
+  :straight nil
+  :bind ("s-d" . dired-jump))
 
 (use-package all-the-icons)
 
@@ -24,7 +24,7 @@
 (use-package async)
 
 (use-package dired-async
-  :straight f
+  :straight nil
   :after (dired async)
   :hook (dired-mode . dired-async-mode))
 

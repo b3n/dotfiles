@@ -1,6 +1,7 @@
 (use-package lsp-mode
   :hook
   (ruby-mode . lsp) ;; gem install solargraph
+  (python-mode . lsp) ;; pip install 'python-language-server[all]'
 
   :config
   (evil-global-set-key 'normal "gd" #'xref-find-definitions))

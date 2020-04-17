@@ -1,11 +1,3 @@
-(use-package emacs
-  :straight nil
-  :config
-  (fset 'yes-or-no-p 'y-or-n-p)
-  (setq-default indent-tabs-mode nil)
-  (setq-default tab-width 4))
-
-
 (use-package files
   :straight nil
 
@@ -46,7 +38,6 @@
   :hook (text-mode . turn-on-visual-line-mode)
 
   :custom
-  (visual-line-fringe-indicators '(left-curly-arrow right-curly-arrow))
   (async-shell-command-buffer 'new-buffer)
 
   :config

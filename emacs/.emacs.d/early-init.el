@@ -11,10 +11,15 @@
                             (unless (frame-focus-state)
                               (garbage-collect))))))
 
+(fset 'yes-or-no-p 'y-or-n-p)
 (setq package-enable-at-startup nil)
 (setq create-lockfiles nil)
 (setq network-security-level 'paranoid)
 (setq frame-inhibit-implied-resize t)
+(setq-default indent-tabs-mode nil)
+(setq-default tab-width 4)
+(setq-default show-trailing-whitespace t)
+(setq-default indicate-empty-lines t)
 
 (menu-bar-mode 0)
 (tool-bar-mode 0)
