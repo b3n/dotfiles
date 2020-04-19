@@ -71,8 +71,10 @@
 
 (use-package recentf
   :straight nil
-  
+  :bind ("s-r" . recentf-open-files)
+
   :custom
+  (recentf-max-menu-items 99)
   (recentf-max-menu-items 99)
   (recentf-max-saved-items 999)
 

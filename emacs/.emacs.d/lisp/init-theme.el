@@ -1,34 +1,45 @@
-(use-package modus-operandi-theme ;; Light
-  :disabled
-  :custom
-  (modus-operandi-theme-slanted-constructs t)
-  (modus-operandi-theme-bold-constructs t)
-  (modus-operandi-theme-scale-headings t)
-
+(use-package faces
+  :straight nil
   :config
-  (load-theme 'modus-operandi t))
+  (set-face-attribute 'default nil :family "Iosevka" :height 110)
+  (set-face-attribute 'fixed-pitch nil :family "Iosevka")
+  (set-face-attribute 'variable-pitch nil :family "Libre Baskerville"))
 
 
-(use-package modus-vivendi-theme ;; Dark
-  :disabled
+(use-package face-remap
+  :straight nil
+  :hook (org-mode . (lambda () (variable-pitch-mode 1)
+                      (dolist (face '(org-block-begin-line
+                                      org-block-end-line
+                                      org-verbatim
+                                      org-code
+                                      org-link
+                                      org-block
+                                      org-table
+                                      org-meta-line
+                                      org-document-info-keyword))
+                        (set-face-attribute face nil :inherit 'fixed-pitch)))))
+
+
+(use-package olivetti
+  :hook (org-mode . olivetti-mode)
   :custom
-  (modus-vivendi-theme-slanted-constructs t)
-  (modus-vivendi-theme-bold-constructs t)
-  (modus-vivendi-theme-scale-headings t))
+  (olivetti-body-width 80))
 
 
 (use-package leuven-theme
-  :straight nil
-  :after org
-
   :custom
   (org-fontify-whole-heading-line t)
 
   :config
-  (load-theme 'leuven t))
+  (load-theme 'leuven t)
+  (load-theme 'leuven-dark t t))
 
 
 (use-package minions
+  :custom
+  (minions-mode-line-lighter "...")
+
   :config
   (minions-mode 1))
 

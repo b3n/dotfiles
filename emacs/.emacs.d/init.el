@@ -18,12 +18,13 @@
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
 (require 'init-core)
-(require 'init-dired)
+(require 'init-org)
 (require 'init-theme)
 (require 'init-evil)
 (require 'init-icomplete)
 (require 'init-undo-tree)
 (require 'init-which-key)
+(require 'init-dired)
 (require 'init-openwith)
 (require 'init-default-text-scale)
 (require 'init-flycheck)
@@ -33,7 +34,6 @@
 (require 'init-grep)
 
 (require 'init-lsp)
-(require 'init-org)
 (require 'init-emacs-lisp)
 (require 'init-auctex)
 (require 'init-csv)

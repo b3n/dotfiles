@@ -22,12 +22,14 @@
 
   :custom
   (org-enforce-todo-dependencies t)
-  (org-startup-indented t)
+  (org-hide-emphasis-markers t)
+  (org-image-actual-width 300)
+  (org-link-frame-setup '((file . find-file)))
   (org-log-done 'time)
   (org-return-follows-link t)
-  (org-link-frame-setup '((file . find-file)))
-  (org-image-actual-width 300)
+  (org-startup-indented t)
   (org-startup-with-inline-images t)
+  (org-hidden-keywords '(title))
 
   :config
   (require 'org-habit)
