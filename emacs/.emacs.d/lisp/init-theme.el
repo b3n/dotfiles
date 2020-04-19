@@ -13,7 +13,6 @@
                                       org-block-end-line
                                       org-verbatim
                                       org-code
-                                      org-link
                                       org-block
                                       org-table
                                       org-meta-line
