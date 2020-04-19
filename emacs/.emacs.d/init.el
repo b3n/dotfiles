@@ -18,6 +18,7 @@
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
 (require 'init-core)
+(require 'init-tab-bar)
 (require 'init-org)
 (require 'init-theme)
 (require 'init-evil)
