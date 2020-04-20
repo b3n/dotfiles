@@ -17,7 +17,8 @@
                                       org-table
                                       org-meta-line
                                       org-document-info-keyword))
-                        (set-face-attribute face nil :inherit 'fixed-pitch)))))
+                        (set-face-attribute face nil :inherit 'fixed-pitch))
+                      (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch)))))
 
 
 (use-package olivetti
@@ -29,6 +30,8 @@
 (use-package leuven-theme
   :custom
   (org-fontify-whole-heading-line t)
+  (org-fontify-done-headline t)
+  (org-fontify-quote-and-verse-blocks t)
 
   :config
   (load-theme 'leuven t)

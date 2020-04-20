@@ -21,15 +21,18 @@
                           (counsel-rg (concat "\\[\\[file:" (regexp-quote (file-name-nondirectory buffer-file-name)))))))
 
   :custom
+  (org-ellipsis "  ⬎ ")
   (org-enforce-todo-dependencies t)
+  (org-hidden-keywords '(title))
   (org-hide-emphasis-markers t)
+  (org-hide-leading-stars t)
   (org-image-actual-width 300)
   (org-link-frame-setup '((file . find-file)))
   (org-log-done 'time)
   (org-return-follows-link t)
+  (org-startup-folded 'content)
   (org-startup-indented t)
   (org-startup-with-inline-images t)
-  (org-hidden-keywords '(title))
 
   :config
   (require 'org-habit)
