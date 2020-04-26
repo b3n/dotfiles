@@ -1,5 +1,5 @@
 (use-package flycheck
-  :hook (prog-mode-hook . flycheck-mode)
+  :hook (prog-mode . flycheck-mode)
   :custom
   (flycheck-flake8-maximum-line-length 100)
   :init

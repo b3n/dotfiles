@@ -5,20 +5,21 @@
   (setq org-src-lang-modes nil) ;; For some reason org-mode fails to load without this being initiated.
   (setq x-selection-timeout 10) ;; https://omecha.info/blog/org-capture-freezes-emacs.html
 
-  :bind (("C-c o a" . org-agenda)
-         ("C-c o c" . org-capture)
-         ("C-c o l n" . org-next-link)
-         ("C-c o l N" . org-previous-link)
-         ("C-c o l o" . org-open-at-point-global)
-         ("C-c o l d" . (lambda ()
-                          (interactive)
-                          (org-insert-link nil
-                                           (format-time-string
-                                            "file:%F.org"
-                                            (org-read-date "" 'totime nil nil (current-time) "")))))
-         ("C-c o l f" . (lambda ()
-                          (interactive)
-                          (counsel-rg (concat "\\[\\[file:" (regexp-quote (file-name-nondirectory buffer-file-name)))))))
+  :general (my-leader
+             "o a" #'org-agenda
+             "o c" #'org-capture
+             "o l n" #'org-next-link
+             "o l N" #'org-previous-link
+             "o l o" #'org-open-at-point-global
+             "o l d" #'(lambda ()
+                         (interactive)
+                         (org-insert-link nil
+                                          (format-time-string
+                                           "file:%F.org"
+                                           (org-read-date "" 'totime nil nil (current-time) ""))))
+             "o l f" #'(lambda ()
+                         (interactive)
+                         (counsel-rg (concat "\\[\\[file:" (regexp-quote (file-name-nondirectory buffer-file-name))))))
 
   :custom
   (org-ellipsis "  ⬎ ")

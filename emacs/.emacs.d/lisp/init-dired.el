@@ -13,7 +13,7 @@
 
 (use-package dired-x
   :straight nil
-  :bind ("s-d" . dired-jump))
+  :general (my-leader "d" #'dired-jump))
 
 (use-package all-the-icons)
 
@@ -28,13 +28,5 @@
   :after (dired async)
   :hook (dired-mode . dired-async-mode))
 
-(use-package dired-subtree
-  :after dired
-  :custom
-  (dired-subtree-use-backgrounds nil)
-  :bind (:map dired-mode-map
-              ("<tab>" . dired-subtree-toggle)
-              ("<C-tab>" . dired-subtree-cycle)
-              ("<S-iso-lefttab>" . dired-subtree-remove)))
 
 (provide 'init-dired)

@@ -34,7 +34,7 @@
 
 (use-package simple
   :straight nil
-  :bind ("s-p" . async-shell-command)
+  :general (my-leader "p" #'async-shell-command)
   :hook (text-mode . turn-on-visual-line-mode)
 
   :custom
@@ -61,7 +61,7 @@
 (use-package emacs ;window
   :straight nil
   :demand
-  :bind ("s-b" . switch-to-buffer)
+  :general (my-leader "b" #'switch-to-buffer)
 
   :custom
   (display-buffer-alist
@@ -71,7 +71,7 @@
 
 (use-package recentf
   :straight nil
-  :bind ("s-r" . recentf-open-files)
+  :general (my-leader "r" #'recentf-open-files)
 
   :custom
   (recentf-max-menu-items 99)

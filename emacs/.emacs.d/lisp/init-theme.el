@@ -8,23 +8,24 @@
 
 (use-package face-remap
   :straight nil
-  :hook (org-mode . (lambda () (variable-pitch-mode 1)
-                      (dolist (face '(org-block-begin-line
-                                      org-block-end-line
-                                      org-verbatim
-                                      org-code
-                                      org-block
-                                      org-table
-                                      org-meta-line
-                                      org-document-info-keyword))
-                        (set-face-attribute face nil :inherit 'fixed-pitch))
-                      (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch)))))
+  :hook (text-mode . (lambda () (variable-pitch-mode 1)
+                       (dolist (face '(org-block-begin-line
+                                       org-block-end-line
+                                       org-verbatim
+                                       org-code
+                                       org-block
+                                       org-table
+                                       org-meta-line
+                                       org-document-info-keyword))
+                         (set-face-attribute face nil :inherit 'fixed-pitch))
+                       (set-face-attribute 'org-indent nil :inherit '(org-hide fixed-pitch)))))
 
 
 (use-package olivetti
-  :hook (org-mode . olivetti-mode)
+  :hook (text-mode . olivetti-mode)
+
   :custom
-  (olivetti-body-width 80))
+  (olivetti-body-width 99))
 
 
 (use-package leuven-theme
@@ -35,7 +36,10 @@
 
   :config
   (load-theme 'leuven t)
-  (load-theme 'leuven-dark t t))
+  (load-theme 'leuven-dark t t)
+
+  (custom-set-faces
+   '(hi-yellow ((t (:background "moccasin"))))))
 
 
 (use-package minions

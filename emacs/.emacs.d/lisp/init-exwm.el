@@ -9,11 +9,6 @@
   (exwm-workspace-number 2)
   (exwm-workspace-show-all-buffers t)
   (exwm-layout-show-all-buffers t)
-  (exwm-input-global-keys
-   (loop for c from ?a to ?z collect
-         (cons
-          (kbd (format "s-%c" c))
-          (lookup-key (current-global-map) (kbd (format "C-c %c" c))))))
 
   :config
   (menu-bar-mode -1)

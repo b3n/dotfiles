@@ -18,11 +18,6 @@
 (use-package minibuffer
   :straight nil
   :demand
-  :bind (:map completion-list-mode-map
-              ("j" . next-line)
-              ("k" . previous-line)
-              ("n" . next-completion)
-              ("p" . previous-completion))
 
   :custom
   (completion-styles '(partial-completion flex))
@@ -39,13 +34,13 @@
   :demand
   :after minibuffer
 
-  :bind (:map icomplete-minibuffer-map
-              ("<right>" . icomplete-forward-completions)
-              ("<left>" . icomplete-backward-completions)
-              ("DEL" . icomplete-fido-backward-updir)
-              ("<return>" . icomplete-fido-ret)
-              ("M-<return>" . icomplete-fido-exit)
-              ("s-<return>" . minibuffer-complete-and-exit))
+  :general (:keymaps 'icomplete-minibuffer-map
+                     "<right>" #'icomplete-forward-completions
+                     "<left>" #'icomplete-backward-completions
+                     "DEL" #'icomplete-fido-backward-updir
+                     "<return>" #'icomplete-fido-ret
+                     "M-<return>" #'icomplete-fido-exit
+                     "s-<return>" #'minibuffer-complete-and-exit)
 
   :custom
   (icomplete-hide-common-prefix nil)

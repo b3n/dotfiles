@@ -1,6 +1,6 @@
 (use-package shell
-  :straight f
-  :bind ("C-c s" . shell)
+  :straight nil
+  :general (my-leader "s" #'shell)
   :config
   (setenv "ENV" "$HOME/.kshrc"))
 

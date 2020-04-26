@@ -15,6 +15,17 @@
 (straight-use-package 'use-package)
 (customize-set-variable 'straight-use-package-by-default t)
 
+(use-package general
+  :config
+  (general-create-definer my-leader
+    :states '(normal visual insert emacs)
+    :keymaps 'override
+    :global-prefix "M-SPC"
+    :config
+    (symbol-overlay-mode))
+  :prefix "SPC"))
+
+
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
 (require 'init-core)
@@ -26,14 +37,12 @@
 (require 'init-undo-tree)
 (require 'init-which-key)
 (require 'init-dired)
-(require 'init-openwith)
 (require 'init-default-text-scale)
 (require 'init-flycheck)
 (require 'init-company)
 (require 'init-yasnippet)
 (require 'init-avy)
 (require 'init-grep)
-
 (require 'init-lsp)
 (require 'init-emacs-lisp)
 (require 'init-auctex)
@@ -42,7 +51,6 @@
 (require 'init-markdown)
 (require 'init-rust)
 (require 'init-yaml)
-
 (require 'init-vlf)
 (require 'init-git)
 (require 'init-irc)
@@ -51,3 +59,5 @@
 (require 'init-shell)
 (require 'init-email)
 (require 'init-exwm)
+(require 'init-openwith)
+(require 'init-misc)

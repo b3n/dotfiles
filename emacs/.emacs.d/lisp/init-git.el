@@ -1,4 +1,4 @@
 (use-package magit
-  :bind ("s-g" . magit-status))
+  :general (my-leader "g" #'magit-status))
 
 (provide 'init-git)

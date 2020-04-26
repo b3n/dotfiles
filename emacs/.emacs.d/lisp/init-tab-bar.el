@@ -1,6 +1,6 @@
 (use-package tab-bar
   :straight nil
-  :bind ("s-0" . tab-bar-switch-to-recent-tab)
+  :general ("s-0" #'tab-bar-switch-to-recent-tab)
 
   :custom
   (tab-bar-new-tab-choice "*scratch*")
