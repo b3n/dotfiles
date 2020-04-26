@@ -71,15 +71,20 @@
 
 (use-package recentf
   :straight nil
-  :general (my-leader "r" #'recentf-open-files)
+  :after dired
+  :general (my-leader "r" '((lambda () (interactive) (dired (cons "*Recentf Dired*" recentf-list)))
+                            :wk "Recent files"))
 
   :custom
-  (recentf-max-menu-items 99)
-  (recentf-max-menu-items 99)
   (recentf-max-saved-items 999)
 
   :config
   (recentf-mode))
+
+
+(use-package help
+  :straight nil
+  :general (my-leader "h" '(:keymap help-map :wk "Help")))
 
 
 (provide 'init-core)

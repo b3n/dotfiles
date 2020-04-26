@@ -21,9 +21,7 @@
     :states '(normal visual insert emacs)
     :keymaps 'override
     :global-prefix "M-SPC"
-    :config
-    (symbol-overlay-mode))
-  :prefix "SPC"))
+    :prefix "SPC"))
 
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
@@ -51,7 +49,6 @@
 (require 'init-markdown)
 (require 'init-rust)
 (require 'init-yaml)
-(require 'init-vlf)
 (require 'init-git)
 (require 'init-irc)
 (require 'init-password-gen)

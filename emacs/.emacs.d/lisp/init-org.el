@@ -6,6 +6,7 @@
   (setq x-selection-timeout 10) ;; https://omecha.info/blog/org-capture-freezes-emacs.html
 
   :general (my-leader
+             "o" '(:ignore t :wk "Org")
              "o a" #'org-agenda
              "o c" #'org-capture
              "o l n" #'org-next-link

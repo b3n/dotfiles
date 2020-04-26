@@ -4,6 +4,8 @@
   (setq evil-want-integration t)
   (setq evil-want-keybinding nil)
 
+  :general (my-leader "w" '(:keymap evil-window-map :wk "Window"))
+
   :custom
   (evil-search-module 'evil-search)
   (evil-shift-round nil)
