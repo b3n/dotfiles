@@ -13,12 +13,12 @@
 
 (use-package dired-x
   :straight nil
-  :general (my-leader "d" #'dired-jump))
+  :general (my-leader "f d" #'dired-jump))
 
 (use-package all-the-icons)
 
 (use-package all-the-icons-dired
-  :after (all-the-icons)
+  :after all-the-icons
   :hook (dired-mode . all-the-icons-dired-mode))
 
 (use-package async)

@@ -1,6 +1,6 @@
 (use-package project
   :straight nil
-  :general (my-leader "f" #'project-find-file))
+  :general (my-leader "f p" #'project-find-file))
 
 
 (use-package wgrep)

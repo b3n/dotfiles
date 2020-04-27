@@ -1,5 +1,8 @@
 (use-package files
   :straight nil
+  :general (my-leader
+             "f f" #'find-file
+             "f s" #'save-buffer)
 
   :custom
   (enable-local-variables nil)
@@ -72,8 +75,8 @@
 (use-package recentf
   :straight nil
   :after dired
-  :general (my-leader "r" '((lambda () (interactive) (dired (cons "*Recentf Dired*" recentf-list)))
-                            :wk "Recent files"))
+  :general (my-leader "f r" '((lambda () (interactive) (dired (cons "*Recentf Dired*" recentf-list)))
+                              :wk "Recent files"))
 
   :custom
   (recentf-max-saved-items 999)
