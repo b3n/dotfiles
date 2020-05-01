@@ -16,6 +16,7 @@
 (setq create-lockfiles nil)
 (setq network-security-level 'paranoid)
 (setq frame-inhibit-implied-resize t)
+(setq-default frame-title-format '("%b - Emacs"))
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 4)
 (setq-default show-trailing-whitespace t)
