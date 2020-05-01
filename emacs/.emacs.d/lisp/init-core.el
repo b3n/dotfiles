@@ -37,7 +37,10 @@
 
 (use-package simple
   :straight nil
-  :general (my-leader "p" #'async-shell-command)
+  :general (my-leader
+             "SPC" #'execute-extended-command
+             "u" #'universal-argument
+             "p" #'async-shell-command)
   :hook (text-mode . turn-on-visual-line-mode)
 
   :custom
@@ -87,7 +90,18 @@
 
 (use-package help
   :straight nil
-  :general (my-leader "h" '(:keymap help-map :wk "Help")))
+  :general (my-leader "h" '(:keymap help-map :wk "Help"))
+  :custom (help-window-select t))
+
+
+(use-package calc
+  :straight nil
+  :general (my-leader "a c" #'calc-dispatch))
+
+
+(use-package uniquify
+  :straight nil
+  :custom (uniquify-buffer-name-style 'forward))
 
 
 (provide 'init-core)
