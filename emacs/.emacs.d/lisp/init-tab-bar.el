@@ -1,6 +1,5 @@
 (use-package tab-bar
   :straight nil
-  ;;:general ("M-0" #'tab-bar-switch-to-recent-tab)
   :general (:keymaps 'tab-prefix-map
                      "q" #'tab-close
                      "u" #'tab-undo
@@ -9,7 +8,10 @@
   :custom
   (tab-bar-new-tab-choice "*scratch*")
   (tab-bar-select-tab-modifiers '(meta))
-  (tab-bar-tab-hints t))
+  (tab-bar-tab-hints t)
+  (tab-bar-new-button nil)
+  (tab-bar-close-button nil)
+  (tab-bar-show "1"))
 
 
 (provide 'init-tab-bar)

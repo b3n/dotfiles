@@ -1,10 +1,8 @@
 (use-package evil
   :init
-  (winner-mode 1)
+  (winner-mode 1) ; TODO: Move where it belongs
   (setq evil-want-integration t)
   (setq evil-want-keybinding nil)
-
-  :general (my-leader "w" '(:keymap evil-window-map :wk "Window"))
 
   :custom
   (evil-search-module 'evil-search)
@@ -15,11 +13,16 @@
   (evil-want-C-w-delete nil)
 
   :config
-  (define-key evil-motion-state-map (kbd "RET") nil)
-  (define-key evil-window-map "u" #'winner-undo)
-  (define-key evil-window-map (kbd "C-r") #'winner-redo)
-  (define-key evil-window-map "f" #'other-frame)
-  (define-key evil-window-map "d" #'evil-delete-buffer)
+  (my-leader
+    "w" '(:keymap evil-window-map :wk "Window"))
+  (general-def evil-window-map
+    "f" #'other-frame
+    "Q" #'evil-delete-buffer
+    "t" '(:keymap tab-prefix-map :wk "Tab bar")
+    "u" #'winner-undo
+    "C-r" #'winner-redo)
+  (general-unbind evil-motion-state-map "<up>" "<down>" "RET" "SPC")
+
   (evil-mode 1))
 
 
@@ -30,10 +33,13 @@
 
 (use-package evil-surround
   :config
-  (global-evil-surround-mode 1))
+  (global-evil-surround-mode 1)
+
+  ;; `s' for visual surround instead of useless `substitute'
+  (evil-define-key 'visual evil-surround-mode-map "s" 'evil-surround-region))
 
 
-(use-package evil-org
+(use-package evil-org ; TODO: Test if I need this
   :after org
 
   :config
@@ -41,7 +47,7 @@
   (add-hook 'evil-org-mode-hook (lambda () (evil-org-set-key-theme))))
 
 
-(use-package evil-magit)
+(use-package evil-magit) ; TODO: Test if I need this
 
 
 (use-package evil-anzu

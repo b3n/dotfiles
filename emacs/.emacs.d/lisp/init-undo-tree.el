@@ -1,5 +1,5 @@
 (use-package undo-tree
-  :diminish undo-tree-mode
+  :general (my-leader "U" #'undo-tree-visualize)
   :config
   (setq undo-tree-auto-save-history t)
   (setq undo-tree-history-directory-alist '(("." . "~/.emacs.d/undo")))

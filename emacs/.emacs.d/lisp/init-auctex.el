@@ -1,6 +1,6 @@
-(use-package auctex
-  :defer t
+(use-package tex
   :straight auctex
+  :commands TeX-mode
 
   :custom
   (latex-run-command "pdflatex")
@@ -11,10 +11,8 @@
   (TeX-view-program-selection '((output-pdf "PDF Tools"))
                               TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view))
                               TeX-source-correlate-start-server t)
-  :init
+  :config
   (setq doc-view-continuous t)
-  (require 'tex)
-  (add-hook 'TeX-after-compilation-finished-functions
-            #'TeX-revert-document-buffer))
+  (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
 
 (provide 'init-auctex)
