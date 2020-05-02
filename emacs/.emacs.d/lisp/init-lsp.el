@@ -1,17 +1,14 @@
 (use-package lsp-mode
+  :general
+  (my-leader "l" '(:keymap lsp-command-map :wk "LSP"))
+
   :hook
   (ruby-mode . lsp) ;; gem install solargraph
   (python-mode . lsp) ;; pip install 'python-language-server[all]'
-
-  :config
-  (evil-global-set-key 'normal "gd" #'xref-find-definitions))
+  (java-mode . lsp))
 
 
 (use-package lsp-ui
-  :disabled
-
-  :hook (lsp-mode . lsp-ui-mode)
-
   :custom
   (lsp-ui-doc nil t)
   (lsp-ui-doc-enable nil)
@@ -23,10 +20,16 @@
 
 
 (use-package dap-mode
-  :disabled
+  :general
+  (lsp-command-map "d" #'dap-hydra)
+
   :config
+  (require 'dap-java)
   (dap-mode t)
   (dap-ui-mode t))
+
+
+(use-package lsp-java)
 
 
 (provide 'init-lsp)

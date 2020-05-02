@@ -42,7 +42,6 @@
 (require 'init-avy)
 (require 'init-grep)
 (require 'init-lsp)
-(require 'init-emacs-lisp)
 (require 'init-auctex)
 (require 'init-csv)
 (require 'init-json)
@@ -57,4 +56,3 @@
 (require 'init-email)
 (require 'init-exwm)
 (require 'init-openwith)
-(require 'init-misc)
