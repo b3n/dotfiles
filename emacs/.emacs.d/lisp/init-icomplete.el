@@ -17,11 +17,8 @@
 
 (use-package minibuffer
   :straight nil
-  :demand
 
   :custom
-  (completion-styles '(partial-completion flex))
-  (completion-category-overrides '((file (styles basic initials))))
   (read-buffer-completion-ignore-case t)
   (read-file-name-completion-ignore-case t)
 
@@ -35,8 +32,8 @@
   :after minibuffer
 
   :general (:keymaps 'icomplete-minibuffer-map
-                     "<right>" #'icomplete-forward-completions
-                     "<left>" #'icomplete-backward-completions
+                     "<down>" #'icomplete-forward-completions
+                     "<up>" #'icomplete-backward-completions
                      "DEL" #'icomplete-fido-backward-updir
                      "<return>" #'icomplete-fido-ret
                      "M-<return>" #'icomplete-fido-exit
@@ -51,6 +48,11 @@
 
   :config
   (icomplete-mode))
+
+
+(use-package orderless
+  :after minibuffer
+  :custom (completion-styles '(orderless)))
 
 
 (provide 'init-icomplete)
