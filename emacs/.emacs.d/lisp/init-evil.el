@@ -55,4 +55,9 @@
   (global-anzu-mode +1))
 
 
+(use-package repeat
+  :straight nil
+  :general (my-leader "." #'repeat))
+
+
 (provide 'init-evil)

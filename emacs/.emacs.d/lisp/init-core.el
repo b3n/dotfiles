@@ -1,6 +1,7 @@
 (use-package files
   :straight nil
   :general (my-leader
+             "f" '(:ignore t :wk "File")
              "f f" #'find-file
              "f s" #'save-buffer)
 
