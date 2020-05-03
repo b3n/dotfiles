@@ -12,6 +12,7 @@
   (exwm-input-global-keys
    `(([?\s-r] . exwm-reset)
      ([?\s-w] . exwm-workspace-switch)
+     (,(kbd "s-<tab>") . tab-bar-switch-to-next-tab)
      ,@(mapcar (lambda (i) `(,(kbd (format "s-%d" i)) . tab-bar-select-tab)) (number-sequence 0 9))))
 
   :config
@@ -32,4 +33,16 @@
   (exwm-enable))
 
 
-(provide 'init-exwm)
+(use-package time
+  :straight nil
+
+  :custom
+  (display-time-format "%F %R")
+  (display-time-default-load-average nil)
+
+
+  :config
+  (display-time-mode t))
+
+
+(provide 'init-window-manager)

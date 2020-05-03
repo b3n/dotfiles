@@ -17,6 +17,8 @@
 
 (use-package general
   :config
+  (general-evil-setup t)
+
   (general-create-definer my-leader
     :states '(normal visual insert emacs)
     :keymaps 'override
@@ -27,16 +29,16 @@
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
 (require 'init-core)
+(require 'init-theme)
 (require 'init-tab-bar)
 (require 'init-org)
-(require 'init-theme)
-(require 'init-evil)
 (require 'init-icomplete)
 (require 'init-undo-tree)
-(require 'init-which-key)
+(require 'init-evil)
 (require 'init-dired)
 (require 'init-default-text-scale)
 (require 'init-flycheck)
+(require 'init-which-key)
 (require 'init-company)
 (require 'init-yasnippet)
 (require 'init-avy)
@@ -54,5 +56,5 @@
 (require 'init-restclient)
 (require 'init-shell)
 (require 'init-email)
-(require 'init-exwm)
 (require 'init-openwith)
+(require 'init-window-manager)
