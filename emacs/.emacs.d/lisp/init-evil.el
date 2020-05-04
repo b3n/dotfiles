@@ -32,11 +32,9 @@
 
 
 (use-package evil-surround
-  :config
-  (global-evil-surround-mode 1)
-
-  ;; `s' for visual surround instead of useless `substitute'
-  (evil-define-key 'visual evil-surround-mode-map "s" 'evil-surround-region))
+  :general
+  (general-define-key :states '(normal operator) "s" 'evil-surround-edit)
+  (general-define-key :states 'visual "s" 'evil-surround-region))
 
 
 (use-package evil-org ; TODO: Test if I need this
