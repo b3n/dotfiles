@@ -1,6 +1,5 @@
 (use-package evil
   :init
-  (winner-mode 1) ; TODO: Move where it belongs
   (setq evil-want-integration t)
   (setq evil-want-keybinding nil)
 
@@ -13,16 +12,11 @@
   (evil-want-C-w-delete nil)
 
   :config
-  (my-leader
-    "w" '(:keymap evil-window-map :wk "Window"))
   (general-def evil-window-map
     "f" #'other-frame
-    "Q" #'evil-delete-buffer
-    "t" '(:keymap tab-prefix-map :wk "Tab bar")
-    "u" #'winner-undo
-    "C-r" #'winner-redo)
+    "Q" #'evil-delete-buffer)
   (general-unbind evil-motion-state-map "<up>" "<down>" "RET" "SPC")
-  (evil-set-initial-state 'completion-list-mode 'normal)
+  ;; (evil-set-initial-state 'completion-list-mode 'normal)
 
   (evil-mode 1))
 
@@ -55,14 +49,22 @@
   (global-anzu-mode +1))
 
 
-(use-package repeat
-  :straight nil
-  :general (my-leader "." #'repeat))
-
-
 (use-package evil-commentary
   :config
   (evil-commentary-mode))
+
+
+(use-package winner
+  :straight nil
+  :after evil
+
+  :general
+  (general-def evil-window-map
+    "u" #'winner-undo
+    "C-r" #'winner-redo)
+
+  :config
+  (winner-mode 1))
 
 
 (provide 'init-evil)

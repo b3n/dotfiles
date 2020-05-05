@@ -2,7 +2,7 @@
 
 
 (use-package rg
-  :general (my-leader "/" #'rg-project))
+  :general (my-leader "r" #'rg-project))
 
 
 (provide 'init-grep)

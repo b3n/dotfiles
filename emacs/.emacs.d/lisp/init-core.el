@@ -39,8 +39,6 @@
 (use-package simple
   :straight nil
   :general (my-leader
-             "SPC" #'execute-extended-command
-             "u" #'universal-argument
              "p" #'async-shell-command)
   :hook (text-mode . turn-on-visual-line-mode)
 
@@ -88,12 +86,6 @@
 
   :config
   (recentf-mode))
-
-
-(use-package help
-  :straight nil
-  :general (my-leader "h" '(:keymap help-map :wk "Help"))
-  :custom (help-window-select t))
 
 
 (use-package calc

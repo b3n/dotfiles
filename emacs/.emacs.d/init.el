@@ -19,11 +19,8 @@
 
 (use-package general
   :config
-  (general-create-definer my-leader
-    :states '(normal visual insert emacs)
-    :keymaps 'override
-    :global-prefix "M-SPC"
-    :prefix "SPC"))
+  (general-create-definer my-leader :prefix "C-c")
+  (general-define-key :states 'normal :keymaps 'override "SPC" (general-simulate-key "C-c")))
 
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
@@ -50,7 +47,7 @@
 (require 'init-markdown)
 (require 'init-rust)
 (require 'init-yaml)
-(require 'init-git)
+(require 'init-vc)
 (require 'init-irc)
 (require 'init-password-gen)
 (require 'init-restclient)
