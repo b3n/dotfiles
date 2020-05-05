@@ -24,7 +24,6 @@
   (lsp-command-map "d" #'dap-hydra)
 
   :config
-  (require 'dap-java)
   (dap-mode t)
   (dap-ui-mode t))
 

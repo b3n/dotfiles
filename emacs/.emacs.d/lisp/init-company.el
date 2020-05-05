@@ -1,9 +1,10 @@
 (use-package company
-  :diminish company-mode
+  :disabled
   :config
   (add-hook 'after-init-hook 'global-company-mode))
 
 (use-package company-lsp
+  :disabled
   :config
   (add-to-list 'company-backends #'company-lsp))
 

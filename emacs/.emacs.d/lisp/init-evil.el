@@ -22,6 +22,7 @@
     "u" #'winner-undo
     "C-r" #'winner-redo)
   (general-unbind evil-motion-state-map "<up>" "<down>" "RET" "SPC")
+  (evil-set-initial-state 'completion-list-mode 'normal)
 
   (evil-mode 1))
 
@@ -33,16 +34,17 @@
 
 (use-package evil-surround
   :general
-  (general-define-key :states '(normal operator) "s" 'evil-surround-edit)
-  (general-define-key :states 'visual "s" 'evil-surround-region))
+  (general-define-key :states '(normal operator) "s" #'evil-surround-edit)
+  (general-define-key :states 'visual "s" #'evil-surround-region))
 
 
 (use-package evil-org ; TODO: Test if I need this
+  :disabled
   :after org
 
   :config
   (add-hook 'org-mode-hook 'evil-org-mode)
-  (add-hook 'evil-org-mode-hook (lambda () (evil-org-set-key-theme))))
+  (evil-org-set-key-theme '(navigation)))
 
 
 (use-package evil-magit) ; TODO: Test if I need this
@@ -56,6 +58,11 @@
 (use-package repeat
   :straight nil
   :general (my-leader "." #'repeat))
+
+
+(use-package evil-commentary
+  :config
+  (evil-commentary-mode))
 
 
 (provide 'init-evil)

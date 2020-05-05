@@ -1,5 +1,7 @@
 ;; -*- lexical-binding: t; -*-
 
+(customize-set-variable 'network-security-level 'paranoid)
+
 (defvar bootstrap-version)
 (let ((bootstrap-file
        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
@@ -17,8 +19,6 @@
 
 (use-package general
   :config
-  (general-evil-setup t)
-
   (general-create-definer my-leader
     :states '(normal visual insert emacs)
     :keymaps 'override
@@ -32,7 +32,7 @@
 (require 'init-theme)
 (require 'init-tab-bar)
 (require 'init-org)
-(require 'init-icomplete)
+(require 'init-minibuffer)
 (require 'init-undo-tree)
 (require 'init-evil)
 (require 'init-dired)
@@ -58,3 +58,4 @@
 (require 'init-email)
 (require 'init-openwith)
 (require 'init-window-manager)
+(require 'init-vlf)

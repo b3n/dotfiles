@@ -46,6 +46,7 @@
 
   :custom
   (async-shell-command-buffer 'new-buffer)
+  (completion-show-help nil)
 
   :config
   (size-indication-mode)
@@ -103,6 +104,23 @@
 (use-package uniquify
   :straight nil
   :custom (uniquify-buffer-name-style 'forward))
+
+
+(use-package project
+  :straight nil
+  :init
+  (defun my-find-all-files ()
+    "Find all files within a particular directory."
+    (interactive)
+    (project-find-file-in
+     nil
+     nil
+     (cons 'transient (read-directory-name "Choose the directory: " "~/" nil t))))
+
+  :general
+  (my-leader
+    "f F" #'my-find-all-files
+    "f p" #'project-find-file))
 
 
 (provide 'init-core)

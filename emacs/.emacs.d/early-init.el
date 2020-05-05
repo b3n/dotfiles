@@ -1,27 +1,22 @@
-(defvar default-file-name-handler-alist file-name-handler-alist)
-(setq file-name-handler-alist nil)
-(setq gc-cons-threshold most-positive-fixnum)
-(add-hook 'emacs-startup-hook
-          (lambda ()
-            "Restore defalut values after init."
-            (setq file-name-handler-alist default-file-name-handler-alist)
-            (setq gc-cons-threshold 999999)
-            (add-function :after after-focus-change-function
-                          (lambda ()
-                            (unless (frame-focus-state)
-                              (garbage-collect))))))
+(menu-bar-mode 0)
+(tool-bar-mode 0)
+(scroll-bar-mode 0)
+(horizontal-scroll-bar-mode 0)
 
 (fset 'yes-or-no-p 'y-or-n-p)
-(setq package-enable-at-startup nil)
+
+;; https://github.com/emacs-lsp/lsp-mode#performance
+(setq gc-cons-threshold 99999999)
+(setq read-process-output-max 9999999)
+
+(setq completion-ignore-case t)
 (setq create-lockfiles nil)
-(setq network-security-level 'paranoid)
 (setq frame-inhibit-implied-resize t)
+(setq package-enable-at-startup nil)
+(setq x-selection-timeout 10) ;; https://omecha.info/blog/org-capture-freezes-emacs.html
+
 (setq-default frame-title-format '("%b - Emacs"))
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 4)
 (setq-default show-trailing-whitespace t)
 
-(menu-bar-mode 0)
-(tool-bar-mode 0)
-(scroll-bar-mode 0)
-(horizontal-scroll-bar-mode 0)

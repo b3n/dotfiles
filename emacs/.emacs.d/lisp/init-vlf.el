@@ -1,6 +1,9 @@
 (use-package vlf
-  :custom (vlf-application 'dont-ask)
-  :config (require 'vlf-setup))
+  :custom
+  (vlf-application 'dont-ask)
+
+  :config
+  (require 'vlf-setup))
 
 
 (provide 'init-vlf)
