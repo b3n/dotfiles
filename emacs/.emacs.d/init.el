@@ -1,4 +1,6 @@
-;; -*- lexical-binding: t; -*-
+;; TODO (in order of priority):
+;; - Deprecate general.el (again)
+;; - Consolidate init files under better groupings
 
 (customize-set-variable 'network-security-level 'paranoid)
 
@@ -15,12 +17,15 @@
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 (straight-use-package 'use-package)
-(customize-set-variable 'straight-use-package-by-default t)
 
 (use-package general
+  :straight t
+
   :config
   (general-create-definer my-leader :prefix "C-c")
-  (general-define-key :states 'normal :keymaps 'override "SPC" (general-simulate-key "C-c")))
+  (general-define-key :states 'normal :keymaps 'override "DEL" (general-simulate-key "C-w"))
+  (general-define-key :states 'normal :keymaps 'override "SPC" (general-simulate-key "C-x"))
+  (general-define-key :states 'normal :keymaps 'override "," (general-simulate-key "C-c")))
 
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
@@ -33,10 +38,7 @@
 (require 'init-undo-tree)
 (require 'init-evil)
 (require 'init-dired)
-(require 'init-default-text-scale)
 (require 'init-flycheck)
-(require 'init-which-key)
-(require 'init-company)
 (require 'init-yasnippet)
 (require 'init-avy)
 (require 'init-grep)

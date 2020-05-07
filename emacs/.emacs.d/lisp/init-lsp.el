@@ -1,6 +1,6 @@
 (use-package lsp-mode
-  :general
-  (my-leader "l" '(:keymap lsp-command-map :wk "LSP"))
+  :straight t
+  :bind-keymap ("C-c l" . lsp-command-map)
 
   :hook
   (ruby-mode . lsp) ;; gem install solargraph
@@ -9,6 +9,7 @@
 
 
 (use-package lsp-ui
+  :straight t
   :custom
   (lsp-ui-doc nil t)
   (lsp-ui-doc-enable nil)
@@ -20,15 +21,16 @@
 
 
 (use-package dap-mode
-  :general
-  (lsp-command-map "d" #'dap-hydra)
+  :straight t
+  :bind (:map lsp-command-map ("d" . dap-hydra))
 
   :config
   (dap-mode t)
   (dap-ui-mode t))
 
 
-(use-package lsp-java)
+(use-package lsp-java
+  :straight t)
 
 
 (provide 'init-lsp)

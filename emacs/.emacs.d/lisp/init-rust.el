@@ -1,10 +1,16 @@
 (use-package rust-mode
+  :straight t
+
   :config
   (setq rust-format-on-save t))
 
-(use-package cargo)
+(use-package cargo
+  :disabled
+  :straight t)
 
 (use-package racer
+  :disabled
+  :straight t
   :after company
   :config
   (add-hook 'rust-mode-hook #'racer-mode)

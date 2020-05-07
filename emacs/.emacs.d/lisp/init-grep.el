@@ -1,8 +1,8 @@
-(use-package wgrep)
-
-
 (use-package rg
-  :general (my-leader "r" #'rg-project))
+  :straight t
+
+  :config
+  (rg-enable-default-bindings))
 
 
 (provide 'init-grep)

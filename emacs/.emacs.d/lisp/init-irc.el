@@ -1,5 +1,4 @@
 (use-package erc
-  :straight nil
   :config
   (setq erc-lurker-hide-list '("JOIN" "PART" "QUIT")
         erc-lurker-threshold-time 3600)

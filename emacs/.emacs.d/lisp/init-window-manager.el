@@ -1,5 +1,6 @@
 (use-package exwm
   :if (eq window-system 'x)
+  :straight t
 
   :hook
   (exwm-update-class . (lambda () (exwm-workspace-rename-buffer exwm-class-name)))
@@ -34,12 +35,9 @@
 
 
 (use-package time
-  :straight nil
-
   :custom
   (display-time-format "%F %R")
   (display-time-default-load-average nil)
-
 
   :config
   (display-time-mode t))

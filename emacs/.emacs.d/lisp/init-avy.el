@@ -1,18 +1,9 @@
-(use-package avy
-  :custom
-  (avy-keys '(?n ?t ?e ?s ?i ?r ?o ?a))
-
-  :general
-  (general-define-key
-   :states '(normal motion)
-   "<backspace>" #'avy-goto-word-or-subword-1))
-
-
 (use-package link-hint
-  :general
-  (general-define-key
-   :states '(normal motion)
-   "<C-backspace>" #'link-hint-open-link))
+  :straight t
+  :bind ("C-c j" . link-hint-open-link)
+
+  :custom
+  (link-hint-avy-keys '(?n ?t ?e ?s ?i ?r ?o ?a)))
 
 
 (provide 'init-avy)

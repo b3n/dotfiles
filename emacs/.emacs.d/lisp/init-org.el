@@ -17,18 +17,29 @@
       "\\[\\[file:"
       (regexp-quote (file-name-nondirectory buffer-file-name)))))
 
+  (defun my-org-narrow-forward ()
+    "Move to the next subtree at same level, and narrow to it."
+    (interactive)
+    (widen)
+    (org-forward-heading-same-level 1)
+    (org-narrow-to-subtree))
+
+  (defun my-org-narrow-backward ()
+    "Move to the previous subtree at same level, and narrow to it."
+    (interactive)
+    (widen)
+    (org-backward-heading-same-level 1)
+    (org-narrow-to-subtree))
+
   ;;(setq org-src-lang-modes nil) ;; For some reason org-mode fails to load without this being initiated.
 
-  :general
-  (my-leader
-    "o" '(:ignore t :wk "Org")
-    "o a" #'org-agenda
-    "o c" #'org-capture
-    "o l n" #'org-next-link
-    "o l N" #'org-previous-link
-    "o l o" #'org-open-at-point-global
-    "o l d" #'my-org-link-date
-    "o l f" #'my-org-find-links-here)
+  :bind (("C-c o a"   . org-agenda)
+         ("C-c o c"   . org-capture)
+         :map org-mode-map
+         ("C-c o l n" . my-org-narrow-forward) ; TODO: Make Hydra
+         ("C-c o l N" . my-org-narrow-backward)
+         ("C-c o l d" . my-org-link-date)
+         ("C-c o l f" . my-org-find-links-here))
 
   :custom
   (org-ellipsis "  ⬎ ")
@@ -48,7 +59,9 @@
   (org-startup-indented t)
   (org-startup-with-inline-images t)
   (org-agenda-files '("~/todo.org"))
-  (org-todo-keywords '((sequence "TODO" "IN-PROGRESS" "BLOCKED" "|" "DONE" "CANCELLED")))
+  (org-todo-keywords '((sequence "TODO" "IN-PROGRESS" "BLOCKED" "|" "DONE" "CANCELLED")
+                       (sequence "TO-READ" "CURRENTLY-READING" "|" "READ")
+                       (sequence "HABIT" "|" "HABIT-DONE")))
   (org-capture-templates
         `(("i" "Todo inbox" entry (file+headline "~/todo.org" "Inbox") "* %?")
           ("t" "Todo" entry

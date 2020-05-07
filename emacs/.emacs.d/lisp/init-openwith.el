@@ -1,4 +1,6 @@
 (use-package openwith
+  :straight t
+
   :custom
   (openwith-associations ((lambda (asocs)
                             (cl-loop for (prog . exts) in asocs
