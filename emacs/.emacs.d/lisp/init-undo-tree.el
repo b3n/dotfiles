@@ -1,5 +1,7 @@
 (use-package undo-tree
+  :demand
   :straight t
+  :bind ("C-c u" . undo-tree-visualize)
 
   :custom
   (undo-tree-auto-save-history t)

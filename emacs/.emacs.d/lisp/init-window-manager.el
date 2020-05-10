@@ -1,4 +1,5 @@
 (use-package exwm
+  :disabled
   :if (eq window-system 'x)
   :straight t
 
@@ -10,14 +11,14 @@
   (exwm-workspace-number 2)
   (exwm-workspace-show-all-buffers t)
   (exwm-layout-show-all-buffers t)
-  (exwm-input-global-keys
-   `(([?\s-r] . exwm-reset)
-     ([?\s-w] . exwm-workspace-switch)
-     (,(kbd "s-<tab>") . tab-bar-switch-to-next-tab)
-     ,@(mapcar (lambda (i) `(,(kbd (format "s-%d" i)) . tab-bar-select-tab)) (number-sequence 0 9))))
+  ;; (exwm-input-global-keys
+  ;;  `(([?\s-r] . exwm-reset)
+  ;;    ([?\s-w] . exwm-workspace-switch)
+  ;;    (,(kbd "s-<tab>") . tab-bar-switch-to-next-tab)
+  ;;    ,@(mapcar (lambda (i) `(,(kbd (format "s-%d" i)) . tab-bar-select-tab)) (number-sequence 0 9))))
 
   :config
-  (push ?\M-\s exwm-input-prefix-keys)
+  (push ?\C-w exwm-input-prefix-keys)
 
   ;;(require 'exwm-randr)
   ;;(add-hook

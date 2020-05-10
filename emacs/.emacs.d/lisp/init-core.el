@@ -70,7 +70,7 @@
 
 
 (use-package calc
-  :general (my-leader "a c" #'calc-dispatch))
+  :bind ("C-c c" . calc-dispatch))
 
 
 (use-package uniquify
@@ -94,6 +94,17 @@
 (use-package emacs ; indent
   :custom
   (tab-always-indent 'complete))
+
+
+(use-package tab-bar
+  :bind (:map tab-prefix-map
+              ("q" . tab-close)
+              ("u" . tab-undo)
+              ("t" . tab-new))
+
+  :custom
+  (tab-bar-new-tab-choice "*scratch*")
+  (tab-bar-show nil))
 
 
 (provide 'init-core)

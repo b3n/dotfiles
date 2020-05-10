@@ -12,14 +12,8 @@
 
 
 (use-package minibuffer
-  :general
-  (minibuffer-local-completion-map
-   "S-<return>" #'minibuffer-complete-and-exit)
-  ;; (completion-list-mode-map :keymaps 'override
-  ;;  "d" (lambda ()
-  ;;        (interactive)
-  ;;        (message (cons "*Completions Dired*" (mapcar (lambda (x) (concat my-find-all-files x)) (split-string (buffer-substring (point) (point-max))))))))
-  ;; (general-define-key :states 'insert "<tab>" #'completion-at-point)
+  :bind (:map minibuffer-local-completion-map
+   ("S-<return>" . minibuffer-complete-and-exit))
 
   :custom
   (read-buffer-completion-ignore-case t)
@@ -52,13 +46,12 @@
 (use-package icomplete
   :demand
 
-  :general
-  (icomplete-minibuffer-map
-   "<right>" #'icomplete-forward-completions
-   "<left>" #'icomplete-backward-completions
-   "DEL" #'icomplete-fido-backward-updir
-   "<return>" #'icomplete-fido-ret
-   "M-<return>" #'icomplete-fido-exit)
+  :bind (:map icomplete-minibuffer-map
+   ("<right>"    . icomplete-forward-completions)
+   ("<left>"     . icomplete-backward-completions)
+   ("DEL"        . icomplete-fido-backward-updir)
+   ("<return>"   . icomplete-fido-ret)
+   ("M-<return>" . icomplete-fido-exit))
 
   :custom
   (icomplete-prospects-height 1)
@@ -74,10 +67,9 @@
   :after minibuffer
   :straight (:host github :repo "oantolin/restricto")
 
-  :general
-  (minibuffer-local-completion-map
-   "SPC" #'restricto-narrow
-   "S-SPC" #'restricto-widen)
+  :bind (:map minibuffer-local-completion-map
+   ("SPC"   . restricto-narrow)
+   ("S-SPC" . restricto-widen))
 
   :config
   (restricto-mode))

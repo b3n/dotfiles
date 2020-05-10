@@ -1,10 +1,3 @@
-(menu-bar-mode 0)
-(tool-bar-mode 0)
-(scroll-bar-mode 0)
-(horizontal-scroll-bar-mode 0)
-
-(fset 'yes-or-no-p 'y-or-n-p)
-
 ;; https://github.com/emacs-lsp/lsp-mode#performance
 (setq gc-cons-threshold 99999999)
 (setq read-process-output-max 9999999)
@@ -18,5 +11,12 @@
 (setq-default frame-title-format '("%b - Emacs"))
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 4)
-(setq-default show-trailing-whitespace t)
 
+(put 'narrow-to-region 'disabled nil)
+
+(menu-bar-mode 0)
+(tool-bar-mode 0)
+(scroll-bar-mode 0)
+(horizontal-scroll-bar-mode 0)
+
+(fset 'yes-or-no-p 'y-or-n-p)

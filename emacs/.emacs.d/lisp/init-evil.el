@@ -1,28 +1,25 @@
 (use-package evil
   :straight t
-
-  :init
-  (setq evil-want-keybinding nil) ;; We use evil-collection for this
+  :bind (:map evil-window-map
+    ("f" . other-frame)
+    ("Q" . evil-delete-buffer))
 
   :custom
+  (evil-kill-on-visual-paste nil)
   (evil-search-module 'evil-search)
-  (evil-shift-round nil)
   (evil-symbol-word-search t)
   (evil-want-minibuffer t)
   (evil-want-Y-yank-to-eol t)
   (evil-want-C-w-delete nil)
+  (evil-want-C-w-in-emacs-state t)
 
   :config
-  (general-def evil-window-map
-    "f" #'other-frame
-    "Q" #'evil-delete-buffer)
-  (general-unbind evil-motion-state-map "<up>" "<down>" "RET" "SPC")
-  ;; (evil-set-initial-state 'completion-list-mode 'normal)
-
+  ;; (general-unbind evil-motion-state-map "<up>" "<down>" "SPC")
   (evil-mode 1))
 
 
 (use-package evil-collection
+  :disabled
   :straight t
   :config
   (evil-collection-init))
@@ -30,13 +27,16 @@
 
 (use-package evil-surround
   :straight t
-  :general
-  (general-define-key :states '(normal operator) "s" #'evil-surround-edit)
-  (general-define-key :states 'visual "s" #'evil-surround-region))
+  :config
+  (evil-define-key 'normal global-map "s" 'evil-surround-edit)
+  (evil-define-key 'operator global-map "s" 'evil-surround-edit)
+  (evil-define-key 'visual global-map "s" 'evil-surround-region))
 
 
 (use-package evil-org
+  :disabled
   :after org
+  :straight t
 
   :config
   (add-hook 'org-mode-hook 'evil-org-mode)
@@ -44,6 +44,7 @@
 
 
 (use-package evil-magit
+  :disabled
   :straight t)
 
 
@@ -62,10 +63,9 @@
 (use-package winner
   :after evil
 
-  :general
-  (general-def evil-window-map
-    "u" #'winner-undo
-    "C-r" #'winner-redo)
+  :bind (:map evil-window-map
+    ("u"   . winner-undo)
+    ("C-r" . winner-redo))
 
   :config
   (winner-mode 1))
@@ -73,9 +73,10 @@
 
 (use-package evil-indent-plus
   :straight t
-  :general
-  (evil-inner-text-objects-map "i" 'evil-indent-plus-i-indent)
-  (evil-outer-text-objects-map "i" 'evil-indent-plus-a-indent))
+  :bind (:map evil-inner-text-objects-map
+              ("i" . evil-indent-plus-i-indent)
+         :map evil-outer-text-objects-map
+              ("i" . evil-indent-plus-a-inednt)))
 
 
 (provide 'init-evil)
