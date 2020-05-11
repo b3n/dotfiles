@@ -34,7 +34,7 @@
 
   :config
   (load-theme 'modus-vivendi t t)
-  (run-at-time "20:00" (* 60 60 24) (lambda () (enable-theme 'modus-vivendi))))
+  (run-at-time "19:00" (* 60 60 24) (lambda () (enable-theme 'modus-vivendi))))
 
 
 (use-package modus-operandi-theme ;; Light
@@ -51,7 +51,7 @@
 
   :config
   (load-theme 'modus-operandi t t)
-  (run-at-time "06:00" (* 60 60 24) (lambda () (enable-theme 'modus-operandi))))
+  (run-at-time "07:00" (* 60 60 24) (lambda () (enable-theme 'modus-operandi))))
 
 
 (use-package minions
