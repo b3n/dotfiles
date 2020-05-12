@@ -30,21 +30,16 @@
 (require 'init-grep)
 (require 'init-password-gen)
 (require 'init-openwith)
-(require 'init-vlf)
 (require 'init-lsp)
 
 ;; Major modes
-(require 'init-window-manager)
-(require 'init-email)
+(require 'init-calc)
+(require 'init-email) ;; TODO: Email setup
 (require 'init-irc)
 (require 'init-vc)
 (require 'init-dired)
-
-(require 'init-org)
-(require 'init-markdown)
+(require 'init-window-manager)
 (require 'init-restclient)
-(require 'init-auctex)
-(require 'init-csv)
-(require 'init-json)
-(require 'init-rust)
-(require 'init-yaml)
+(require 'init-vlf)
+(require 'init-prog-modes)
+(require 'init-text-modes)

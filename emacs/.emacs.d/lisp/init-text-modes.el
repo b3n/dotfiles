@@ -1,6 +1,4 @@
 (use-package org
-  :straight org-plus-contrib
-
   :init
   (defun my-org-link-date ()
     (interactive)
@@ -33,13 +31,15 @@
 
   ;;(setq org-src-lang-modes nil) ;; For some reason org-mode fails to load without this being initiated.
 
-  :bind (("C-c o a"   . org-agenda)
-         ("C-c o c"   . org-capture)
+  :mode ("\\.org\'" . org-mode)
+  :bind (("C-c o a" . org-agenda)
+         ("C-c o c" . org-capture)
          :map org-mode-map
-         ("C-c o l n" . my-org-narrow-forward) ; TODO: Make Hydra
-         ("C-c o l N" . my-org-narrow-backward)
+         ("C-c o n" . my-org-narrow-forward) ; TODO: Make Hydra
+         ("C-c o N" . my-org-narrow-backward)
          ("C-c o l d" . my-org-link-date)
          ("C-c o l f" . my-org-find-links-here))
+  :straight org-plus-contrib
 
   :custom
   (org-ellipsis "  ⬎ ")
@@ -89,4 +89,40 @@
                          (user-error))))))
 
 
-(provide 'init-org)
+(use-package markdown-mode
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode))
+  :straight t)
+
+
+(use-package tex
+  :init
+  (setq doc-view-continuous t)
+
+  :defer t
+  :straight auctex
+
+  :custom
+  (latex-run-command "pdflatex")
+  (TeX-auto-save t)
+  (TeX-parse-self t)
+  (TeX-save-query nil)
+  (TeX-PDF-mode t)
+  (TeX-view-program-selection '((output-pdf "PDF Tools"))
+                              TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view))
+                              TeX-source-correlate-start-server t)
+  :config
+  (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
+
+
+(use-package csv-mode
+  :mode "\\.csv\\'"
+  :straight t)
+
+
+(use-package yaml-mode
+  :mode "\\.ya?ml\\'"
+  :straight t)
+
+
+(provide 'init-text-modes)

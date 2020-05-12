@@ -1,8 +1,12 @@
 (use-package evil
+  :demand
   :straight t
   :bind (:map evil-window-map
     ("f" . other-frame)
     ("Q" . evil-delete-buffer))
+
+  :init
+  (setq evil-want-keybinding nil)
 
   :custom
   (evil-kill-on-visual-paste nil)
@@ -14,12 +18,13 @@
   (evil-want-C-w-in-emacs-state t)
 
   :config
-  ;; (general-unbind evil-motion-state-map "<up>" "<down>" "SPC")
+  (evil-define-key 'motion global-map
+    [up] nil
+    [down] nil)
   (evil-mode 1))
 
 
 (use-package evil-collection
-  :disabled
   :straight t
   :config
   (evil-collection-init))
@@ -28,8 +33,7 @@
 (use-package evil-surround
   :straight t
   :config
-  (evil-define-key 'normal global-map "s" 'evil-surround-edit)
-  (evil-define-key 'operator global-map "s" 'evil-surround-edit)
+  (evil-define-key '(normal operator) global-map "s" 'evil-surround-edit)
   (evil-define-key 'visual global-map "s" 'evil-surround-region))
 
 
@@ -44,7 +48,6 @@
 
 
 (use-package evil-magit
-  :disabled
   :straight t)
 
 

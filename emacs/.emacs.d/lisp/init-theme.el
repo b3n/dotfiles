@@ -64,9 +64,4 @@
   (minions-mode 1))
 
 
-(use-package fringe
-  :config
-  (fringe-mode nil))
-
-
 (provide 'init-theme)

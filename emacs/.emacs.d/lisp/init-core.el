@@ -69,10 +69,6 @@
   (recentf-mode))
 
 
-(use-package calc
-  :bind ("C-c c" . calc-dispatch))
-
-
 (use-package uniquify
   :custom (uniquify-buffer-name-style 'forward))
 
