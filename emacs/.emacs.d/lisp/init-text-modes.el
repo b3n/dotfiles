@@ -63,16 +63,9 @@
                        (sequence "TO-READ" "CURRENTLY-READING" "|" "READ")
                        (sequence "HABIT" "|" "HABIT-DONE")))
   (org-capture-templates
-        `(("i" "Todo inbox" entry (file+headline "~/todo.org" "Inbox") "* %?")
-          ("t" "Todo" entry
-           (file+headline
-            ,(lambda ()
-               (setq my-last-todo-date (org-read-date nil t))
-               (format-time-string "~/wiki/%F.org" my-last-todo-date))
-            "Agenda")
-           "* TODO %?\nSCHEDULED: <%(my-todo-scheduled-string)>\n")
-          ("j" "Journal" entry
-           (file ,(lambda () (format-time-string "~/journal/%Y-%m-%d.org")))
+        `(("t" "Todo inbox" entry (file+headline "~/todo.org" "Inbox") "* %?")
+          ("j" "Journal (/tmp)" entry
+           (file ,(lambda () (format-time-string "~/tmp/%Y-%m-%d.org")))
            "* %<%H:%M>\n%?\n")))
 
   :config

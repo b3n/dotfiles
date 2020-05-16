@@ -16,4 +16,4 @@ pulseaudio -D
 thunar --daemon &
 
 compton -cf --backend xr_glx_hybrid --vsync opengl --xrender-sync-fence --vsync-aggressive --xrender-sync -m .9 &
-exec emacs
+exec emacs -f exwm-enable

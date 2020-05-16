@@ -18,12 +18,12 @@
   :custom
   (read-buffer-completion-ignore-case t)
   (read-file-name-completion-ignore-case t)
-  (completion-styles '(substring partial-completion flex))
+  (completion-styles '(substring flex))
   (enable-recursive-minibuffers t)
 
   :config
   (setq completion-in-region-function (lambda (start end collection &optional predicate)
-  "Prompt for completion of region in the minibuffer if non-unique."
+    "Prompt for completion of region in the minibuffer if non-unique."
     (if (and (minibufferp) (not (string= (minibuffer-prompt) "Eval: ")))
         (completion--in-region start end collection predicate)
       (let* ((initial (buffer-substring-no-properties start end))

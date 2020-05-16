@@ -2,32 +2,30 @@
   :demand
   :straight t
   :bind (:map evil-window-map
-    ("f" . other-frame)
-    ("Q" . evil-delete-buffer))
-
-  :init
-  (setq evil-want-keybinding nil)
+         ("C-f" . other-frame)
+         :map evil-motion-state-map
+         ("<up>") ("<down>") ("RET") ("SPC"))
 
   :custom
-  (evil-kill-on-visual-paste nil)
+  (evil-disable-insert-state-bindings t)
   (evil-search-module 'evil-search)
   (evil-symbol-word-search t)
-  (evil-want-minibuffer t)
-  (evil-want-Y-yank-to-eol t)
   (evil-want-C-w-delete nil)
-  (evil-want-C-w-in-emacs-state t)
+  (evil-want-Y-yank-to-eol t)
+  (evil-want-minibuffer t)
+
+  ;; This is needed because we disable other insert state bindings, but want
+  ;; C-w everywhere.
+  :bind-keymap ("C-w" . evil-window-map)
 
   :config
-  (evil-define-key 'motion global-map
-    [up] nil
-    [down] nil)
+  (setq evil-insert-state-modes (append evil-insert-state-modes evil-emacs-state-modes))
+  (setq evil-emacs-state-modes nil)
+
+  (add-to-list 'evil-motion-state-modes 'dired-mode)
+  (add-to-list 'evil-insert-state-modes 'git-commit-mode)
+
   (evil-mode 1))
-
-
-(use-package evil-collection
-  :straight t
-  :config
-  (evil-collection-init))
 
 
 (use-package evil-surround
@@ -37,22 +35,10 @@
   (evil-define-key 'visual global-map "s" 'evil-surround-region))
 
 
-(use-package evil-org
-  :disabled
-  :after org
-  :straight t
-
-  :config
-  (add-hook 'org-mode-hook 'evil-org-mode)
-  (evil-org-set-key-theme '(navigation)))
-
-
-(use-package evil-magit
-  :straight t)
-
-
 (use-package evil-anzu
+  :disabled
   :straight t
+
   :config
   (global-anzu-mode +1))
 
@@ -68,6 +54,7 @@
 
   :bind (:map evil-window-map
     ("u"   . winner-undo)
+    ("C-u" . winner-undo)
     ("C-r" . winner-redo))
 
   :config

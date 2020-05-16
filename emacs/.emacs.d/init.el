@@ -33,6 +33,7 @@
 (require 'init-lsp)
 
 ;; Major modes
+(require 'init-shell)
 (require 'init-calc)
 (require 'init-email) ;; TODO: Email setup
 (require 'init-irc)

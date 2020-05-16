@@ -1,4 +1,6 @@
 (use-package eshell
+  :bind ("C-c e" . eshell)
+
   :custom
   (inhibit-read-only t)
   (eshell-hist-ignoredups t)
@@ -15,18 +17,17 @@
 
 
 (use-package fish-completion
+  :if (executable-find "fish")
   :straight t
 
   :config
-  (when (and (executable-find "fish")
-             (require 'fish-completion nil t))
-    (add-to-list 'fish-completion--parent-commands "doas")
-    (global-fish-completion-mode)))
+  (add-to-list 'fish-completion--parent-commands "doas")
+  (global-fish-completion-mode))
 
 
-(use-package esh-autosuggest
-  :straight t
-  :hook (eshell-mode . esh-autosuggest-mode))
+;; (use-package esh-autosuggest
+;;   :straight t
+;;   :hook (eshell-mode . esh-autosuggest-mode))
 
 
 (provide 'init-shell)

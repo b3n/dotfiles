@@ -29,11 +29,9 @@
 
 
 (use-package simple
-  :bind ("C-c p" . async-shell-command)
   :hook (text-mode . turn-on-visual-line-mode)
 
   :custom
-  (async-shell-command-buffer 'new-buffer)
   (completion-show-help nil)
 
   :config
@@ -55,8 +53,7 @@
 (use-package emacs ;window
   :custom
   (display-buffer-alist
-   '(("\\*shell" (display-buffer-reuse-window display-buffer-same-window))
-     ("\\*Async Shell Command" (display-buffer-no-window)))))
+   '(("\\*shell" (display-buffer-reuse-window display-buffer-same-window)))))
 
 
 (use-package recentf
@@ -100,7 +97,14 @@
 
   :custom
   (tab-bar-new-tab-choice "*scratch*")
-  (tab-bar-show nil))
+  (tab-bar-close-button nil)
+  (tab-bar-show 1))
+
+
+
+(use-package fringe
+  :config
+  (fringe-mode))
 
 
 (provide 'init-core)

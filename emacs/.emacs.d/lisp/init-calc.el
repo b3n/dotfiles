@@ -16,4 +16,10 @@
                                     (format "Currency %s in terms of %s" curr base))))
             math-units-table nil))))
 
+
+(use-package calc-forms
+  :config
+  (add-to-list 'math-tzone-names '("AEST" -10 0)))
+
+
 (provide 'init-calc)
