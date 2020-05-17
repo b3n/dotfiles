@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: title from file name
+# key: <ti
+# --
+#+title:${1:`(capitalize (s-replace "-" " " (file-name-nondirectory (file-name-sans-extension (buffer-file-name)))))`}
+$0

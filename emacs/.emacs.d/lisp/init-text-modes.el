@@ -1,5 +1,7 @@
 (use-package org
   :init
+  (setq x-selection-timeout 9) ;; https://omecha.info/blog/org-capture-freezes-emacs.html
+
   (defun my-org-link-date ()
     (interactive)
     (org-insert-link
@@ -28,8 +30,6 @@
     (widen)
     (org-backward-heading-same-level 1)
     (org-narrow-to-subtree))
-
-  ;;(setq org-src-lang-modes nil) ;; For some reason org-mode fails to load without this being initiated.
 
   :mode ("\\.org\'" . org-mode)
   :bind (("C-c o a" . org-agenda)
@@ -63,8 +63,8 @@
                        (sequence "TO-READ" "CURRENTLY-READING" "|" "READ")
                        (sequence "HABIT" "|" "HABIT-DONE")))
   (org-capture-templates
-        `(("t" "Todo inbox" entry (file+headline "~/todo.org" "Inbox") "* %?")
-          ("j" "Journal (/tmp)" entry
+        `(("t" "Todo" entry (file+headline "~/todo.org" "Inbox") "* %?")
+          ("n" "Note" entry
            (file ,(lambda () (format-time-string "~/tmp/%Y-%m-%d.org")))
            "* %<%H:%M>\n%?\n")))
 
