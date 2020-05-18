@@ -8,7 +8,6 @@
 
   :custom
   (evil-disable-insert-state-bindings t)
-  (evil-search-module 'evil-search)
   (evil-symbol-word-search t)
   (evil-want-C-w-delete nil)
   (evil-want-Y-yank-to-eol t)
@@ -22,7 +21,7 @@
   (setq evil-insert-state-modes (append evil-insert-state-modes evil-emacs-state-modes))
   (setq evil-emacs-state-modes nil)
 
-  (add-to-list 'evil-motion-state-modes 'dired-mode)
+  ;; (add-to-list 'evil-motion-state-modes 'dired-mode)
   (add-to-list 'evil-insert-state-modes 'git-commit-mode)
 
   (evil-mode 1))
@@ -33,14 +32,6 @@
   :config
   (evil-define-key '(normal operator) global-map "s" 'evil-surround-edit)
   (evil-define-key 'visual global-map "s" 'evil-surround-region))
-
-
-(use-package evil-anzu
-  :disabled
-  :straight t
-
-  :config
-  (global-anzu-mode +1))
 
 
 (use-package evil-commentary

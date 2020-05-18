@@ -90,10 +90,11 @@
 
 
 (use-package tab-bar
+  :bind-keymap ("C-x C-t" . tab-prefix-map)
   :bind (:map tab-prefix-map
-              ("q" . tab-close)
-              ("u" . tab-undo)
-              ("t" . tab-new))
+         ("q" . tab-close)
+         ("u" . tab-undo)
+         ("t" . tab-new))
 
   :custom
   (tab-bar-new-tab-choice "*scratch*")
@@ -102,9 +103,11 @@
 
 
 
-(use-package fringe
-  :config
-  (fringe-mode))
+(use-package isearch
+  :custom
+  (isearch-lazy-count t)
+  (lazy-count-prefix-format nil)
+  (lazy-count-suffix-format "  (%s/%s)"))
 
 
 (provide 'init-core)

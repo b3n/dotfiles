@@ -2,9 +2,10 @@
   :bind ("C-c e" . eshell)
 
   :custom
-  (inhibit-read-only t)
   (eshell-hist-ignoredups t)
   (eshell-history-size 9999)
+  (eshell-destroy-buffer-when-process-dies t)
+  (eshell-scroll-to-bottom-on-output t)
   
   :config
   (setenv "ENV" "$HOME/.kshrc")
@@ -25,9 +26,9 @@
   (global-fish-completion-mode))
 
 
-;; (use-package esh-autosuggest
-;;   :straight t
-;;   :hook (eshell-mode . esh-autosuggest-mode))
+(use-package esh-autosuggest
+  :straight t
+  :hook (eshell-mode . esh-autosuggest-mode))
 
 
 (provide 'init-shell)
