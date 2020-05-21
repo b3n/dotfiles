@@ -22,7 +22,6 @@
 (require 'init-minibuffer)
 
 ;; Minor modes
-(require 'init-undo-tree)
 (require 'init-evil)
 (require 'init-flycheck)
 (require 'init-yasnippet)
