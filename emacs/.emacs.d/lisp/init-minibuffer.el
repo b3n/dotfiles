@@ -12,13 +12,16 @@
 
 
 (use-package minibuffer
+  :init
+  (setq completion-category-defaults nil)
+
   :bind (:map minibuffer-local-completion-map
    ("S-<return>" . minibuffer-complete-and-exit))
 
   :custom
   (read-buffer-completion-ignore-case t)
   (read-file-name-completion-ignore-case t)
-  (completion-styles '(substring flex))
+  (completion-styles '(substring partial-completion flex))
   (enable-recursive-minibuffers t)
 
   :config
