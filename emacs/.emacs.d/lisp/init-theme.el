@@ -64,4 +64,20 @@
   (minions-mode 1))
 
 
+(use-package spaceline
+  :straight t
+
+  :custom
+  (powerline-default-separator 'utf-8)
+  (spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
+
+  :config
+  (require 'spaceline-config)
+  (spaceline-toggle-version-control-off)
+  (when (bound-and-true-p minions-mode)
+    (spaceline-toggle-major-mode-off)
+    (spaceline-define-segment minor-modes (format-mode-line minions-mode-line-modes)))
+  (spaceline-emacs-theme))
+
+
 (provide 'init-theme)

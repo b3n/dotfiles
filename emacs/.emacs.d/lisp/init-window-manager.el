@@ -47,15 +47,14 @@
 
 
 (use-package time
+  :after exwm
+
   :custom
-  (display-time-format "%R")
+  (display-time-format "<%F %R>")
   (display-time-default-load-average nil)
 
   :config
-  (display-time-mode t)
-  (add-to-list
-   'global-mode-string
-   '(:eval (propertize " " 'display `((space :align-to (- right ,(1+ (length display-time-string)))))))))
+  (display-time-mode t))
 
 
 (provide 'init-window-manager)

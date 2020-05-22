@@ -24,10 +24,9 @@
 
   :config
   ;; I'll just use insert state instead of emacs state.
-  (setq evil-insert-state-modes (append evil-insert-state-modes evil-emacs-state-modes))
+  (setq evil-insert-state-modes (append evil-insert-state-modes evil-emacs-state-modes '(git-commit-mode)))
   (setq evil-emacs-state-modes nil)
-  (add-to-list 'evil-insert-state-modes 'dired-mode)
-  (add-to-list 'evil-insert-state-modes 'git-commit-mode)
+  (add-to-list 'evil-motion-state-modes 'dired-mode)
 
   (evil-mode 1)
 
