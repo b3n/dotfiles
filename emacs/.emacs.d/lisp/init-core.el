@@ -104,10 +104,27 @@
 
 
 (use-package isearch
+  :disabled
   :custom
   (isearch-lazy-count t)
   (lazy-count-prefix-format nil)
   (lazy-count-suffix-format "  (%s/%s)"))
+
+
+(use-package desktop
+  :custom
+  (desktop-restore-eager 9)
+
+  :config
+  (desktop-save-mode 1))
+
+
+(use-package midnight)
+
+
+(use-package browse-url
+  :custom
+  (browse-url-handlers '(("\\`file:" . browse-url-default-browser))))
 
 
 (provide 'init-core)

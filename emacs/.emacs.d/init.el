@@ -28,7 +28,6 @@
 (require 'init-avy)
 (require 'init-grep)
 (require 'init-password-gen)
-(require 'init-openwith)
 (require 'init-lsp)
 
 ;; Major modes

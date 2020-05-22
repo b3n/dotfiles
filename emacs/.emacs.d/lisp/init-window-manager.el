@@ -14,7 +14,7 @@
   (setq mouse-autoselect-window t)
 
   :custom
-  (exwm-randr-workspace-monitor-plist '(1 "HDMI-2"))
+  (exwm-randr-workspace-monitor-plist '(1 "HDMI2"))
   (exwm-workspace-number 2)
   (exwm-workspace-show-all-buffers t)
   (exwm-layout-show-all-buffers t)
@@ -30,7 +30,7 @@
      ([?\s-p] . (lambda (command)
                   (interactive (list (read-shell-command "$ ")))
                   (start-process-shell-command command nil (concat "nohup " command))))
-     ([?\s-g] . (lambda () (interactive) (shell-command "xrandr --output HDMI-2 --auto")))
+     ([?\s-g] . (lambda () (interactive) (shell-command "xrandr --output HDMI2 --auto")))
      (,(kbd "s-<tab>") . tab-bar-switch-to-next-tab)
      ,@(mapcar (lambda (i) `(,(kbd (format "s-%d" i)) . tab-bar-select-tab)) (number-sequence 0 9))))
 
@@ -42,7 +42,7 @@
    'exwm-randr-screen-change-hook
    (lambda ()
      (start-process-shell-command
-      "xrandr" nil "xrandr --output HDMI-2 --auto --output DP-1 --auto --right-of HDMI-2")))
+      "xrandr" nil "xrandr --output HDMI2 --auto --output DP1 --auto --right-of HDMI2")))
   (exwm-randr-enable))
 
 
