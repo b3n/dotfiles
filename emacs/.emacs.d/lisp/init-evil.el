@@ -38,18 +38,18 @@
   (evil-define-key '(normal visual) global-map
     "U" #'undo
     "u" #'undo-only
-    "C-r" #'undo-redo))
+    (kbd "C-r") #'undo-redo))
 
 
 (use-package evil-surround
   :straight t
   :config
-  (evil-define-key '(normal operator) global-map "s" 'evil-surround-edit)
-  (evil-define-key 'visual global-map "s" 'evil-surround-region))
+  (global-evil-surround-mode 1))
 
 
 (use-package evil-commentary
   :straight t
+  :diminish
   :config
   (evil-commentary-mode))
 
@@ -72,6 +72,21 @@
               ("i" . evil-indent-plus-i-indent)
          :map evil-outer-text-objects-map
               ("i" . evil-indent-plus-a-inednt)))
+
+
+(use-package avy
+  :straight t
+  :custom (avy-keys '(?n ?t ?e ?s ?i ?r ?o ?a)))
+
+(use-package evil-easymotion
+  :after avy
+  :straight t
+  :config (evilem-default-keybindings "SPC"))
+
+(use-package link-hint
+  :after avy
+  :straight t
+  :bind (:map evil-motion-state-map ("SPC o" . link-hint-open-link)))
 
 
 (provide 'init-evil)

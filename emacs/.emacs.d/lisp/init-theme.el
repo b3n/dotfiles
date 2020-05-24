@@ -54,16 +54,6 @@
   (run-at-time "07:00" (* 60 60 24) (lambda () (enable-theme 'modus-operandi))))
 
 
-(use-package minions
-  :straight t
-
-  :custom
-  (minions-mode-line-lighter "...")
-
-  :config
-  (minions-mode 1))
-
-
 (use-package spaceline
   :straight t
 
@@ -73,11 +63,31 @@
 
   :config
   (require 'spaceline-config)
-  (spaceline-toggle-version-control-off)
-  (when (bound-and-true-p minions-mode)
-    (spaceline-toggle-major-mode-off)
-    (spaceline-define-segment minor-modes (format-mode-line minions-mode-line-modes)))
-  (spaceline-emacs-theme))
+  (spaceline-emacs-theme)
+
+  (spaceline-compile
+    `(((buffer-modified buffer-size) :face highlight-face :priority 90)
+      ((buffer-id remote-host) :priority 100)
+      (major-mode :priority 85)
+      (minor-modes :when active :priority 40)
+      (process :when active :priority 20)
+      (version-control :when active :priority 1)
+      (org-clock :when active :priority 50))
+    '((selection-info :priority 70)
+      (input-method :priority 10)
+      ((point-position line-column) :priority 80)
+      (buffer-position :priority 60)
+      (hud :priority 30))))
+
+
+(use-package minibuffer-line
+  :straight t
+
+  :custom
+  (minibuffer-line-format global-mode-string)
+  (minibuffer-line-refresh-interval 1)
+
+  :config (minibuffer-line-mode t))
 
 
 (provide 'init-theme)

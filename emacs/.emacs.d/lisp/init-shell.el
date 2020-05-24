@@ -26,9 +26,4 @@
   (global-fish-completion-mode))
 
 
-(use-package esh-autosuggest
-  :straight t
-  :hook (eshell-mode . esh-autosuggest-mode))
-
-
 (provide 'init-shell)
