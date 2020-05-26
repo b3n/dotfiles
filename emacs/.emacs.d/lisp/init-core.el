@@ -2,10 +2,13 @@
   :custom
   (backup-by-copying t)
   (backup-directory-alist '((".*" . "~/.emacs.d/saves/")))
-  (confirm-kill-emacs 'yes-or-no-p)
   (delete-old-versions t)
-  (enable-local-variables nil)
+  (kept-new-versions 99)
   (version-control t)
+  (vc-make-backup-files t)
+
+  (enable-local-variables nil)
+  (confirm-kill-emacs 'yes-or-no-p)
 
   :config
   (auto-save-visited-mode))
@@ -51,6 +54,20 @@
 
 
 (use-package emacs ;window
+  :init
+  (defun my-switch-to-mode-buffer ()
+    (interactive)
+    (switch-to-buffer
+     (let ((current-major-mode major-mode))
+       (read-buffer (format "Switch to %s buffer: " current-major-mode)
+                    nil
+                    t
+                    (lambda (buffer)
+                      (when (consp buffer) (setq buffer (cdr buffer)))
+                      (string= current-major-mode (buffer-local-value 'major-mode buffer)))))))
+
+  :bind ("C-x C-b" . my-switch-to-mode-buffer)
+  
   :custom
   (display-buffer-alist
    '(("\\*shell" (display-buffer-reuse-window display-buffer-same-window)))))
@@ -104,27 +121,10 @@
 
 
 (use-package isearch
-  :disabled
   :custom
   (isearch-lazy-count t)
   (lazy-count-prefix-format nil)
   (lazy-count-suffix-format "  (%s/%s)"))
-
-
-(use-package desktop
-  :custom
-  (desktop-restore-eager 9)
-
-  :config
-  (desktop-save-mode 1))
-
-
-(use-package midnight)
-
-
-(use-package browse-url
-  :custom
-  (browse-url-handlers '(("\\`file:" . browse-url-default-browser))))
 
 
 (provide 'init-core)

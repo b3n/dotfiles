@@ -7,7 +7,7 @@
   :bind (:map evil-window-map
          ("C-f" . other-frame)
          :map evil-motion-state-map
-         ("<up>") ("<down>") ("<left>") ("<right>") ("RET") ("SPC")
+         ("<up>") ("<down>") ("RET")
          ("i" . evil-insert))
 
   :custom

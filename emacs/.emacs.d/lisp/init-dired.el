@@ -19,4 +19,9 @@
   :hook (dired-mode . dired-async-mode))
 
 
+(use-package browse-url
+  :custom
+  (browse-url-handlers '(("\\`file:" . browse-url-default-browser))))
+
+
 (provide 'init-dired)
