@@ -68,7 +68,7 @@
   (spaceline-compile
     `(((buffer-modified buffer-size) :face highlight-face :priority 90)
       ((buffer-id remote-host) :face highlight-face :priority 100)
-      (major-mode :priority 85)
+      (major-mode :face face2 :priority 85)
       (minor-modes :when active :priority 40)
       (process :when active :priority 20)
       (version-control :when active :priority 1)

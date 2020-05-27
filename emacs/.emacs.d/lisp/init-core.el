@@ -73,16 +73,6 @@
    '(("\\*shell" (display-buffer-reuse-window display-buffer-same-window)))))
 
 
-(use-package recentf
-  :bind ("C-c r" . recentf-open-files)
-
-  :custom
-  (recentf-max-saved-items 999)
-
-  :config
-  (recentf-mode))
-
-
 (use-package uniquify
   :custom (uniquify-buffer-name-style 'forward))
 
@@ -119,12 +109,16 @@
   (tab-bar-show 1))
 
 
-
 (use-package isearch
+  :custom (isearch-lazy-count t))
+
+
+(use-package flymake
+  :hook (prog-mode . flymake-mode)
+
   :custom
-  (isearch-lazy-count t)
-  (lazy-count-prefix-format nil)
-  (lazy-count-suffix-format "  (%s/%s)"))
+  (flymake-no-changes-timeout nil)
+  (flymake-wrap-around nil))
 
 
 (provide 'init-core)

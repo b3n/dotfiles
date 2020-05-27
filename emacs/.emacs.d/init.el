@@ -12,7 +12,6 @@
       (goto-char (point-max))
       (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
-(straight-use-package 'diminish)
 (straight-use-package 'use-package)
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
@@ -24,7 +23,6 @@
 
 ;; Minor modes
 (require 'init-evil)
-(require 'init-flycheck)
 (require 'init-yasnippet)
 (require 'init-grep)
 (require 'init-lsp)

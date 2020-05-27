@@ -10,13 +10,6 @@
       "file:%F.org"
       (org-read-date "" 'totime nil nil (current-time) ""))))
 
-  (defun my-org-find-links-here ()
-    (interactive)
-    (counsel-rg
-     (concat
-      "\\[\\[file:"
-      (regexp-quote (file-name-nondirectory buffer-file-name)))))
-
   (defun my-org-narrow-forward ()
     "Move to the next subtree at same level, and narrow to it."
     (interactive)
@@ -37,8 +30,7 @@
          :map org-mode-map
          ("C-c o n" . my-org-narrow-forward) ; TODO: Make Hydra
          ("C-c o N" . my-org-narrow-backward)
-         ("C-c o l d" . my-org-link-date)
-         ("C-c o l f" . my-org-find-links-here))
+         ("C-c o l d" . my-org-link-date))
   :straight org-plus-contrib
 
   :custom

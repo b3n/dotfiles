@@ -69,6 +69,7 @@
   (emms-source-file-default-directory "/mnt/sandisk/music")
 
   :config
+  (setq emms-volume-mixerctl-change nil) ;; TODO: What should this be? Why is it void?
   (require 'emms-setup)
   (require 'emms-mode-line)
   (require 'emms-volume-mixerctl)
@@ -91,9 +92,7 @@
              (cl-loop for (curr . rate) in (cdr (assq 'rates exch))
                       collect (list curr (format "%f %s" (/ rate) base)
                                     (format "Currency %s in terms of %s" curr base))))
-            math-units-table nil)))
-
-  (add-to-list 'math-tzone-names '("AEST" -10 0)))
+            math-units-table nil))))
 
 
 (use-package erc

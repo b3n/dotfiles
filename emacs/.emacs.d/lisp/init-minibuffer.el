@@ -1,6 +1,6 @@
 (use-package savehist
   :custom
-  (history-length 9999)
+  (history-length 99999)
 
   :config
   (savehist-mode 1))
@@ -16,7 +16,7 @@
   (setq completion-category-defaults nil)
 
   :bind (:map minibuffer-local-completion-map
-   ("S-<return>" . minibuffer-complete-and-exit))
+              ("S-<return>" . minibuffer-complete-and-exit))
 
   :custom
   (read-buffer-completion-ignore-case t)
