@@ -51,7 +51,7 @@
 
 (use-package time
   :custom
-  (display-time-format "%F %R")
+  (display-time-format "%F %R\t")
   (display-time-default-load-average nil)
 
   :config

@@ -1,3 +1,11 @@
+(use-package olivetti
+  :straight t
+  :hook (text-mode . olivetti-mode)
+
+  :custom
+  (olivetti-body-width 80))
+
+
 (use-package org
   :init
   (setq x-selection-timeout 9) ;; https://omecha.info/blog/org-capture-freezes-emacs.html

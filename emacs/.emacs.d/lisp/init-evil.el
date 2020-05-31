@@ -8,24 +8,23 @@
          ("i" . evil-insert))
 
   :custom
-  (evil-default-state 'insert)
   (evil-disable-insert-state-bindings t)
+  (evil-default-state 'insert)
   (evil-emacs-state-modes nil)
-  (evil-lookup-func (lambda () (call-interactively #'man))) ; Woman doesn't work on OpenBSD :-(
   (evil-normal-state-modes '(prog-mode text-mode))
+
+  (evil-lookup-func (lambda () (call-interactively #'man))) ; Woman doesn't work on OpenBSD :-(
   (evil-search-module 'evil-search)
   (evil-symbol-word-search t)
-  (evil-want-C-w-delete nil)
   (evil-want-Y-yank-to-eol t)
   (evil-want-keybinding nil)
   (evil-want-minibuffer t)
 
-  ;; This is needed because we disable other evil insert state bindings, but
-  ;; still want C-w everywhere.
-  :bind-keymap ("C-w" . evil-window-map)
-
   :config
   (evil-mode 1)
+
+  ;; This is needed because we disable other evil insert state bindings, but still want C-w.
+  (evil-global-set-key 'insert (kbd "C-w") 'evil-window-map)
 
   ;; Get rid of undo-tree
   (with-eval-after-load 'undo-tree
@@ -55,6 +54,7 @@
 
 (use-package winner
   :after evil
+  :demand
   :bind (:map evil-window-map
     ("u"   . winner-undo)
     ("C-u" . winner-undo)

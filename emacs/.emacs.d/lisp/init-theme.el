@@ -12,14 +12,6 @@
   (default-text-scale-amount 20))
 
 
-(use-package olivetti
-  :straight t
-  :hook (text-mode . olivetti-mode)
-
-  :custom
-  (olivetti-body-width 80))
-
-
 (use-package modus-vivendi-theme ;; Dark
   :straight t
 
@@ -85,9 +77,12 @@
 
   :custom
   (minibuffer-line-format '(:eval mode-line-misc-info))
-  (minibuffer-line-refresh-interval 1)
+  (minibuffer-line-refresh-interval 0.9)
 
-  :config (minibuffer-line-mode t))
+  :config
+  (delete 'mode-line-misc-info mode-line-format)
+  (custom-set-faces '(minibuffer-line ((t (:inherit default)))))
+  (minibuffer-line-mode t))
 
 
 (provide 'init-theme)

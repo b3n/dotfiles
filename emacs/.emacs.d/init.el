@@ -25,7 +25,6 @@
 (require 'init-evil)
 (require 'init-yasnippet)
 (require 'init-grep)
-(require 'init-lsp)
 
 ;; Major modes
 (require 'init-shell)
