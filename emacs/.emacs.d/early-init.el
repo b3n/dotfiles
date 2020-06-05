@@ -6,6 +6,7 @@
 (setq create-lockfiles nil)
 (setq frame-inhibit-implied-resize t)
 (setq package-enable-at-startup nil)
+(setq visible-bell t)
 
 (setq-default frame-title-format '("%b - Emacs"))
 (setq-default indent-tabs-mode nil)

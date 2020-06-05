@@ -83,8 +83,13 @@
 
 
 (use-package markdown-mode
-  :mode (("README\\.md\\'" . gfm-mode)
-         ("\\.md\\'" . markdown-mode))
+  :mode (("\\.md\\'" . markdown-mode)
+         ("README\\.md\\'" . gfm-mode))
+  :straight t)
+
+
+(use-package dockerfile-mode
+  :mode ("Dockerfile\\'" . dockerfile-mode)
   :straight t)
 
 

@@ -11,7 +11,7 @@
   (evil-disable-insert-state-bindings t)
   (evil-default-state 'insert)
   (evil-emacs-state-modes nil)
-  (evil-normal-state-modes '(prog-mode text-mode))
+  (evil-normal-state-modes '(prog-mode text-mode fundamental-mode))
 
   (evil-lookup-func (lambda () (call-interactively #'man))) ; Woman doesn't work on OpenBSD :-(
   (evil-search-module 'evil-search)
@@ -23,7 +23,7 @@
   :config
   (evil-mode 1)
 
-  ;; This is needed because we disable other evil insert state bindings, but still want C-w.
+  ;; This is needed because we disable evil insert state bindings, but still want C-w.
   (evil-global-set-key 'insert (kbd "C-w") 'evil-window-map)
 
   ;; Get rid of undo-tree
@@ -50,6 +50,11 @@
               ("i" . evil-indent-plus-i-indent)
          :map evil-outer-text-objects-map
               ("i" . evil-indent-plus-a-indent)))
+
+(use-package evil-matchit
+  :straight t
+  :config
+  (global-evil-matchit-mode 1))
 
 
 (use-package winner

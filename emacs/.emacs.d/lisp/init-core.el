@@ -69,6 +69,7 @@
   :bind ("C-x C-b" . my-switch-to-mode-buffer)
   
   :custom
+  (mouse-autoselect-window t)
   (display-buffer-alist
    '(("\\*shell" (display-buffer-reuse-window display-buffer-same-window)))))
 
@@ -85,7 +86,7 @@
     (project-find-file-in
      nil
      nil
-     (cons 'transient (read-directory-name "Choose the directory: " "~/" nil t))))
+     (cons 'transient (read-directory-name "Choose the directory: " nil nil t))))
 
   :bind (("C-x f" . project-find-file)
          ("C-x F" . my-find-all-files)))

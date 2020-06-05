@@ -5,7 +5,11 @@
   :hook
   (ruby-mode . lsp) ;; gem install solargraph
   (python-mode . lsp) ;; pip install 'python-language-server[all]'
-  (java-mode . lsp))
+  (java-mode . lsp)
+
+  :custom
+  (lsp-pyls-plugins-pycodestyle-max-line-length 100)
+  (lsp-pyls-plugins-flake8-max-line-length 100))
 
 
 (use-package lsp-ui
@@ -36,6 +40,16 @@
 (use-package json-mode
   :mode "\\.json\\'"
   :straight t)
+
+
+(use-package blacken
+  :straight t
+
+  :hook
+  (python-mode . blacken-mode) ;; brew install black
+
+  :custom
+  (blacken-line-length 100))
 
 
 (provide 'init-prog-modes)
