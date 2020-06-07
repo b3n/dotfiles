@@ -1,15 +1,30 @@
 ;; Things a text editor has no buisness doing. ;-)
 
 (use-package exwm
+  ;; TODO: Automaticlaly bind any unmapped `s-?` keys to `C-c ?` if it exists, else `C-x ?`.
   :if (eq window-system 'x)
   :straight t
 
   :init
-  (defun my-exwm-set-buffer-name ()
+  (defun my/exwm-set-buffer-name ()
     "Add the application's class name to the buffer name."
     (exwm-workspace-rename-buffer (concat "*EXWM*<" exwm-class-name ">")))
 
-  :hook (exwm-update-class . my-exwm-set-buffer-name)
+  (defun my/gtk-launch ()
+    "Launch an X application via `gtk-launch'."
+    (interactive)
+
+    (let* ((extention "\\.desktop$")
+           (dirs (mapcar (lambda (dir) (expand-file-name "applications" dir))
+                         (cons (xdg-data-home) (xdg-data-dirs))))
+           (apps (cl-loop for dir in dirs
+                          if (file-exists-p dir)
+                          append (cl-loop for file in (directory-files dir nil extention)
+                                          collect (replace-regexp-in-string extention "" file)))))
+
+      (call-process "gtk-launch" nil 0 nil (completing-read "Launch: " apps))))
+
+  :hook (exwm-update-class . my/exwm-set-buffer-name)
 
   :init
   (setq focus-follows-mouse t)
@@ -30,12 +45,8 @@
    `(([?\s-r] . exwm-reset)
      ([?\s-o] . exwm-workspace-swap)
      ([?\s-b] . switch-to-buffer)
-     ([?\s-p] . (lambda (command)
-                  (interactive (list (read-shell-command "$ ")))
-                  (start-process-shell-command command nil (concat "nohup " command))))
-     ([?\s-g] . (lambda () (interactive) (shell-command "xrandr --output HDMI-2 --auto")))
-     (,(kbd "s-<tab>") . tab-bar-switch-to-next-tab)
-     ,@(mapcar (lambda (i) `(,(kbd (format "s-%d" i)) . tab-bar-select-tab)) (number-sequence 0 9))))
+     ([?\s-p] . my/gtk-launch)
+     ([?\s-g] . (lambda () (interactive) (shell-command "xrandr --output HDMI-2 --auto")))))
 
   :config
   (push ?\C-w exwm-input-prefix-keys)
