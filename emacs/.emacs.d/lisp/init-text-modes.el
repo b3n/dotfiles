@@ -44,7 +44,6 @@
   :custom
   (org-ellipsis "  ⬎ ")
   (org-enforce-todo-dependencies t)
-  (org-fontify-done-headline t)
   (org-fontify-quote-and-verse-blocks t)
   (org-fontify-whole-heading-line t)
   (org-hidden-keywords '(title))

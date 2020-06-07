@@ -16,6 +16,14 @@
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
+
+(defmacro my/format-sexp (sexp &rest objects)
+  "Format an expression as if it were a string.
+
+See `format' for replacement syntax."
+  `(eval (read (format ,(format "%S" sexp) ,@objects))))
+
+
 (require 'init-core)
 (require 'init-theme)
 (require 'init-minibuffer)

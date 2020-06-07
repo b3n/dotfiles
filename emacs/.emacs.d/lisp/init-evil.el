@@ -11,6 +11,7 @@
   (evil-disable-insert-state-bindings t)
   (evil-default-state 'insert)
   (evil-emacs-state-modes nil)
+  (evil-motion-state-modes nil)
   (evil-normal-state-modes '(prog-mode text-mode fundamental-mode))
 
   (evil-lookup-func (lambda () (call-interactively #'man))) ; Woman doesn't work on OpenBSD :-(
