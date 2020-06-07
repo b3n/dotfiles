@@ -28,7 +28,6 @@
 
   :init
   (setq focus-follows-mouse t)
-  (setq mouse-autoselect-window t)
 
   :custom
   (exwm-randr-workspace-monitor-plist '(1 "HDMI-2"))
@@ -61,6 +60,8 @@
 
 
 (use-package time
+  :after exwm
+
   :custom
   (display-time-format "%F %R\t")
   (display-time-default-load-average nil)
@@ -80,7 +81,7 @@
   (emms-source-file-default-directory "/mnt/sandisk/music")
 
   :config
-  (setq emms-volume-mixerctl-change nil) ;; TODO: What should this be? Why is it void?
+  ;; (setq emms-volume-mixerctl-change nil) ;; TODO: What should this be? Why is it void?
   (require 'emms-setup)
   (require 'emms-mode-line)
   (require 'emms-volume-mixerctl)
@@ -90,7 +91,7 @@
 
 
 (use-package calc
-  :bind ("C-c c" . calc-dispatch)
+  :defer t
 
   :config
   ;; Get latest exchange rates
