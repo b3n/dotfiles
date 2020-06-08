@@ -13,7 +13,7 @@
   (defun my/gtk-launch ()
     "Launch an X application via `gtk-launch'."
     (interactive)
-
+    (require 'xdg)
     (let* ((extention "\\.desktop$")
            (dirs (mapcar (lambda (dir) (expand-file-name "applications" dir))
                          (cons (xdg-data-home) (xdg-data-dirs))))
@@ -21,7 +21,6 @@
                           if (file-exists-p dir)
                           append (cl-loop for file in (directory-files dir nil extention)
                                           collect (replace-regexp-in-string extention "" file)))))
-
       (call-process "gtk-launch" nil 0 nil (completing-read "Launch: " apps))))
 
   :hook (exwm-update-class . my/exwm-set-buffer-name)
@@ -73,15 +72,16 @@
 (use-package emms
   :straight t
 
-  :bind (("s-," . emms-previous)
-         ("s-." . emms-next)
-         ("s-m" . emms-pause))
+  :bind ("C-c m" . emms)
 
   :custom
   (emms-source-file-default-directory "/mnt/sandisk/music")
+  (emms-volume-change-function
+   (lambda (amount)
+     (call-process "sndioctl" nil nil nil
+      (format "app/mpv0.level=%s%s" (if (> amount 0) "+" "") (/ amount 10.0)))))
 
   :config
-  ;; (setq emms-volume-mixerctl-change nil) ;; TODO: What should this be? Why is it void?
   (require 'emms-setup)
   (require 'emms-mode-line)
   (require 'emms-volume-mixerctl)

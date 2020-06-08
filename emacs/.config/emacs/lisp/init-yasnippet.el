@@ -1,8 +1,7 @@
 (use-package yasnippet
   :straight t
-
-  :config
-  (yas-global-mode 1))
+  :hook ((text-mode . yas-minor-mode)
+         (prog-mode . yas-minor-mode)))
 
 
 (use-package yasnippet-snippets

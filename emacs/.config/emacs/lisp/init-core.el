@@ -1,11 +1,11 @@
 (use-package files
   :custom
   (backup-by-copying t)
-  (backup-directory-alist '((".*" . "~/.emacs.d/saves/")))
+  (backup-directory-alist '((".*" . (expand-file-name "backups" user-emacs-directory))))
   (delete-old-versions t)
   (kept-new-versions 99)
-  (version-control t)
   (vc-make-backup-files t)
+  (version-control t)
 
   (enable-local-variables nil)
   (confirm-kill-emacs 'yes-or-no-p)
@@ -120,6 +120,11 @@
   :custom
   (flymake-no-changes-timeout nil)
   (flymake-wrap-around nil))
+
+
+(use-package hippie-exp
+  :config
+  (global-set-key [remap dabbrev-expand] #'hippie-expand))
 
 
 (provide 'init-core)

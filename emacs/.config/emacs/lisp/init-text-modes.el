@@ -3,7 +3,7 @@
   :hook (text-mode . olivetti-mode)
 
   :custom
-  (olivetti-body-width 80))
+  (olivetti-body-width 99))
 
 
 (use-package org
