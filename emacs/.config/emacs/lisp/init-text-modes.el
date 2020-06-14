@@ -69,6 +69,7 @@
 
   :config
   (require 'org-habit)
+  (require 'ob-calc)
 
   (add-hook 'org-capture-mode-hook 'evil-insert-state)
 

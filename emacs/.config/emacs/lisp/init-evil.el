@@ -20,6 +20,7 @@
   (evil-search-module 'evil-search)
   (evil-symbol-word-search t)
   (evil-want-Y-yank-to-eol t)
+  (evil-want-keybinding nil)
   (evil-want-minibuffer t)
 
   :config

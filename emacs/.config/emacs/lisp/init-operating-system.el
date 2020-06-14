@@ -43,7 +43,7 @@
    `(([?\s-r] . exwm-reset)
      ([?\s-o] . exwm-workspace-swap)
      ([?\s-b] . switch-to-buffer)
-     ([?\s-p] . my/gtk-launch)
+     ([?\s-\s] . my/gtk-launch)
      ([?\s-g] . (lambda () (interactive) (shell-command "xrandr --output HDMI-2 --auto")))))
 
   :config
@@ -71,7 +71,6 @@
 
 (use-package emms
   :straight t
-
   :bind ("C-c m" . emms)
 
   :custom

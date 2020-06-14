@@ -18,6 +18,7 @@
 
 
 (use-package fish-completion
+  :disabled  ;; This creates a "~" directory inside my config...
   :if (executable-find "fish")
   :straight t
 

@@ -1,5 +1,3 @@
-(setenv "XDG_CONFIG_HOME" "~/.config")
-
 ;; https://github.com/emacs-lsp/lsp-mode#performance
 (setq gc-cons-threshold 99999999)
 (setq read-process-output-max 9999999)
