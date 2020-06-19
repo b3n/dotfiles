@@ -79,4 +79,23 @@
   (winner-mode 1))
 
 
+(use-package dumb-jump
+  :after evil
+  :straight t
+
+  :init
+  (defun my/evil-goto-definition-dumb-jump (_string _position)
+    "Jump to definition with dumb-jump. Error if no jump candidate found."
+    (unless (dumb-jump-go)
+      (user-error nil)))
+
+  :custom
+  (evil-goto-definition-functions
+   '(evil-goto-definition-xref
+     evil-goto-definition-semantic
+     my/evil-goto-definition-dumb-jump
+     evil-goto-definition-imenu
+     evil-goto-definition-search)))
+
+
 (provide 'init-evil)

@@ -1,5 +1,6 @@
 (use-package files
   :custom
+  (auto-save-visited-interval  9)
   (backup-by-copying t)
   (backup-directory-alist `((".*" . ,(expand-file-name "backups" user-emacs-directory))))
   (delete-old-versions t)
@@ -38,7 +39,6 @@
   (completion-show-help nil)
 
   :config
-  (size-indication-mode)
   (column-number-mode))
 
 
@@ -102,7 +102,7 @@
   :bind (:map tab-prefix-map
          ("q" . tab-close)
          ("u" . tab-undo)
-         ("t" . tab-new))
+         ("t" . tab-bar-switch-to-recent-tab))
 
   :custom
   (tab-bar-new-tab-choice "*scratch*")

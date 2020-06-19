@@ -1,5 +1,5 @@
-!emacs/.emacs.d/
-emacs/.emacs.d/*
-!emacs/.emacs.d/*.el
-!emacs/.emacs.d/lisp/
-!emacs/.emacs.d/snippets/
+!emacs/.config/emacs/
+emacs/.config/emacs/*
+!emacs/.config/emacs/*.el
+!emacs/.config/emacs/lisp/
+!emacs/.config/emacs/snippets/

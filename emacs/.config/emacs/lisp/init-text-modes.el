@@ -3,7 +3,7 @@
   :hook (text-mode . olivetti-mode)
 
   :custom
-  (olivetti-body-width 99))
+  (olivetti-body-width 100))
 
 
 (use-package org
@@ -119,7 +119,7 @@
 
 
 (use-package yaml-mode
-  :mode "\\.ya?ml\\'"
+  :mode "\\.ya?ml\\(\\.j2\\)?\\'"
   :straight t)
 
 

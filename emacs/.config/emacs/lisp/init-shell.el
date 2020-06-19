@@ -1,3 +1,11 @@
+(use-package exec-path-from-shell
+  :if (memq window-system '(mac ns x))
+  :straight t
+
+  :config
+  (exec-path-from-shell-initialize))
+
+
 (use-package eshell
   :bind ("C-c e" . eshell)
 

@@ -8,9 +8,9 @@
   :bind-keymap ("C-c l" . lsp-command-map)
 
   :hook
-  (ruby-mode . lsp) ;; gem install solargraph
   (python-mode . lsp) ;; pip install 'python-language-server[all]'
   (java-mode . lsp)
+  (sh-mode . lsp)
 
   :custom
   (lsp-pyls-plugins-pycodestyle-max-line-length 100)
@@ -18,6 +18,7 @@
 
 
 (use-package lsp-ui
+  :disabled
   :straight t
   :custom
   (lsp-ui-doc nil t)
@@ -34,6 +35,7 @@
   :bind (:map lsp-command-map ("d" . dap-hydra))
 
   :config
+  (require 'dap-python)
   (dap-mode t)
   (dap-ui-mode t))
 
@@ -55,6 +57,11 @@
 
   :custom
   (blacken-line-length 100))
+
+
+(use-package terraform-mode
+  :mode "\\.tf\\'"
+  :straight t)
 
 
 (provide 'init-prog-modes)

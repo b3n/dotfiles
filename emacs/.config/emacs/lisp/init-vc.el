@@ -1,6 +1,10 @@
 (use-package vc-hooks
   :custom
-  (vc-follow-symlinks t))
+  (vc-follow-symlinks t)
+
+  :config
+  (delete '(vc-mode vc-mode) mode-line-format)
+  (nconc mode-line-format '((vc-mode vc-mode))))
 
 
 (use-package magit

@@ -47,6 +47,8 @@
      ([?\s-g] . (lambda () (interactive) (shell-command "xrandr --output HDMI-2 --auto")))))
 
   :config
+  (scroll-bar-mode 0)
+  (horizontal-scroll-bar-mode 0)
   (push ?\C-w exwm-input-prefix-keys)
 
   (require 'exwm-randr)

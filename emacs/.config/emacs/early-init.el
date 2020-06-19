@@ -16,7 +16,5 @@
 
 (menu-bar-mode 0)
 (tool-bar-mode 0)
-(scroll-bar-mode 0)
-(horizontal-scroll-bar-mode 0)
 
 (fset 'yes-or-no-p 'y-or-n-p)
