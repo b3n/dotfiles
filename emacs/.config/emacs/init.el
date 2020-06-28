@@ -33,6 +33,7 @@ See `format' for replacement syntax."
 (require 'init-evil)
 (require 'init-yasnippet)
 (require 'init-grep)
+(require 'init-emoji)
 
 ;; Major modes
 (require 'init-shell)
