@@ -18,7 +18,6 @@
      :straight t
 
      :custom
-     (modus-%1$s-theme-3d-modeline t)
      (modus-%1$s-theme-bold-constructs t)
      (modus-%1$s-theme-slanted-constructs t)
      (modus-%1$s-theme-distinct-org-blocks t)
@@ -29,7 +28,7 @@
      :config
      (load-theme 'modus-%1$s t t)
      (run-at-time
-      (if (equal "%1$s" "operandi") "07:00" "19:00")
+      (if (equal "%1$s" "operandi") "04:00" "19:00")
       (* 60 60 24)
       (lambda () (enable-theme 'modus-%1$s))))
    theme))

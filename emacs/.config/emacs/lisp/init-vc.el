@@ -11,7 +11,9 @@
   :straight t
   :bind (("C-c g" . magit-status)
          :map magit-mode-map
-         ("C-w")))
+         ("C-w"))
+  :custom
+  (magit-no-confirm '(stage-all-changes)))
 
 
 (provide 'init-vc)

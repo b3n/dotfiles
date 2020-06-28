@@ -40,6 +40,6 @@ See `format' for replacement syntax."
 (require 'init-dired)
 (require 'init-operating-system)
 (require 'init-restclient)
-(require 'init-vlf)
+(require 'init-large-files)
 (require 'init-prog-modes)
 (require 'init-text-modes)

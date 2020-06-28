@@ -1,7 +1,6 @@
 ;; Things a text editor has no buisness doing. ;-)
 
 (use-package exwm
-  ;; TODO: Automaticlaly bind any unmapped `s-?` keys to `C-c ?` if it exists, else `C-x ?`.
   :if (eq window-system 'x)
   :straight t
 
@@ -38,6 +37,7 @@
      ([?\s-c] .  [?\C-c])
      ([?\s-w] .  [?\C-w])
      ([?\s-a] .  [?\C-a])
+     ([?\s-f] .  [?\C-f])
      ([?\s-v] .  [?\C-v])))
   (exwm-input-global-keys
    `(([?\s-r] . exwm-reset)

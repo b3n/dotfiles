@@ -13,7 +13,7 @@
   (evil-default-state 'insert)
   (evil-emacs-state-modes nil)
   (evil-motion-state-modes nil)
-  (evil-normal-state-modes '(prog-mode text-mode fundamental-mode))
+  (evil-normal-state-modes '(prog-mode text-mode))
 
   (evil-lookup-func (lambda () (call-interactively #'man))) ; Woman doesn't work on OpenBSD
   (evil-mode-line-format 'after)
