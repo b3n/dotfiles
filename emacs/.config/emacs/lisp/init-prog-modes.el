@@ -18,7 +18,6 @@
 
 
 (use-package lsp-ui
-  :disabled
   :straight t
   :custom
   (lsp-ui-doc nil t)
@@ -61,6 +60,10 @@
 
 (use-package terraform-mode
   :mode "\\.tf\\'"
+  :straight t)
+
+
+(use-package bazel-mode
   :straight t)
 
 
