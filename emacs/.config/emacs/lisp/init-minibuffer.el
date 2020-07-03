@@ -58,7 +58,7 @@
 
   :custom
   (icomplete-prospects-height 1)
-  (icomplete-separator "  ")
+  (icomplete-separator (propertize ", " 'face 'shadow))
   (icomplete-show-matches-on-no-input t)
   (icomplete-tidy-shadowed-file-names t)
 

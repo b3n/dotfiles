@@ -23,7 +23,6 @@
      (modus-%1$s-theme-distinct-org-blocks t)
      (modus-%1$s-theme-scale-5 1.9)
      (modus-%1$s-theme-scale-headings t)
-     (modus-%1$s-theme-section-headings t)
 
      :config
      (load-theme 'modus-%1$s t t)
@@ -39,11 +38,10 @@
 
   :custom
   (minibuffer-line-format '(:eval mode-line-misc-info))
-  (minibuffer-line-refresh-interval 0.9)
+  (minibuffer-line-refresh-interval 1)
 
   :config
   (delete 'mode-line-misc-info mode-line-format)
-  (custom-set-faces '(minibuffer-line ((t (:inherit default)))))
   (minibuffer-line-mode t))
 
 
