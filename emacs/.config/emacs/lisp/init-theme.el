@@ -21,6 +21,7 @@
      (modus-%1$s-theme-bold-constructs t)
      (modus-%1$s-theme-slanted-constructs t)
      (modus-%1$s-theme-distinct-org-blocks t)
+     (modus-%1$s-theme-faint-syntax t)
      (modus-%1$s-theme-scale-5 1.9)
      (modus-%1$s-theme-scale-headings t)
 
