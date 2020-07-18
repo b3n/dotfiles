@@ -1,9 +1,13 @@
 (use-package olivetti
   :straight t
-  :hook (text-mode . olivetti-mode)
+  :hook ((org-mode . olivetti-mode)
+         (markdown-mode . olivetti-mode))
 
   :custom
-  (olivetti-body-width 100))
+  (olivetti-body-width 100)
+
+  :config
+  (variable-pitch-mode))
 
 
 (use-package org

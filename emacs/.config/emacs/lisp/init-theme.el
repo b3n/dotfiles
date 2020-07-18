@@ -7,7 +7,6 @@
 
 
 (use-package face-remap
-  :hook (text-mode . variable-pitch-mode)
   :custom
   (default-text-scale-amount 20))
 
