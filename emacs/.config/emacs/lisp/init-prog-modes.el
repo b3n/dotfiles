@@ -8,7 +8,7 @@
   :bind-keymap ("C-c l" . lsp-command-map)
 
   :hook
-  (python-mode . lsp) ;; pip install 'python-language-server[all]'
+  ;; (python-mode . lsp) ;; pip install 'python-language-server[all]'
   (java-mode . lsp)
   (sh-mode . lsp)
 
@@ -17,16 +17,27 @@
   (lsp-pyls-plugins-flake8-max-line-length 100))
 
 
-(use-package lsp-ui
+(use-package lsp-python-ms
+  :if (eq system-type 'darwin)
   :straight t
+  :init (setq lsp-python-ms-auto-install-server t)
+  :hook (python-mode . (lambda ()
+                          (require 'lsp-python-ms)
+                          (lsp-deferred))))
+
+
+(use-package blacken
+  :straight t
+
+  :hook
+  (python-mode . blacken-mode) ;; brew install black
+
   :custom
-  (lsp-ui-doc nil t)
-  (lsp-ui-doc-enable nil)
-  (lsp-ui-imenu-enable nil)
-  (lsp-ui-peek-enable nil)
-  (lsp-ui-sideline nil t)
-  (lsp-ui-sideline-enable nil)
-  (lsp-ui-sideline-update-mode 'point))
+  (blacken-line-length 100))
+
+
+(use-package lsp-java
+  :straight t)
 
 
 (use-package dap-mode
@@ -39,23 +50,9 @@
   (dap-ui-mode t))
 
 
-(use-package lsp-java
-  :straight t)
-
-
 (use-package json-mode
   :mode "\\.json\\'"
   :straight t)
-
-
-(use-package blacken
-  :straight t
-
-  :hook
-  (python-mode . blacken-mode) ;; brew install black
-
-  :custom
-  (blacken-line-length 100))
 
 
 (use-package terraform-mode
