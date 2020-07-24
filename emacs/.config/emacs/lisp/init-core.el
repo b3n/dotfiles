@@ -79,6 +79,23 @@
 
 (use-package project
   :init
+  ;; Add caching to project-find-file
+  (defun project-find-file-clear-cache ()
+    (interactive)
+    (setq project-find-file-in-cache (make-hash-table :test 'equal)))
+  (project-find-file-clear-cache)
+  (defun project-find-file-in (filename dirs project)
+    (when (not (gethash (list project dirs) project-find-file-in-cache))
+      (puthash (list project dirs) (project-files project dirs) project-find-file-in-cache))
+
+    (let* ((all-files (gethash (list project dirs) project-find-file-in-cache))
+           (file (funcall project-read-file-name-function
+                          "Find file" all-files nil nil
+                          filename)))
+      (if (string= file "")
+          (user-error "You didn't specify the file")
+        (find-file file))))
+
   (defun my-find-all-files ()
     "Find all files within a particular directory."
     (interactive)
