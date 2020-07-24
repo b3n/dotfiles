@@ -52,8 +52,7 @@
   :straight t
 
   :config
-  (evil-define-key '(normal operator) global-map "s" 'evil-surround-edit)
-  (evil-define-key 'visual global-map "s" 'evil-surround-region))
+  (global-evil-surround-mode 1))
 
 
 ;; Great for Python
