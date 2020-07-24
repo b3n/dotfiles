@@ -1,6 +1,11 @@
 (use-package evil
   :demand
   :straight t
+  :init
+  (setq evil-intercept-maps nil)
+  (setq evil-overriding-maps nil)
+  (setq evil-want-keybinding nil)
+
   :bind (:map evil-window-map
          ("C-f" . other-frame)
          :map evil-motion-state-map
@@ -20,7 +25,6 @@
   (evil-search-module 'evil-search)
   (evil-symbol-word-search t)
   (evil-want-Y-yank-to-eol t)
-  (evil-want-keybinding nil)
   (evil-want-minibuffer t)
 
   :config
