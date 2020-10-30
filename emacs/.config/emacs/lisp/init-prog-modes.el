@@ -8,7 +8,6 @@
   :bind-keymap ("C-c l" . lsp-command-map)
 
   :hook
-  ;; (python-mode . lsp) ;; pip install 'python-language-server[all]'
   (java-mode . lsp)
   (sh-mode . lsp)
 
@@ -17,13 +16,11 @@
   (lsp-pyls-plugins-flake8-max-line-length 100))
 
 
-(use-package lsp-python-ms
-  :if (eq system-type 'darwin)
+(use-package lsp-pyright
   :straight t
-  :init (setq lsp-python-ms-auto-install-server t)
-  :hook (python-mode . (lambda ()
-                          (require 'lsp-python-ms)
-                          (lsp-deferred))))
+
+  :hook
+  (python-mode . (lambda () (require 'lsp-pyright) (lsp-deferred))))
 
 
 (use-package blacken
@@ -37,7 +34,9 @@
 
 
 (use-package lsp-java
-  :straight t)
+  :straight t
+  :config
+  (add-hook 'java-mode-hook #'lsp))
 
 
 (use-package dap-mode
@@ -61,6 +60,11 @@
 
 
 (use-package bazel-mode
+  :straight t)
+
+
+(use-package web-mode
+  :mode "\\.tsx\\'"
   :straight t)
 
 

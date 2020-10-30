@@ -1,5 +1,6 @@
 (use-package files
   :custom
+  (auto-save-default t)
   (backup-by-copying t)
   (backup-directory-alist `((".*" . ,(expand-file-name "backups" user-emacs-directory))))
   (delete-old-versions t)
@@ -8,10 +9,7 @@
   (version-control t)
 
   (enable-local-variables nil)
-  (confirm-kill-emacs 'yes-or-no-p)
-
-  :config
-  (auto-save-visited-mode))
+  (confirm-kill-emacs 'yes-or-no-p))
 
 
 (use-package cus-edit
@@ -53,20 +51,6 @@
 
 
 (use-package emacs ;window
-  :init
-  (defun my-switch-to-mode-buffer ()
-    (interactive)
-    (switch-to-buffer
-     (let ((current-major-mode major-mode))
-       (read-buffer (format "Switch to %s buffer: " current-major-mode)
-                    nil
-                    t
-                    (lambda (buffer)
-                      (when (consp buffer) (setq buffer (cdr buffer)))
-                      (string= current-major-mode (buffer-local-value 'major-mode buffer)))))))
-
-  :bind ("C-x C-b" . my-switch-to-mode-buffer)
-  
   :custom
   (mouse-autoselect-window t)
   (display-buffer-alist

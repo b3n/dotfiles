@@ -5,6 +5,7 @@
   (setq evil-intercept-maps nil)
   (setq evil-overriding-maps nil)
   (setq evil-want-keybinding nil)
+  (setq evil-undo-system 'undo-redo)
 
   :bind (:map evil-window-map
          ("C-f" . other-frame)
@@ -18,7 +19,8 @@
   (evil-default-state 'insert)
   (evil-emacs-state-modes nil)
   (evil-motion-state-modes nil)
-  (evil-normal-state-modes '(prog-mode text-mode))
+  (evil-normal-state-modes '(prog-mode text-mode fundamental-mode))
+  (evil-insert-state-modes '(special-mode))
 
   (evil-lookup-func (lambda () (call-interactively #'man))) ; Woman doesn't work on OpenBSD
   (evil-mode-line-format 'after)
@@ -33,6 +35,7 @@
   ;; This is needed because we disable evil insert state bindings, but still want C-w.
   (evil-global-set-key 'insert (kbd "C-w") 'evil-window-map)
 
+  ;; TODO: Is this still needed?
   ;; Get rid of undo-tree.
   (with-eval-after-load 'undo-tree
     (global-set-key [remap undo-tree-undo] #'undo-only)
@@ -81,25 +84,6 @@
 
   :config
   (winner-mode 1))
-
-
-(use-package dumb-jump
-  :after evil
-  :straight t
-
-  :init
-  (defun my/evil-goto-definition-dumb-jump (_string _position)
-    "Jump to definition with dumb-jump. Error if no jump candidate found."
-    (unless (dumb-jump-go)
-      (user-error nil)))
-
-  :custom
-  (evil-goto-definition-functions
-   '(evil-goto-definition-xref
-     evil-goto-definition-semantic
-     my/evil-goto-definition-dumb-jump
-     evil-goto-definition-imenu
-     evil-goto-definition-search)))
 
 
 (provide 'init-evil)

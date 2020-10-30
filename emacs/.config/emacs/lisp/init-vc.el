@@ -13,6 +13,7 @@
          :map magit-mode-map
          ("C-w"))
   :custom
+  (magit-diff-refine-hunk t)
   (magit-save-repository-buffers 'dontask)
   (magit-no-confirm '(stage-all-changes)))
 

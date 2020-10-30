@@ -14,9 +14,14 @@
   (eshell-history-size 9999)
   (eshell-destroy-buffer-when-process-dies t)
   (eshell-scroll-to-bottom-on-output t)
+  (eshell-prompt-function
+   (lambda ()
+     (concat (abbreviate-file-name (eshell/pwd))
+             (if (= (user-uid) 0) " #\n" " $\n"))))
+  (eshell-prompt-regexp "^[^#$\n]* [#$]\n")
   
   :config
-  (setenv "ENV" "$HOME/.kshrc")
+  (setenv "PAGER" "")
 
   (defun eshell/in-term (prog &rest args)
     "Run shell command in term buffer."
