@@ -8,6 +8,7 @@
 
 (use-package eshell
   :bind ("C-c e" . eshell)
+  :hook (eshell-mode . with-editor-export-editor)
 
   :custom
   (eshell-hist-ignoredups t)
@@ -22,22 +23,14 @@
   
   :config
   (setenv "PAGER" "")
+  (setenv "ENV" "$HOME/.kshrc")
+  (setenv "AUTOMAKE_VERSION" "1.16")
+  (setenv "AUTOCONF_VERSION" "2.69")
 
   (defun eshell/in-term (prog &rest args)
     "Run shell command in term buffer."
     (switch-to-buffer (apply #'make-term (format "in-term %s %s" prog args) prog nil args))
-    (term-mode)
-    (term-char-mode)))
-
-
-(use-package fish-completion
-  :disabled  ;; This creates a "~" directory inside my config...
-  :if (executable-find "fish")
-  :straight t
-
-  :config
-  (add-to-list 'fish-completion--parent-commands "doas")
-  (global-fish-completion-mode))
+    (term-mode)))
 
 
 (provide 'init-shell)
