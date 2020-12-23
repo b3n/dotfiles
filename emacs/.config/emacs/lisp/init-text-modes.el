@@ -44,6 +44,7 @@
   :straight org-plus-contrib
 
   :custom
+  (org-cycle-separator-lines 1)
   (org-ellipsis "  ⬎ ")
   (org-enforce-todo-dependencies t)
   (org-fontify-quote-and-verse-blocks t)
@@ -60,9 +61,7 @@
   (org-startup-indented t)
   (org-startup-with-inline-images t)
   (org-agenda-files '("~/todo.org"))
-  (org-todo-keywords '((sequence "TODO" "IN-PROGRESS" "BLOCKED" "|" "DONE" "CANCELLED")
-                       (sequence "TO-READ" "CURRENTLY-READING" "|" "READ")
-                       (sequence "HABIT" "|" "HABIT-DONE")))
+  (org-todo-keywords '((sequence "TODO" "IN-PROGRESS" "BLOCKED" "|" "DONE" "CANCELLED")))
   (org-capture-templates
         `(("t" "Todo" entry (file+headline "~/todo.org" "Inbox") "* %?")
           ("n" "Note" entry

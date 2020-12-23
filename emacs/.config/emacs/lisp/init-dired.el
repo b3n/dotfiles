@@ -20,13 +20,13 @@
   :hook (dired-mode . dired-async-mode))
 
 
-(use-package browse-url
-  :init
-  (defun my/browse-url-xdg-open (url &optional ignored)
-    (browse-url-xdg-open (replace-regexp-in-string "%20" "\\\\ " url)))
-
-  :custom
-  (browse-url-handlers '(("\\`file:" . my/browse-url-xdg-open))))
+;;(use-package browse-url
+;;  :init
+;;  (defun my/browse-url-xdg-open (url &optional ignored)
+;;    (browse-url-xdg-open (replace-regexp-in-string "%20" "\\\\ " url)))
+;;
+;;  :custom
+;;  (browse-url-handlers '(("\\`file:" . my/browse-url-xdg-open))))
 
 
 (provide 'init-dired)

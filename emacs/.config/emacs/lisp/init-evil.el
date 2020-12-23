@@ -11,6 +11,8 @@
          ("C-f" . other-frame)
          :map evil-motion-state-map
          ("<up>") ("<down>") ("RET")
+         :map evil-normal-state-map
+         ("q") ;; TODO: Only set q to nil if it would have overriden something else
          :map evil-visual-state-map
          ("v" . evil-visual-line))
 
@@ -19,10 +21,10 @@
   (evil-default-state 'insert)
   (evil-emacs-state-modes nil)
   (evil-motion-state-modes nil)
-  (evil-normal-state-modes '(prog-mode text-mode fundamental-mode))
+  (evil-normal-state-modes '(prog-mode text-mode))
   (evil-insert-state-modes '(special-mode))
 
-  (evil-lookup-func (lambda () (call-interactively #'man))) ; Woman doesn't work on OpenBSD
+  (evil-lookup-func (lambda () (call-interactively #'man))) ; `woman` doesn't work on OpenBSD
   (evil-mode-line-format 'after)
   (evil-search-module 'evil-search)
   (evil-symbol-word-search t)
@@ -36,11 +38,6 @@
   (evil-global-set-key 'insert (kbd "C-w") 'evil-window-map)
 
   ;; TODO: Is this still needed?
-  ;; Get rid of undo-tree.
-  (with-eval-after-load 'undo-tree
-    (global-set-key [remap undo-tree-undo] #'undo-only)
-    (global-set-key [remap undo-tree-redo] #'undo-redo) ; Emacs 28
-    (global-undo-tree-mode -1))
   (evil-define-key '(normal visual) global-map
     "U"    #'undo
     "u"    #'undo-only

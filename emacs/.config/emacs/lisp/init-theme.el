@@ -1,9 +1,9 @@
 (use-package cus-face
   :config
   (custom-set-faces
-   '(default ((t (:family "Iosevka" :height 110))))
-   '(fixed-pitch ((t (:family "Iosevka"))))
-   '(variable-pitch ((t (:family "Libre Baskerville"))))))
+   '(default ((t (:family "JetBrains Mono" :height 110))))
+   '(fixed-pitch ((t (:family "JetBrains Mono" :height 105))))
+   '(variable-pitch ((t (:family "Libre Baskerville" :height 115))))))
 
 
 (use-package face-remap
@@ -14,20 +14,20 @@
 (dolist (theme '("operandi" "vivendi"))
   (my/format-sexp
    (use-package modus-%1$s-theme
-     :straight t
+     :straight t ;; TODO: This will be included in the latest Emacs build
 
      :custom
      (modus-%1$s-theme-bold-constructs t)
      (modus-%1$s-theme-slanted-constructs t)
      (modus-%1$s-theme-org-blocks 'greyscale)
      (modus-%1$s-theme-faint-syntax t)
-     (modus-%1$s-theme-scale-5 1.9)
+     (modus-%1$s-theme-scale-5 1.8)
      (modus-%1$s-theme-scale-headings t)
 
      :config
      (load-theme 'modus-%1$s t t)
      (run-at-time
-      (if (equal "%1$s" "operandi") "04:00" "19:00")
+      (if (equal "%1$s" "operandi") "04:00" "18:00")
       (* 60 60 24)
       (lambda () (enable-theme 'modus-%1$s))))
    theme))
