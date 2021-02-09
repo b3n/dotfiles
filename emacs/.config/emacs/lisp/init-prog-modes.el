@@ -1,8 +1,3 @@
-(use-package display-line-numbers
-  :hook
-  (prog-mode . display-line-numbers-mode))
-
-
 (use-package lsp-mode
   :straight t
   :bind-keymap ("C-c l" . lsp-command-map)

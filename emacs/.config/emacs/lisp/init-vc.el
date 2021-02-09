@@ -15,7 +15,8 @@
   :custom
   (magit-diff-refine-hunk t)
   (magit-save-repository-buffers 'dontask)
-  (magit-no-confirm '(stage-all-changes)))
+  (magit-no-confirm '(stage-all-changes))
+  (magit-refresh-status-buffer nil))
 
 
 (provide 'init-vc)

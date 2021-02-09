@@ -55,7 +55,6 @@
   (org-image-actual-width 300)
   (org-link-frame-setup '((file . find-file)))
   (org-log-done 'time)
-  (org-pretty-entities t)
   (org-return-follows-link t)
   (org-startup-folded 'content)
   (org-startup-indented t)

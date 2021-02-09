@@ -17,6 +17,7 @@
 (use-package dired-async
   :if (eq window-system 'x)
   :after dired
+  :init (use-package async :straight t)
   :hook (dired-mode . dired-async-mode))
 
 

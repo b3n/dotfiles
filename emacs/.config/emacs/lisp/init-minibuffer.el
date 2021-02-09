@@ -23,6 +23,7 @@
   (read-file-name-completion-ignore-case t)
   (completion-styles '(substring partial-completion flex))
   (enable-recursive-minibuffers t)
+  (minibuffer-depth-indicate-mode t)
 
   :config
   (setq completion-in-region-function (lambda (start end collection &optional predicate)
@@ -52,6 +53,8 @@
   :bind (:map icomplete-minibuffer-map
    ("<right>"    . icomplete-forward-completions)
    ("<left>"     . icomplete-backward-completions)
+   ("<down>" . icomplete-forward-completions)
+   ("<up>" . icomplete-backward-completions)
    ("DEL"        . icomplete-fido-backward-updir)
    ("<return>"   . icomplete-fido-ret)
    ("M-<return>" . icomplete-fido-exit))
