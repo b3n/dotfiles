@@ -45,3 +45,6 @@ See `format' for replacement syntax."
 (require 'init-prog-modes)
 (require 'init-text-modes)
 (require 'init-pdf)
+
+;; System specific config
+(require system-type nil t)
