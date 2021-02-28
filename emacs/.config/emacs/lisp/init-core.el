@@ -34,6 +34,7 @@
 
   :custom
   (completion-show-help nil)
+  (async-shell-command-buffer 'rename-buffer)
 
   :config
   (column-number-mode))
@@ -54,7 +55,7 @@
   :custom
   (mouse-autoselect-window t)
   (display-buffer-alist
-   '(("*" (display-buffer-reuse-window display-buffer-same-window)))))
+   '((".*" (display-buffer-reuse-window display-buffer-same-window)))))
 
 
 (use-package uniquify

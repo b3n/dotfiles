@@ -71,6 +71,7 @@
   (require 'org-habit)
   (require 'ob-calc)
 
+  (add-hook 'org-mode-hook (lambda () (electric-indent-local-mode -1)))
   (add-hook 'org-capture-mode-hook 'evil-insert-state)
 
   (defun my-org-sort-all ()
