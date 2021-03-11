@@ -1,3 +1,16 @@
+(use-package emacs
+  :config
+  (defun toggle-window-dedicated ()
+    "Toggle whether the current active window is dedicated or not"
+    (interactive)
+    (message
+     (if (let (window (get-buffer-window (current-buffer)))
+           (set-window-dedicated-p window (not (window-dedicated-p window))))
+         "'%s' is dedicated"
+       "'%s' is normal")
+     (current-buffer)))
+  (global-set-key (kbd "C-c d") 'toggle-window-dedicated))
+
 (use-package files
   :custom
   (auto-save-default t)
@@ -113,6 +126,16 @@
 
 (use-package isearch
   :custom (isearch-lazy-count t))
+
+
+(use-package ibuffer
+  :bind ("C-x C-b" . ibuffer)
+  :custom
+  (ibuffer-saved-filter-groups '(("default"
+                                  ("web" (and (mode . exwm-mode)
+                                              (or (name . "^Firefox")
+                                                  (name . "^Chrom")
+                                                  (name . "^qute"))))))))
 
 
 (use-package flymake

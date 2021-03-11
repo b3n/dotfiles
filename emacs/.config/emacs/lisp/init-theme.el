@@ -11,26 +11,21 @@
   (default-text-scale-amount 20))
 
 
-(dolist (theme '("operandi" "vivendi"))
-  (my/format-sexp
-   (use-package modus-%1$s-theme
-     :straight t ;; TODO: This will be included in the latest Emacs build
+(use-package modus-themes
+  :custom
+  (modus-themes-bold-constructs t)
+  (modus-themes-slanted-constructs t)
+  (modus-themes-org-blocks 'greyscale)
+  (modus-themes-syntax 'faint)
+  (modus-themes-scale-5 1.8)
+  (modus-themes-scale-headings t)
+  (modus-themes-mode-line '3d)
+  (modus-themes-completions 'opinionated)
 
-     :custom
-     (modus-%1$s-theme-bold-constructs t)
-     (modus-%1$s-theme-slanted-constructs t)
-     (modus-%1$s-theme-org-blocks 'greyscale)
-     (modus-%1$s-theme-faint-syntax t)
-     (modus-%1$s-theme-scale-5 1.8)
-     (modus-%1$s-theme-scale-headings t)
-
-     :config
-     (load-theme 'modus-%1$s t t)
-     (run-at-time
-      (if (equal "%1$s" "operandi") "04:00" "18:00")
-      (* 60 60 24)
-      (lambda () (enable-theme 'modus-%1$s))))
-   theme))
+  :config
+  (modus-themes-load-themes)
+  (run-at-time "05:00" (* 60 60 24) #'modus-themes-load-operandi)
+  (run-at-time "19:00" (* 60 60 24) #'modus-themes-load-vivendi))
 
 
 (use-package minibuffer-line

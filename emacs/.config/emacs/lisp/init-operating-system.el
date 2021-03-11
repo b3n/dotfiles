@@ -5,9 +5,16 @@
   :straight t
 
   :init
+  (setq focus-follows-mouse t)
+
   (defun my/exwm-set-buffer-name ()
     "Add the application's class name to the buffer name."
-    (exwm-workspace-rename-buffer (concat "*EXWM*<" exwm-class-name ">")))
+    (exwm-workspace-rename-buffer
+     (concat exwm-class-name
+             "<"
+             (if (<= (length exwm-title) 99) exwm-title
+               (concat (substring exwm-title 0 99) "..."))
+             ">")))
 
   (defun my/gtk-launch ()
     "Launch an X application via `gtk-launch'."
@@ -22,10 +29,7 @@
                                           collect (replace-regexp-in-string extention "" file)))))
       (call-process "gtk-launch" nil 0 nil (completing-read "Launch: " apps))))
 
-  :hook (exwm-update-class . my/exwm-set-buffer-name)
-
-  :init
-  (setq focus-follows-mouse t)
+  :hook ((exwm-update-class exwm-update-title) . my/exwm-set-buffer-name)
 
   :custom
   (exwm-randr-workspace-monitor-plist '(1 "HDMI-2"))
@@ -38,6 +42,7 @@
      ([?\s-w] .  [?\C-w])
      ([?\s-a] .  [?\C-a])
      ([?\s-f] .  [?\C-f])
+     ([?\s-l] .  [?\C-l])
      ([?\s-v] .  [?\C-v])))
   (exwm-input-global-keys
    `(([?\s-r] . exwm-reset)
@@ -91,22 +96,9 @@
   (emms-mode-line 1))
 
 
-(use-package erc
+(use-package midnight
   :config
-  (setq erc-lurker-hide-list '("JOIN" "PART" "QUIT")
-        erc-lurker-threshold-time 3600)
-  (setq erc-join-buffer 'bury)
-  (setq erc-nick "Ben`")
-  (setq erc-format-query-as-channel-p t
-        erc-track-priority-faces-only 'all
-        erc-track-faces-priority-list '(erc-error-face
-                                        erc-current-nick-face
-                                        erc-keyword-face
-                                        erc-nick-msg-face
-                                        erc-direct-msg-face
-                                        erc-dangerous-host-face
-                                        erc-notice-face
-                                        erc-prompt-face)))
+  (midnight-mode)
 
 
 (provide 'init-operating-system)
