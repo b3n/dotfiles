@@ -22,7 +22,10 @@
   (version-control t)
 
   (enable-local-variables nil)
-  (confirm-kill-emacs 'yes-or-no-p))
+  (confirm-kill-emacs 'yes-or-no-p)
+
+  :config
+  (auto-save-visited-mode))
 
 
 (use-package cus-edit
@@ -75,35 +78,12 @@
   :custom (uniquify-buffer-name-style 'forward))
 
 
-(use-package project
-  :init
-  ;; Add caching to project-find-file
-  (defun project-find-file-clear-cache ()
-    (interactive)
-    (setq project-find-file-in-cache (make-hash-table :test 'equal)))
-  (project-find-file-clear-cache)
-  (defun project-find-file-in (filename dirs project)
-    (when (not (gethash (list project dirs) project-find-file-in-cache))
-      (puthash (list project dirs) (project-files project dirs) project-find-file-in-cache))
-
-    (let* ((all-files (gethash (list project dirs) project-find-file-in-cache))
-           (file (funcall project-read-file-name-function
-                          "Find file" all-files nil nil
-                          filename)))
-      (if (string= file "")
-          (user-error "You didn't specify the file")
-        (find-file file))))
-
-  (defun my-find-all-files ()
-    "Find all files within a particular directory."
-    (interactive)
-    (project-find-file-in
-     nil
-     nil
-     (cons 'transient (read-directory-name "Choose the directory: " nil nil t))))
-
-  :bind (("C-x f" . project-find-file)
-         ("C-x F" . my-find-all-files)))
+(use-package find-file-in-project
+  :straight t
+  :bind (("C-x F" . find-file-in-project)
+         ("C-x f" . find-file-in-project-by-selected))
+  :config
+  (setq ffip-use-rust-fd t))
 
 
 (use-package emacs ; indent

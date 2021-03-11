@@ -8,6 +8,7 @@
 (setq package-enable-at-startup nil)
 (setq visible-bell t)
 
+(setq-default fill-column 100)
 (setq-default frame-title-format '("%n %b - %F"))
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 4)

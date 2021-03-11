@@ -1,6 +1,6 @@
 (use-package evil
-  :demand
   :straight t
+
   :init
   (setq evil-intercept-maps nil)
   (setq evil-overriding-maps nil)
@@ -18,7 +18,6 @@
 
   :custom
   (evil-disable-insert-state-bindings t)
-  (evil-default-state 'insert)
   (evil-emacs-state-modes nil)
   (evil-motion-state-modes nil)
   (evil-normal-state-modes '(prog-mode text-mode))
@@ -35,13 +34,7 @@
   (evil-mode 1)
 
   ;; This is needed because we disable evil insert state bindings, but still want C-w.
-  (evil-global-set-key 'insert (kbd "C-w") 'evil-window-map)
-
-  ;; TODO: Is this still needed?
-  (evil-define-key '(normal visual) global-map
-    "U"    #'undo
-    "u"    #'undo-only
-    "\C-r" #'undo-redo))           ; Emacs 28
+  (evil-global-set-key 'insert (kbd "C-w") 'evil-window-map))
 
 
 (use-package evil-surround

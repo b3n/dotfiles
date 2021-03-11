@@ -12,6 +12,8 @@
 
 
 (use-package modus-themes
+  :straight t ;TODO: This will be included in latest Emacs version
+
   :custom
   (modus-themes-bold-constructs t)
   (modus-themes-slanted-constructs t)
@@ -20,7 +22,7 @@
   (modus-themes-scale-5 1.8)
   (modus-themes-scale-headings t)
   (modus-themes-mode-line '3d)
-  (modus-themes-completions 'opinionated)
+  (modus-themes-completions 'moderate)
 
   :config
   (modus-themes-load-themes)
