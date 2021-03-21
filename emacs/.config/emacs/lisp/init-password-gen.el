@@ -26,5 +26,6 @@
                       (or password-gen-length (read-number "Length: ")))))
 
 (global-set-key (kbd "C-c p") #'password-gen)
+(setq password-gen-length 32)
 
 (provide 'init-password-gen)

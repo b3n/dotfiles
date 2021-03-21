@@ -1,3 +1,8 @@
+(use-package server
+  :config
+  (server-start))
+
+
 (use-package emacs
   :config
   (defun toggle-window-dedicated ()
@@ -10,6 +15,7 @@
        "'%s' is normal")
      (current-buffer)))
   (global-set-key (kbd "C-c d") 'toggle-window-dedicated))
+
 
 (use-package files
   :custom
@@ -110,6 +116,9 @@
 
 (use-package ibuffer
   :bind ("C-x C-b" . ibuffer)
+
+  :hook (ibuffer-mode . (lambda () (ibuffer-switch-to-saved-filter-groups "default")))
+
   :custom
   (ibuffer-saved-filter-groups '(("default"
                                   ("web" (and (mode . exwm-mode)

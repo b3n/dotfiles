@@ -8,13 +8,26 @@
   (setq focus-follows-mouse t)
 
   (defun my/exwm-set-buffer-name ()
-    "Add the application's class name to the buffer name."
-    (exwm-workspace-rename-buffer
-     (concat exwm-class-name
-             "<"
-             (if (<= (length exwm-title) 99) exwm-title
-               (concat (substring exwm-title 0 99) "..."))
-             ">")))
+    "Make a nicer title and file name for the buffer"
+
+    (if (and exwm-title (string-match "\\`http[^ ]+" exwm-title))
+      (let ((url (match-string 0 exwm-title)))
+        (setq-local buffer-file-name url)
+        (setq-local exwm-title (replace-regexp-in-string
+                                (concat (regexp-quote url) " - ")
+                                ""
+                                exwm-title))))
+
+    (setq-local exwm-title
+                (concat
+                 exwm-class-name
+                 "<"
+                 (if (<= (length exwm-title) 50)
+                     exwm-title
+                   (concat (substring exwm-title 0 50) "…"))
+                 ">"))
+
+    (exwm-workspace-rename-buffer exwm-title))
 
   (defun my/gtk-launch ()
     "Launch an X application via `gtk-launch'."
@@ -57,11 +70,6 @@
   (push ?\C-w exwm-input-prefix-keys)
 
   (require 'exwm-randr)
-  (add-hook
-   'exwm-randr-screen-change-hook
-   (lambda ()
-     (start-process-shell-command
-      "xrandr" nil "xrandr --output HDMI-2 --auto --output DP-1 --auto --right-of HDMI-2")))
   (exwm-randr-enable))
 
 
@@ -98,7 +106,37 @@
 
 (use-package midnight
   :config
-  (midnight-mode)
+  (midnight-mode))
+
+
+(use-package emacs
+  :config
+  (defun my-same-mode-next-buffer ()
+    "Select next buffer of the same type"
+    (interactive)
+    (let ((new-buffer (car (my--same-mode-buffer-list))))
+      (when new-buffer
+        (bury-buffer)
+        (switch-to-buffer new-buffer))))
+
+
+  (defun my-same-mode-previous-buffer ()
+    "Select previous buffer of the same type"
+    (interactive)
+    (let ((new-buffer (car (last (my--same-mode-buffer-list)))))
+      (when new-buffer (switch-to-buffer new-buffer))))
+
+
+  (defun my--same-mode-buffer-list (&optional mode)
+    "List buffers of mode `mode' that are not already visible"
+    (let ((mode (or mode major-mode)))
+      (seq-filter (lambda (buffer) 
+                    (and (not (get-buffer-window buffer 'visible))
+                         (eq (buffer-local-value 'major-mode buffer) mode)))
+                  (buffer-list))))
+
+  (global-set-key [mode-line mouse-4] #'my-same-mode-previous-buffer)
+  (global-set-key [mode-line mouse-5] #'my-same-mode-next-buffer))
 
 
 (provide 'init-operating-system)

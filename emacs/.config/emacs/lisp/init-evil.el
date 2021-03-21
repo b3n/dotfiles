@@ -1,29 +1,26 @@
 (use-package evil
+  :ensure
   :straight t
 
   :init
+  (setq evil-undo-system 'undo-redo)
   (setq evil-intercept-maps nil)
   (setq evil-overriding-maps nil)
   (setq evil-want-keybinding nil)
-  (setq evil-undo-system 'undo-redo)
+  (setq qevil-disable-insert-state-bindings t)
+  (setq qevil-normal-state-modes '(prog-mode text-mode))
+  (setq qevil-insert-state-modes '(special-mode))
 
   :bind (:map evil-window-map
          ("C-f" . other-frame)
          :map evil-motion-state-map
          ("<up>") ("<down>") ("RET")
          :map evil-normal-state-map
-         ("q") ;; TODO: Only set q to nil if it would have overriden something else
+         ("q") ;; TODO: Only set q to nil if it would have overriden something else (like quit)
          :map evil-visual-state-map
          ("v" . evil-visual-line))
 
   :custom
-  (evil-disable-insert-state-bindings t)
-  (evil-emacs-state-modes nil)
-  (evil-motion-state-modes nil)
-  (evil-normal-state-modes '(prog-mode text-mode))
-  (evil-insert-state-modes '(special-mode))
-
-  (evil-lookup-func (lambda () (call-interactively #'man))) ; `woman` doesn't work on OpenBSD
   (evil-mode-line-format 'after)
   (evil-search-module 'evil-search)
   (evil-symbol-word-search t)
@@ -38,6 +35,7 @@
 
 
 (use-package evil-surround
+  ;; TODO: Setup better bindings (e.g. use `s` instead of `ys`)
   :after evil
   :straight t
 

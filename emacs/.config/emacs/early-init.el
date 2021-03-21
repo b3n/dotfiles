@@ -1,6 +1,7 @@
 ;; https://github.com/emacs-lsp/lsp-mode#performance
 (setq gc-cons-threshold 99999999)
 (setq read-process-output-max 9999999)
+(setq bidi-inhibit-bpa t)
 
 (setq completion-ignore-case t)
 (setq create-lockfiles nil)
