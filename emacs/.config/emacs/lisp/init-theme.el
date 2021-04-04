@@ -18,16 +18,15 @@
   (modus-themes-bold-constructs t)
   (modus-themes-slanted-constructs t)
   (modus-themes-org-blocks 'greyscale)
-  (modus-themes-syntax 'faint)
-  (modus-themes-scale-5 1.8)
+  (modus-themes-scale-5 1.9)
   (modus-themes-scale-headings t)
   (modus-themes-mode-line '3d)
   (modus-themes-completions 'moderate)
 
   :config
   (modus-themes-load-themes)
-  (run-at-time "05:00" (* 60 60 24) #'modus-themes-load-operandi)
-  (run-at-time "19:00" (* 60 60 24) #'modus-themes-load-vivendi))
+  (run-at-time "06:00" (* 60 60 24) #'modus-themes-load-operandi)
+  (run-at-time "18:00" (* 60 60 24) #'modus-themes-load-vivendi))
 
 
 (use-package minibuffer-line
