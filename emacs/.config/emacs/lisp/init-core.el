@@ -4,7 +4,7 @@
 
 
 (use-package emacs
-  :config
+  :init
   (defun toggle-window-dedicated ()
     "Toggle whether the current active window is dedicated or not"
     (interactive)
@@ -14,7 +14,10 @@
          "'%s' is dedicated"
        "'%s' is normal")
      (current-buffer)))
-  (global-set-key (kbd "C-c d") 'toggle-window-dedicated))
+
+  (global-set-key (kbd "C-c d") #'toggle-window-dedicated)
+
+  (setq mode-line-format (cons '(:eval (when (window-dedicated-p) "🔒")) mode-line-format)))
 
 
 (use-package files
