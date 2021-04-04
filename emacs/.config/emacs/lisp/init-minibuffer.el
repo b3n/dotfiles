@@ -21,9 +21,7 @@
   :custom
   (read-buffer-completion-ignore-case t)
   (read-file-name-completion-ignore-case t)
-  (completion-styles '(substring partial-completion))
-  (enable-recursive-minibuffers t)
-  (minibuffer-depth-indicate-mode t)
+  (completion-styles '(substring partial-completion flex))
 
   :config
   (setq completion-in-region-function (lambda (start end collection &optional predicate)
