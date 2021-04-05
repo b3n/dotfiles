@@ -25,8 +25,9 @@
 
   :config
   (modus-themes-load-themes)
-  (run-at-time "06:00" (* 60 60 24) #'modus-themes-load-operandi)
-  (run-at-time "18:00" (* 60 60 24) #'modus-themes-load-vivendi))
+  (let ((daily (* 60 60 24)))
+    (run-at-time "06:00" daily #'modus-themes-load-operandi)
+    (run-at-time "18:00" daily #'modus-themes-load-vivendi)))
 
 
 (use-package minibuffer-line

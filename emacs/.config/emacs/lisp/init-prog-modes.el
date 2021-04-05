@@ -1,10 +1,11 @@
 (use-package lsp-mode
   :straight t
+
   :bind-keymap ("C-c l" . lsp-command-map)
 
   :hook
-  (java-mode . lsp)
   (sh-mode . lsp)
+  (typescript-mode . lsp)
 
   :custom
   (lsp-pyls-plugins-pycodestyle-max-line-length 100)
@@ -15,7 +16,7 @@
   :straight t
 
   :hook
-  (python-mode . (lambda () (require 'lsp-pyright) (lsp-deferred))))
+  (python-mode . (lambda () (require 'lsp-pyright) (lsp))))
 
 
 (use-package blacken
@@ -61,6 +62,10 @@
 (use-package web-mode
   :mode "\\.tsx\\'"
   :straight t)
+
+
+(use-package xml-mode
+  :mode "\\.xlf\\'")
 
 
 (provide 'init-prog-modes)
