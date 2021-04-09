@@ -18,48 +18,8 @@
   (python-mode . (lambda () (require 'lsp-pyright) (lsp-deferred))))
 
 
-(use-package blacken
-  :straight t
-
-  :hook
-  (python-mode . blacken-mode) ;; brew install black
-
-  :custom
-  (blacken-line-length 100))
-
-
-(use-package lsp-java
-  :straight t
-  :config
-  (add-hook 'java-mode-hook #'lsp))
-
-
-(use-package dap-mode
-  :straight t
-  :bind (:map lsp-command-map ("d" . dap-hydra))
-
-  :config
-  (require 'dap-python)
-  (dap-mode t)
-  (dap-ui-mode t))
-
-
 (use-package json-mode
   :mode "\\.json\\'"
-  :straight t)
-
-
-(use-package terraform-mode
-  :mode "\\.tf\\'"
-  :straight t)
-
-
-(use-package bazel-mode
-  :straight t)
-
-
-(use-package web-mode
-  :mode "\\.tsx\\'"
   :straight t)
 
 
