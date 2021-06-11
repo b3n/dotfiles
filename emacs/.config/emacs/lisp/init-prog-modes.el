@@ -23,4 +23,11 @@
   :straight t)
 
 
+(use-package clojure-mode
+  :straight t)
+
+(use-package cider
+  :straight t)
+
+
 (provide 'init-prog-modes)

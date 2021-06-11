@@ -4,18 +4,19 @@
 
 
 (use-package emacs
+  :after evil
   :bind (:map evil-window-map
          ("d" . toggle-window-dedicated))
 
-  :config
+  :init
   (defun toggle-window-dedicated ()
     "Toggle whether the current active window is dedicated or not"
     (interactive)
     (message
      (if (let (window (get-buffer-window (current-buffer)))
            (set-window-dedicated-p window (not (window-dedicated-p window))))
-         "'%s' is dedicated"
-       "'%s' is normal")
+         "`%s' is dedicated!"
+       "`%s' is undedicated")
      (current-buffer)))
 
   (setq-default mode-line-format (cons '(:eval (when (window-dedicated-p) "🔒")) mode-line-format)))
@@ -26,16 +27,20 @@
   (auto-save-default t)
   (backup-by-copying t)
   (backup-directory-alist `((".*" . ,(expand-file-name "backups" user-emacs-directory))))
+  (confirm-kill-emacs 'yes-or-no-p)
   (delete-old-versions t)
+  (enable-dir-local-variables nil)
+  (enable-local-variables nil)
   (kept-new-versions 99)
   (vc-make-backup-files t)
   (version-control t)
 
-  (enable-local-variables nil)
-  (confirm-kill-emacs 'yes-or-no-p)
-
   :config
   (auto-save-visited-mode))
+
+(use-package auth-source
+  :custom
+  (auth-sources '("/tmp/.authinfo" "~/.authinfo.gpg"))) ; Don't write passwords unencrypted on disk...
 
 
 (use-package cus-edit
@@ -46,7 +51,6 @@
 (use-package emacs ;startup
   :custom
   (inhibit-startup-screen t)
-  (initial-major-mode 'fundamental-mode)
   (initial-scratch-message ""))
 
 

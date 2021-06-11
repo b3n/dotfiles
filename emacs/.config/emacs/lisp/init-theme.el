@@ -18,7 +18,6 @@
   (modus-themes-bold-constructs t)
   (modus-themes-slanted-constructs t)
   (modus-themes-org-blocks 'greyscale)
-  (modus-themes-scale-5 1.9)
   (modus-themes-scale-headings t)
   (modus-themes-mode-line '3d)
   (modus-themes-completions 'moderate)

@@ -15,18 +15,11 @@
   :init
   (setq completion-category-defaults nil)
 
-  :bind (:map minibuffer-local-completion-map
-              ("S-<return>" . minibuffer-complete-and-exit))
-
-  :custom
-  (read-buffer-completion-ignore-case t)
-  (read-file-name-completion-ignore-case t)
-  (completion-styles '(substring partial-completion flex))
-
-  :config
-  (setq completion-in-region-function (lambda (start end collection &optional predicate)
-    "Prompt for completion of region in the minibuffer if non-unique."
-    (if (and (minibufferp) (not (string= (minibuffer-prompt) "Eval: ")))
+  (defun my-completion-in-region (start end collection &optional predicate)
+    "Complete in-buffer text using a list of candidates.
+Can be used as `completion-in-region-function'. For START, END,
+COLLECTION, and PREDICATE, see `completion-in-region'."
+  (if (and (minibufferp) (not (string= (minibuffer-prompt) "Eval: ")))
         (completion--in-region start end collection predicate)
       (let* ((initial (buffer-substring-no-properties start end))
              (limit (car (completion-boundaries initial collection predicate "")))
@@ -40,43 +33,37 @@
             (progn (message "No completion") nil)
           (delete-region start end)
           (insert completion)
-          t)))))
+          t))))
 
+  :custom
+  (read-buffer-completion-ignore-case t)
+  (read-file-name-completion-ignore-case t)
+  (completion-styles '(substring partial-completion flex))
+  (completion-in-region-function #'my-completion-in-region)
+
+  :config
   (minibuffer-electric-default-mode 1))
 
 
 (use-package icomplete
-  :demand
+  :demand t
 
   :bind (:map icomplete-minibuffer-map
-   ("<right>"    . icomplete-forward-completions)
    ("<left>"     . icomplete-backward-completions)
-   ("<down>" . icomplete-forward-completions)
-   ("<up>" . icomplete-backward-completions)
-   ("DEL"        . icomplete-fido-backward-updir)
+   ("<right>"    . icomplete-forward-completions)
    ("<return>"   . icomplete-fido-ret)
+   ("C-k"        . icomplete-fido-kill)
+   ("DEL"        . icomplete-fido-backward-updir)
    ("M-<return>" . icomplete-fido-exit))
 
   :custom
   (icomplete-prospects-height 1)
   (icomplete-separator (propertize ", " 'face 'shadow))
   (icomplete-show-matches-on-no-input t)
-  (icomplete-tidy-shadowed-file-names t)
 
   :config
+  (setq icomplete-tidy-shadowed-file-names t)
   (icomplete-mode))
-
-
-(use-package restricto
-  :after minibuffer
-  :straight (:host github :repo "oantolin/restricto")
-
-  :bind (:map minibuffer-local-completion-map
-   ("SPC"   . restricto-narrow)
-   ("S-SPC" . restricto-widen))
-
-  :config
-  (restricto-mode))
 
 
 (provide 'init-minibuffer)

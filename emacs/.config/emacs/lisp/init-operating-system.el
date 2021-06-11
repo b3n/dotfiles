@@ -10,21 +10,13 @@
   (defun my/exwm-set-buffer-name ()
     "Make a nicer title and file name for the buffer"
 
-    (if (and exwm-title (string-match "\\`http[^ ]+" exwm-title))
-      (let ((url (match-string 0 exwm-title)))
-        (setq-local buffer-file-name url)
-        (setq-local exwm-title (replace-regexp-in-string
-                                (concat (regexp-quote url) " - ")
-                                ""
-                                exwm-title))))
-
     (setq-local exwm-title
                 (concat
                  exwm-class-name
                  "<"
-                 (if (<= (length exwm-title) 50)
+                 (if (<= (length exwm-title) 160)
                      exwm-title
-                   (concat (substring exwm-title 0 50) "…"))
+                   (concat (substring exwm-title 0 150) "…"))
                  ">"))
 
     (exwm-workspace-rename-buffer exwm-title))
@@ -56,6 +48,10 @@
      ([?\s-a] .  [?\C-a])
      ([?\s-f] .  [?\C-f])
      ([?\s-l] .  [?\C-l])
+     ([?\s-n] .  [?\C-n])
+     ([?\s-o] .  [?\C-o])
+     ([?\C-y] .  [?\C-v])
+     ([?\C-a] .  [?\C-a])
      ([?\s-v] .  [?\C-v])))
   (exwm-input-global-keys
    `(([?\s-r] . exwm-reset)
