@@ -45,6 +45,11 @@ COLLECTION, and PREDICATE, see `completion-in-region'."
   (minibuffer-electric-default-mode 1))
 
 
+(use-package orderless
+  :straight t
+  :custom (completion-styles '(substring orderless partial-completion flex)))
+
+
 (use-package icomplete
   :demand t
 
