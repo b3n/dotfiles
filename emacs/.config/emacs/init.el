@@ -37,7 +37,6 @@
 (require 'init-large-files)
 (require 'init-prog-modes)
 (require 'init-text-modes)
-(require 'init-pdf)
 
 ;; System specific config
 (require system-type nil t)
