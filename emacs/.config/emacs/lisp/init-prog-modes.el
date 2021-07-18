@@ -50,15 +50,6 @@
   :straight t)
 
 
-(use-package terraform-mode
-  :mode "\\.tf\\'"
-  :straight t)
-
-
-(use-package bazel-mode
-  :straight t)
-
-
 (use-package web-mode
   :mode "\\.tsx\\'"
   :straight t)

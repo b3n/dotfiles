@@ -1,6 +1,11 @@
 ;; Work (OS X) config
 
 
+(use-package emacs
+  :custom
+  (tab-width 2))
+
+
 (use-package cus-face
   :config
   (custom-set-faces
@@ -9,10 +14,21 @@
    '(variable-pitch ((t (:family "Baskerville" :height 195))))))
 
 
+(use-package lsp-mode
+  :custom
+  (lsp-enable-file-watchers nil)) ;; Because monorepo, hopefully this helps with "too many open files"
+
+
 (use-package company
+  ;; TODO: Why am I even using this?
   :straight t
   :config
   (global-company-mode))
+
+
+(use-package js
+  :custom
+  (js-indent-level 2))
 
 
 (use-package typescript-mode
@@ -28,6 +44,7 @@
 
 (use-package magit
   :config
+  ;; Monorepo makes git slow, so do less on magit refresh
   (remove-hook 'magit-status-sections-hook 'magit-insert-status-headers)
   (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-upstream-or-recent)
   (remove-hook 'magit-status-sections-hook 'magit-insert-unpushed-to-pushremote)
@@ -47,6 +64,11 @@
   :config
   (define-key vterm-mode-map (kbd "<C-escape>")
     (lambda () (interactive) (vterm-send-key (kbd "C-[")))))
+
+
+(use-package terraform-mode
+  :mode "\\.tf\\'"
+  :straight t)
 
 
 (provide 'darwin)
