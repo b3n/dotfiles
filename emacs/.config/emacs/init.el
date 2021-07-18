@@ -24,7 +24,7 @@
 
 ;; Minor modes
 (require 'init-evil)
-(require 'init-yasnippet)
+(require 'init-zkeleton)
 (require 'init-grep)
 (require 'init-emoji)
 
@@ -33,8 +33,8 @@
 (require 'init-vc)
 (require 'init-dired)
 (require 'init-operating-system)
-(require 'init-restclient)
 (require 'init-large-files)
+(require 'init-org)
 (require 'init-prog-modes)
 (require 'init-text-modes)
 

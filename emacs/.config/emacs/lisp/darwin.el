@@ -66,8 +66,35 @@
     (lambda () (interactive) (vterm-send-key (kbd "C-[")))))
 
 
+(use-package blacken
+  :straight t
+
+  :hook
+  (python-mode . blacken-mode) ;; brew install black
+
+  :custom
+  (blacken-line-length 100))
+
+
 (use-package terraform-mode
   :mode "\\.tf\\'"
+  :straight t)
+
+
+(use-package bazel-mode
+  :straight t)
+
+
+(use-package web-mode
+  :mode "\\.tsx\\'"
+  :straight t)
+
+
+(use-package lsp-java
+  :straight t)
+
+
+(use-package restclient
   :straight t)
 
 
