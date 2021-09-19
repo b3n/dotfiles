@@ -42,7 +42,7 @@
   (exwm-workspace-show-all-buffers t)
   (exwm-layout-show-all-buffers t)
   (exwm-input-simulation-keys
-   '(([?\s-x] .  [?\C-x])
+   `(([?\s-x] .  [?\C-x])
      ([?\s-c] .  [?\C-c])
      ([?\s-w] .  [?\C-w])
      ([?\s-a] .  [?\C-a])
@@ -52,11 +52,12 @@
      ([?\s-o] .  [?\C-o])
      ([?\C-y] .  [?\C-v])
      ([?\C-a] .  [?\C-a])
+     ([?\s-/] .  [?\C-f]) ;; Chrome search
+     ([?\s-b] .  ,(kbd "C-S-a")) ;; Chrome switch tab with search
      ([?\s-v] .  [?\C-v])))
   (exwm-input-global-keys
    `(([?\s-r] . exwm-reset)
      ([?\s-o] . exwm-workspace-swap)
-     ([?\s-b] . switch-to-buffer)
      ([?\s-\s] . my/gtk-launch)
      ([?\s-g] . (lambda () (interactive) (shell-command "xrandr --output HDMI-2 --auto")))))
 
@@ -133,6 +134,25 @@
 
   (global-set-key [mode-line mouse-4] #'my-same-mode-previous-buffer)
   (global-set-key [mode-line mouse-5] #'my-same-mode-next-buffer))
+
+
+(use-package erc
+  :config
+  (erc-spelling-mode)
+  :custom
+  (erc-fill-function 'erc-fill-static)
+  (erc-fill-static-center 14)
+  (erc-fill-column (- (/ (frame-width) 2) 3))
+  (erc-hide-list '("JOIN" "PART" "QUIT"))
+  (erc-auto-query 'bury)
+  (erc-kill-server-buffer-on-quit t)
+  (erc-kill-queries-on-quit t)
+  (erc-kill-buffer-on-part t)
+  (erc-disable-ctcp-replies t)
+  (erc-prompt (lambda nil (format "%s>" (buffer-name))))
+  (erc-user-mode "+iR")
+  (erc-server "irc.libera.chat")
+  (erc-port "6697"))
 
 
 (provide 'init-operating-system)
