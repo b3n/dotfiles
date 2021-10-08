@@ -51,7 +51,10 @@ COLLECTION, and PREDICATE, see `completion-in-region'."
 
 
 (use-package icomplete
-  :demand t
+  :demand
+
+  :init
+  (ido-mode -1)
 
   :bind (:map icomplete-minibuffer-map
    ("<left>"     . icomplete-backward-completions)

@@ -37,7 +37,7 @@
   :hook ((exwm-update-class exwm-update-title) . my/exwm-set-buffer-name)
 
   :custom
-  (exwm-randr-workspace-monitor-plist '(1 "HDMI-2"))
+  (exwm-randr-workspace-monitor-plist '(0 "HDMI-2" 1 "DP-1"))
   (exwm-workspace-number 2)
   (exwm-workspace-show-all-buffers t)
   (exwm-layout-show-all-buffers t)
@@ -58,8 +58,7 @@
   (exwm-input-global-keys
    `(([?\s-r] . exwm-reset)
      ([?\s-o] . exwm-workspace-swap)
-     ([?\s-\s] . my/gtk-launch)
-     ([?\s-g] . (lambda () (interactive) (shell-command "xrandr --output HDMI-2 --auto")))))
+     ([?\s-\s] . my/gtk-launch)))
 
   :config
   (scroll-bar-mode 0)
