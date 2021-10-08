@@ -4,7 +4,9 @@
 
   :hook
   (java-mode . lsp)
-  (sh-mode . lsp)
+  (clojure-mode . lsp)
+  (clojurescript-mode . lsp)
+  (clojurec-mode . lsp)
 
   :custom
   (lsp-pyls-plugins-pycodestyle-max-line-length 100)
