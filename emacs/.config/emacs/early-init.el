@@ -6,6 +6,7 @@
 (setq completion-ignore-case t)
 (setq create-lockfiles nil)
 (setq frame-inhibit-implied-resize t)
+(setq indicate-buffer-boundaries 'right)
 (setq package-enable-at-startup nil)
 (setq visible-bell t)
 

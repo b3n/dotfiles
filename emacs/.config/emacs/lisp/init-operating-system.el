@@ -34,7 +34,12 @@
                                           collect (replace-regexp-in-string extention "" file)))))
       (call-process "gtk-launch" nil 0 nil (completing-read "Launch: " apps))))
 
-  :hook ((exwm-update-class exwm-update-title) . my/exwm-set-buffer-name)
+  (defun my/exwm-buffer-settings ()
+    (setq-local left-fringe-width 0)
+    (setq-local right-fringe-width 0))
+
+  :hook (((exwm-update-class exwm-update-title) . my/exwm-set-buffer-name)
+         (exwm-mode . my/exwm-buffer-settings))
 
   :custom
   (exwm-randr-workspace-monitor-plist '(0 "HDMI-2" 1 "DP-1"))
