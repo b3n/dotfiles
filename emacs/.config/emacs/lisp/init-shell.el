@@ -1,5 +1,4 @@
 (use-package exec-path-from-shell
-  :if (memq window-system '(mac ns x))
   :straight t
 
   :config
@@ -17,15 +16,26 @@
   (eshell-scroll-to-bottom-on-output t)
 
   :config
-  (setenv "PAGER" "")
-  (setenv "ENV" "$HOME/.kshrc")
-  (setenv "AUTOMAKE_VERSION" "1.16")
-  (setenv "AUTOCONF_VERSION" "2.69")
+  (setenv "PAGER" "cat")
+
+  (defun eshell-buffer-name ()
+    (rename-buffer (concat "*eshell*<" (eshell/pwd) ">") t))
+  (add-hook 'eshell-prompt-load-hook #'eshell-buffer-name)
+  (add-hook 'eshell-directory-change-hook #'eshell-buffer-name)
+
+
+  (defun my-make-field ()
+    "Make text in front of the point a field, useful for prompts."
+    (let ((inhibit-read-only t))
+      (add-text-properties
+       (line-beginning-position) (point)
+       (list 'field t
+             'rear-nonsticky t))))
+  (add-hook 'eshell-after-prompt-hook #'my-make-field)
 
   (defun eshell/in-term (prog &rest args)
     "Run shell command in term buffer."
-    (switch-to-buffer (apply #'make-term (format "in-term %s %s" prog args) prog nil args))
-    (term-mode))
+    (apply #'make-term (format "in-term %s %s" prog args) prog nil args))
 
 
   ;; Output the value of $? in eshell as well as the time taken by the previous command before printing $PS1.

@@ -1,9 +1,9 @@
 (use-package cus-face
   :config
   (custom-set-faces
-   '(default ((t (:family "JetBrains Mono" :height 110))))
-   '(fixed-pitch ((t (:family "JetBrains Mono" :height 105))))
-   '(variable-pitch ((t (:family "Libre Baskerville" :height 115))))))
+   '(default ((t (:family "JetBrains Mono" :height 120))))
+   '(fixed-pitch ((t (:family "JetBrains Mono" :height 115))))
+   '(variable-pitch ((t (:family "Libre Baskerville" :height 125))))))
 
 
 (use-package face-remap
@@ -16,11 +16,11 @@
 
   :custom
   (modus-themes-bold-constructs t)
-  (modus-themes-slanted-constructs t)
+  (modus-themes-mixed-fonts t)
+  (modus-themes-mode-line '(3d))
   (modus-themes-org-blocks 'greyscale)
   (modus-themes-scale-headings t)
-  (modus-themes-mode-line '3d)
-  (modus-themes-completions 'moderate)
+  (modus-themes-slanted-constructs t)
 
   :config
   (modus-themes-load-themes)

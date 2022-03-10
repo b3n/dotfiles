@@ -6,7 +6,7 @@
   :bind (("C-c a" . org-agenda)
          ("C-c c" . org-capture))
 
-  :straight org-plus-contrib ; TODO: Is this needed?
+  :straight t
 
   :custom
   (org-agenda-custom-commands
