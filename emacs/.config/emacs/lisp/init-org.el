@@ -24,9 +24,6 @@
            (file ,(lambda () (format-time-string "~/tmp/%Y-%m-%d.org")))
            "* %<%H:%M>\n%?\n")))
   (org-ellipsis "  ⬎ ")
-  ;;(org-fontify-quote-and-verse-blocks t)
-  ;;(org-fontify-whole-heading-line t)
-  ;;(org-hidden-keywords '(title))
   (org-hide-emphasis-markers t)
   (org-hide-leading-stars t)
   (org-image-actual-width 300)
@@ -36,6 +33,7 @@
   (org-startup-folded 'content)
   (org-startup-indented t)
   (org-startup-with-inline-images t)
+  (org-todo-keywords '((sequence "TODO" "IN-PROGRESS" "|" "DONE" "CANCELED")))
 
   :config
   (add-hook 'org-mode-hook (lambda () (electric-indent-local-mode -1)))
