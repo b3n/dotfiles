@@ -144,6 +144,11 @@
   (flymake-wrap-around nil))
 
 
+(use-package man
+  :custom
+  (Man-notify-method 'pushy))
+
+
 (use-package hippie-exp
   :custom
   (hippie-expand-try-functions-list '(try-expand-dabbrev-visible
