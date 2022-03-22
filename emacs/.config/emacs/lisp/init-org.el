@@ -24,8 +24,6 @@
            (file ,(lambda () (format-time-string "~/tmp/%Y-%m-%d.org")))
            "* %<%H:%M>\n%?\n")))
   (org-ellipsis "  ⬎ ")
-  (org-hide-emphasis-markers t)
-  (org-hide-leading-stars t)
   (org-image-actual-width 300)
   (org-link-frame-setup '((file . find-file)))
   (org-log-done 'time)
