@@ -45,15 +45,14 @@
   :straight t)
 
 
-(use-package lsp-java
+(use-package dockerfile-mode
+  :mode ("Dockerfile\\'" . dockerfile-mode)
   :straight t)
 
 
-(use-package restclient
+(use-package yaml-mode
+  :mode "\\.ya?ml\\(\\.j2\\)?\\'"
   :straight t)
-
-
-(provide 'init-restclient)
 
 
 (provide 'darwin)
