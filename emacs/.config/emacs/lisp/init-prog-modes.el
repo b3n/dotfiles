@@ -1,26 +1,22 @@
-(use-package lsp-mode
+(use-package eglot
   :straight t
 
-  :bind-keymap ("C-c l" . lsp-command-map)
+  :init
+  ;; Get latest versions, for older Emacs
+  (use-package eldoc :straight t)
+  (use-package flymake :straight t)
+  (use-package project :straight t)
+  (use-package xref :straight t)
 
   :hook
-  (sh-mode . lsp)
-  (typescript-mode . lsp)
-  (java-mode . lsp)
-  (clojure-mode . lsp)
-  (clojurescript-mode . lsp)
-  (clojurec-mode . lsp)
+  (java-mode . eglot-ensure)
+  (clojure-mode . eglot-ensure)
+  (clojurescript-mode . eglot-ensure)
+  (clojurec-mode . eglot-ensure)
+  (python-mode . elgot-ensure)
 
   :custom
-  (lsp-pyls-plugins-pycodestyle-max-line-length 100)
-  (lsp-pyls-plugins-flake8-max-line-length 100))
-
-
-(use-package lsp-pyright
-  :straight t
-
-  :hook
-  (python-mode . (lambda () (require 'lsp-pyright) (lsp))))
+  (eglot-autoshutdown t))
 
 
 (use-package json-mode

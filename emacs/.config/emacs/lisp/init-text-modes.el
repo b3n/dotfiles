@@ -2,20 +2,16 @@
   :straight t
   :hook ((org-mode . olivetti-mode)
          (markdown-mode . olivetti-mode)
+         (nov-mode . olivetti-mode)
          (olivetti-mode . variable-pitch-mode))
 
   :custom
-  (olivetti-body-width 99))
+  (olivetti-body-width 80))
 
 
 (use-package markdown-mode
   :mode (("\\.md\\'" . markdown-mode)
          ("README\\.md\\'" . gfm-mode))
-  :straight t)
-
-
-(use-package dockerfile-mode
-  :mode ("Dockerfile\\'" . dockerfile-mode)
   :straight t)
 
 
@@ -41,11 +37,6 @@
 
 (use-package csv-mode
   :mode "\\.csv\\'"
-  :straight t)
-
-
-(use-package yaml-mode
-  :mode "\\.ya?ml\\(\\.j2\\)?\\'"
   :straight t)
 
 

@@ -52,7 +52,6 @@
 
 (use-package emacs ;startup
   :custom
-  (inhibit-startup-screen t)
   (initial-scratch-message ""))
 
 
@@ -161,6 +160,11 @@
 
   :config
   (global-set-key [remap dabbrev-expand] #'hippie-expand))
+
+
+(use-package bookmark
+  :custom
+  (bookmark-save-flag 1))
 
 
 (provide 'init-core)

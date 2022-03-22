@@ -36,11 +36,12 @@
          ("RET")
          ("SPC" . evil-execute-in-emacs-state)
          ("i"   . evil-insert)
+         ("q"   . previous-buffer)
+         ("Q"   . next-buffer)
 
          :map evil-normal-state-map
          ("U"   . undo)
          ("g q" . evil-record-macro)
-         ("q"   . bury-buffer)
 
          :map evil-visual-state-map
          ("U" . undo)

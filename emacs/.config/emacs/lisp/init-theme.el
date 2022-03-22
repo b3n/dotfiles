@@ -6,19 +6,14 @@
    '(variable-pitch ((t (:family "Libre Baskerville" :height 125))))))
 
 
-(use-package face-remap
-  :custom
-  (default-text-scale-amount 20))
-
-
 (use-package modus-themes
   :straight t ;TODO: This will be included in latest Emacs version
 
   :custom
   (modus-themes-bold-constructs t)
   (modus-themes-mixed-fonts t)
-  (modus-themes-mode-line '(3d))
-  (modus-themes-org-blocks 'greyscale)
+  (modus-themes-mode-line '(accented))
+  (modus-themes-org-blocks 'gray-background)
   (modus-themes-scale-headings t)
   (modus-themes-slanted-constructs t)
 
