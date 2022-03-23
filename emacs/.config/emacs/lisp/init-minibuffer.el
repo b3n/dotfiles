@@ -51,14 +51,25 @@ COLLECTION, and PREDICATE, see `completion-in-region'."
 
 
 (use-package icomplete
+  :after project
   :demand
 
   :init
   (ido-mode -1)
+  (defun my-icomplete-root ()
+    "Go to the project root in find-file, or the parent dir"
+    (interactive)
+    (if (and
+         (eq (icomplete--category) 'file)
+         (project-current))
+        (progn (delete-minibuffer-contents)
+               (insert (project-root (project-current))))
+      (call-interactively 'icomplete-fido-backward-updir)))
 
   :bind (:map icomplete-minibuffer-map
    ("<left>"     . icomplete-backward-completions)
    ("<right>"    . icomplete-forward-completions)
+   ("M-DEL"      . my-icomplete-root)
    ("<return>"   . icomplete-fido-ret)
    ("C-k"        . icomplete-fido-kill)
    ("DEL"        . icomplete-fido-backward-updir)
