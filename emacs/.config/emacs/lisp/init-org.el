@@ -30,7 +30,6 @@
   (org-return-follows-link t)
   (org-startup-folded 'content)
   (org-startup-indented t)
-  (org-startup-with-inline-images t)
   (org-todo-keywords '((sequence "TODO" "IN-PROGRESS" "|" "DONE" "CANCELED")))
 
   :config

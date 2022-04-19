@@ -68,41 +68,20 @@
   :config
   (scroll-bar-mode 0)
   (horizontal-scroll-bar-mode 0)
+
   (push ?\C-w exwm-input-prefix-keys)
+  (push 'exwm-mode evil-insert-state-modes)
 
   (require 'exwm-randr)
   (exwm-randr-enable))
 
 
 (use-package time
-  :after exwm
-
   :custom
   (display-time-format "%F %R\t")
-  (display-time-default-load-average nil)
 
   :config
   (display-time-mode t))
-
-
-(use-package emms
-  :straight t
-  :bind ("C-c m" . emms)
-
-  :custom
-  (emms-source-file-default-directory "/mnt/sandisk/music")
-  (emms-volume-change-function
-   (lambda (amount)
-     (call-process "sndioctl" nil nil nil
-      (format "app/mpv0.level=%s%s" (if (> amount 0) "+" "") (/ amount 10.0)))))
-
-  :config
-  (require 'emms-setup)
-  (require 'emms-mode-line)
-  (require 'emms-volume-mixerctl)
-  (emms-all)
-  (emms-default-players)
-  (emms-mode-line 1))
 
 
 (use-package midnight

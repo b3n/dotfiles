@@ -1,13 +1,14 @@
-;; https://github.com/emacs-lsp/lsp-mode#performance
-(setq gc-cons-threshold 99999999)
-(setq read-process-output-max 9999999)
-(setq bidi-inhibit-bpa t)
-
 (setq completion-ignore-case t)
 (setq create-lockfiles nil)
+(setq display-buffer-alist '((".*" (display-buffer-reuse-window display-buffer-same-window))))
 (setq frame-inhibit-implied-resize t)
 (setq indicate-buffer-boundaries 'right)
+(setq initial-scratch-message "")
+(setq mouse-autoselect-window t)
+(setq network-security-level 'paranoid)
 (setq package-enable-at-startup nil)
+(setq enable-recursive-minibuffers t)
+(setq tab-always-indent 'complete)
 (setq visible-bell t)
 
 (setq-default fill-column 100)
@@ -19,5 +20,3 @@
 
 (menu-bar-mode 0)
 (tool-bar-mode 0)
-
-(fset 'yes-or-no-p 'y-or-n-p)

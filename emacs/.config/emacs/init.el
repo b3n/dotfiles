@@ -1,5 +1,3 @@
-(customize-set-variable 'network-security-level 'paranoid)
-
 (defvar bootstrap-version)
 (let ((bootstrap-file
        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
@@ -24,9 +22,8 @@
 
 ;; Minor modes
 (require 'init-evil)
-(require 'init-zkeleton)
+;(require 'init-zkeleton)
 (require 'init-grep)
-(require 'init-emoji)
 
 ;; Major modes
 (require 'init-shell)

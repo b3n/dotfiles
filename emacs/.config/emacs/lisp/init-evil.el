@@ -4,65 +4,44 @@
 
   :init
   (setq evil-want-keybinding nil)
-
-  ;; TODO: Remove this after upgrading emacs to a version which includes undo-redo.
-  (defun undo--last-change-was-undo-p (undo-list)
-    (while (and (consp undo-list) (eq (car undo-list) nil))
-      (setq undo-list (cdr undo-list)))
-    (gethash undo-list undo-equiv-table))
-  (defun undo-redo (&optional arg)
-    "Undo the last ARG undos."
-    (interactive "*p")
-    (cond
-     ((not (undo--last-change-was-undo-p buffer-undo-list))
-      (user-error "No undo to undo"))
-     (t
-      (let* ((ul buffer-undo-list)
-             (new-ul
-              (let ((undo-in-progress t))
-                (while (and (consp ul) (eq (car ul) nil))
-                  (setq ul (cdr ul)))
-                (primitive-undo arg ul)))
-             (new-pul (undo--last-change-was-undo-p new-ul)))
-        (message "Redo%s" (if undo-in-region " in region" ""))
-        (setq this-command 'undo)
-        (setq pending-undo-list new-pul)
-        (setq buffer-undo-list new-ul)))))
+  (setq evil-want-integration nil)
 
   :bind (:map evil-insert-state-map
          ("C-w" . evil-window-map)
 
          :map evil-motion-state-map
          ("RET")
+         ("<down-mouse-1>")
          ("SPC" . evil-execute-in-emacs-state)
          ("i"   . evil-insert)
-         ("q"   . previous-buffer)
-         ("Q"   . next-buffer)
 
          :map evil-normal-state-map
-         ("U"   . undo)
+         ("q"   . previous-buffer) ;; Closer to what Emacs does in many modes
+         ("Q"   . next-buffer)
          ("g q" . evil-record-macro)
 
          :map evil-visual-state-map
-         ("U" . undo)
-         ("v" . evil-visual-line)
+         ("v" . evil-visual-line) 
 
          :map evil-window-map
          ("C-f" . other-frame)
          ("f"   . other-frame))
 
   :custom
-  (evil-disable-insert-state-bindings t)
-  (evil-overriding-maps nil)
-  (evil-mode-line-format 'after)
-  (evil-search-module 'evil-search)
+  (evil-disable-insert-state-bindings t) ;; Make insert mode like "Emacs mode"
+  (evil-echo-state nil) ;; I have more useful things to put here
+  (evil-kill-on-visual-paste nil)
+  (evil-mode-line-format 'after) ;; It's not important so stick it at the end
   (evil-symbol-word-search t)
   (evil-undo-system 'undo-redo)
+  (evil-visual-region-expanded t)
+  (evil-want-C-w-in-emacs-state t)
   (evil-want-Y-yank-to-eol t)
   (evil-want-minibuffer t)
 
   :config
-  (setq evil-insert-state-modes (append evil-insert-state-modes evil-emacs-state-modes '(exwm-mode)))
+  (setq evil-motion-state-modes (append evil-insert-state-modes evil-emacs-state-modes evil-motion-state-modes))
+  (setq evil-insert-state-modes nil)
   (setq evil-emacs-state-modes nil)
 
   (evil-mode 1))
@@ -72,28 +51,8 @@
   :after evil
   :straight t
 
-  :bind (:map evil-normal-state-map
-         ("s" . evil-surround-edit)
-         ("S" . evil-Surround-edit)
-         :map evil-operator-state-map
-         ("s" . evil-surround-edit)
-         ("S" . evil-Surround-edit)
-         :map evil-visual-state-map
-         ("s" . evil-surround-region)
-         ("S" . evil-Surround-region))
-
-  :config
-  ;; Hotfix for repeating surrounds (upstream assumes "ys" binding).
-  (defun evil-surround-call-with-repeat (callback)
-    (let ((evil-surround-record-repeat t))
-      (call-interactively callback))))
-
-
-(use-package evil-exchange
-  :after evil
-  :straight t
-  :config
-  (evil-exchange-install))
+  :(config)
+  (global-evil-surround-mode 1))
 
 
 (use-package winner

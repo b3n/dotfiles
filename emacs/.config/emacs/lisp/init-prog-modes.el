@@ -1,13 +1,6 @@
 (use-package eglot
   :straight t
 
-  :init
-  ;; Get latest versions, for older Emacs
-  (use-package eldoc :straight t)
-  (use-package flymake :straight t)
-  (use-package project :straight t)
-  (use-package xref :straight t)
-
   :hook
   (java-mode . eglot-ensure)
   (clojure-mode . eglot-ensure)
@@ -25,7 +18,7 @@
 
 
 (use-package web-mode
-  :mode "\\.tsx\\'"
+  :mode "\\.tsx\\'")
 
 
 (use-package clojure-mode
