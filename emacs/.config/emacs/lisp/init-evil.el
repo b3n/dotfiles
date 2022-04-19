@@ -5,9 +5,15 @@
   :init
   (setq evil-want-keybinding nil)
   (setq evil-want-integration nil)
+  (defun my-evil-normal-or-motion-state ()
+    (interactive)
+    (if (eq evil-previous-state 'motion)
+        (evil-motion-state)
+      (evil-normal-state)))
 
   :bind (:map evil-insert-state-map
          ("C-w" . evil-window-map)
+         ("<escape>" . my-evil-normal-or-motion-state)
 
          :map evil-motion-state-map
          ("RET")
@@ -35,7 +41,6 @@
   (evil-symbol-word-search t)
   (evil-undo-system 'undo-redo)
   (evil-visual-region-expanded t)
-  (evil-want-C-w-in-emacs-state t)
   (evil-want-Y-yank-to-eol t)
   (evil-want-minibuffer t)
 
@@ -51,7 +56,7 @@
   :after evil
   :straight t
 
-  :(config)
+  (config)
   (global-evil-surround-mode 1))
 
 
