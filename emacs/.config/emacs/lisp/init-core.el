@@ -1,8 +1,3 @@
-(use-package server
-  :config
-  (server-start))
-
-
 (use-package files
   :custom
   (auto-save-default t)
@@ -21,6 +16,7 @@
 
   :config
   (auto-save-visited-mode))
+
 
 (use-package auth-source
   :custom
@@ -44,7 +40,6 @@
 
 
 (use-package flyspell
-  :disabled
   :hook ((text-mode . flyspell-mode)
          (prog-mode . flyspell-prog-mode)))
 

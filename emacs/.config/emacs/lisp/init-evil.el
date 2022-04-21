@@ -2,14 +2,20 @@
   :demand
   :straight t
 
-  :init
-  (setq evil-want-keybinding nil)
-  (setq evil-want-integration nil)
+  :preface
   (defun my-evil-normal-or-motion-state ()
     (interactive)
     (if (eq evil-previous-state 'motion)
         (evil-motion-state)
       (evil-normal-state)))
+
+  (defun my-evil-lookup-func ()
+    (or (call-interactively #'eldoc)
+        (call-interactively #'woman-follow)))
+
+  :init
+  (setq evil-want-keybinding nil)
+  (setq evil-want-integration nil)
 
   :bind (:map evil-insert-state-map
          ("C-w" . evil-window-map)
@@ -27,26 +33,26 @@
          ("g q" . evil-record-macro)
 
          :map evil-visual-state-map
-         ("v" . evil-visual-line) 
+         ("v" . evil-visual-line)
 
          :map evil-window-map
          ("C-f" . other-frame)
          ("f"   . other-frame))
 
   :custom
-  (evil-disable-insert-state-bindings t) ;; Make insert mode like "Emacs mode"
-  (evil-echo-state nil) ;; I have more useful things to put here
+  (evil-disable-insert-state-bindings t)
+  (evil-echo-state nil)
   (evil-kill-on-visual-paste nil)
-  (evil-mode-line-format 'after) ;; It's not important so stick it at the end
+  (evil-mode-line-format 'after)
   (evil-symbol-word-search t)
   (evil-undo-system 'undo-redo)
   (evil-visual-region-expanded t)
   (evil-want-Y-yank-to-eol t)
   (evil-want-minibuffer t)
+  (evil-lookup-func #'my-evil-lookup-func)
 
   :config
-  (setq evil-motion-state-modes (append evil-insert-state-modes evil-emacs-state-modes evil-motion-state-modes))
-  (setq evil-insert-state-modes nil)
+  (setq evil-motion-state-modes (append evil-emacs-state-modes evil-motion-state-modes))
   (setq evil-emacs-state-modes nil)
 
   (evil-mode 1))
@@ -56,7 +62,7 @@
   :after evil
   :straight t
 
-  (config)
+  :config
   (global-evil-surround-mode 1))
 
 
