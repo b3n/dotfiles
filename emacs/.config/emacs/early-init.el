@@ -1,13 +1,11 @@
 (setq completion-ignore-case t)
 (setq create-lockfiles nil)
 (setq display-buffer-alist '((".*" (display-buffer-reuse-window display-buffer-same-window))))
+(setq enable-recursive-minibuffers t)
 (setq frame-inhibit-implied-resize t)
 (setq indicate-buffer-boundaries 'right)
 (setq initial-scratch-message "")
 (setq mouse-autoselect-window t)
-(setq network-security-level 'paranoid)
-(setq package-enable-at-startup nil)
-(setq enable-recursive-minibuffers t)
 (setq tab-always-indent 'complete)
 (setq visible-bell t)
 
@@ -20,3 +18,11 @@
 
 (menu-bar-mode 0)
 (tool-bar-mode 0)
+
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(package-initialize)
+(package-refresh-contents)
+(unless (package-installed-p 'setup) (package-install 'setup))
+
+(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
