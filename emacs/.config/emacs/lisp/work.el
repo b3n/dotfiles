@@ -1,4 +1,14 @@
-;; Work (OS X) config
+;;; work.el -- Ben's MacOS configuration   -*- lexical-binding: t -*-
+
+;;; Commentary:
+
+;; This extends my configuration for $DAYJOB.
+
+;;; Code:
+
+(setq-default fill-column 100
+              tab-width 2)
+
 
 (setup cus-face
   (custom-set-faces
@@ -8,7 +18,7 @@
 
 
 (setup js
-  (js-indent-level 2))
+  (:option js-indent-level 2))
 
 
 (setup (:package typescript-mode)
@@ -36,10 +46,11 @@
 
 
 (setup (:package vterm)
-  (:package vterm-max-scrollback 100000
-            vterm-buffer-name-string "vterm<%s>")
-  (define-key vterm-mode-map (kbd "<C-escape>")
-    (lambda () (interactive) (vterm-send-key (kbd "C-[")))))
+  (:option vterm-max-scrollback 100000
+           vterm-buffer-name-string "vterm<%s>")
+  (:global "C-c v" #'vterm)
+  (:bind "C-<escape>"
+         (lambda () (interactive) (vterm-send-key (kbd "C-[")))))
 
 
 (setup (:package blacken)
@@ -65,8 +76,11 @@
   (:file-match "\\.ya?ml\\(\\.j2\\)?\\'"))
 
 
+(setup xml-mode
+  (:file-match "\\.xlf\\'"))
+
+
 (setup (:package eglot-java)
-  (setq tab-width 2)
   (add-hook 'java-mode-hook (lambda ()
                               (electric-indent-local-mode -1)
                               (setq c-basic-offset 2
@@ -76,4 +90,4 @@
   (eglot-java-init))
 
 
-(provide 'darwin)
+(provide 'work)

@@ -1,3 +1,12 @@
+;;; init.el -- Ben's configuration   -*- lexical-binding: t -*-
+
+;;; Commentary:
+
+;; This is part 2 of my personal configuration, it's unlikely to be useful to
+;; anyone else.  See `early-init.el' for part 1.
+
+;;; Code:
+
 (setup nsm
   (:option network-security-level 'paranoid))
 
@@ -12,6 +21,24 @@
            minibuffer-line-refresh-interval 1)
   (setq mode-line-misc-info nil)
   (minibuffer-line-mode))
+
+
+(setup window
+  (:option display-buffer-alist
+           '((".*" (display-buffer-reuse-window display-buffer-same-window)))))
+
+
+(setup startup
+  (:option initial-scratch-message ""))
+
+
+(setup indent
+  (:option tab-always-indent 'complete))
+
+
+(setup mb-depth
+  (setq enable-recursive-minibuffers t)
+  (minibuffer-depth-indicate-mode 1))
 
 
 (setup files
@@ -47,8 +74,8 @@
 
 
 (setup flyspell
-  (:with-mode text-mode (:hook flyspell-mode))
-  (:with-mode prog-mode (:hook flyspell-prog-mode)))
+  (:hook-into text-mode)
+  (:with-feature flyspell-prog (:hook-into prog-mode)))
 
 
 (setup saveplace
@@ -129,9 +156,9 @@
   (:with-map minibuffer-local-completion-map
     (:bind "S-<return>" #'minibuffer-complete-and-exit))
   (:option completion-styles '(substring partial-completion flex)
-            completions-detailed t
-            read-buffer-completion-ignore-case t
-            read-file-name-completion-ignore-case t)
+           completions-detailed t
+           read-buffer-completion-ignore-case t
+           read-file-name-completion-ignore-case t)
 
   (setq completion-category-defaults nil)
   (setq completion-in-region-function (lambda (start end collection &optional predicate)
@@ -185,8 +212,8 @@
              icomplete-separator (propertize ", " 'face 'shadow)
              icomplete-show-matches-on-no-input t)
 
-  (setq icomplete-tidy-shadowed-file-names t)
-  (icomplete-mode)))
+    (setq icomplete-tidy-shadowed-file-names t)
+    (icomplete-mode)))
 
 
 (setup (:require password-gen)
@@ -478,7 +505,7 @@
            erc-kill-queries-on-quit t
            erc-kill-buffer-on-part t
            erc-disable-ctcp-replies t
-           erc-prompt (lambda nil (format "%s>" (buffer-name)))
+           erc-prompt (lambda () (format "%s>" (buffer-name)))
            erc-user-mode "+iR"
            erc-server "irc.libera.chat"
            erc-port "6697")
@@ -493,7 +520,7 @@
   (:require vlf-setup))
 
 
-(setup org
+(setup (:require org org-habit ob-calc)
   (:global "C-c a" #'org-agenda
            "C-c c" #'org-capture)
 
@@ -520,28 +547,25 @@
            org-startup-indented t
            org-todo-keywords '((sequence "TODO" "IN-PROGRESS" "|" "DONE" "CANCELED")))
 
-  (:hook (lambda () (electric-indent-local-mode -1)))
-
-  (require 'org-habit)
-  (require 'ob-calc))
+  (:hook (lambda () (electric-indent-local-mode -1))))
 
 
 (setup calendar
   (:option calendar-week-start-day 1
            calendar-holidays
-            '((holiday-fixed 1 1 "New Year's Day")
-              (holiday-fixed 2 14 "Valentine's Day")
-              (holiday-fixed 3 17 "St. Patrick's Day")
-              (holiday-fixed 4 1 "April Fools' Day")
-              (holiday-easter-etc -47 "Pancake Day")
-              (holiday-easter-etc -21 "Mother's Day")
-              (holiday-easter-etc 0 "Easter Sunday")
-              (holiday-float 6 0 3 "Father's Day")
-              (holiday-fixed 10 31 "Halloween")
-              (holiday-fixed 12 24 "Christmas Eve")
-              (holiday-fixed 12 25 "Christmas Day")
-              (holiday-fixed 12 26 "Boxing Day")
-              (holiday-fixed 12 31 "New Year's Eve"))))
+           '((holiday-fixed 1 1 "New Year's Day")
+             (holiday-fixed 2 14 "Valentine's Day")
+             (holiday-fixed 3 17 "St. Patrick's Day")
+             (holiday-fixed 4 1 "April Fools' Day")
+             (holiday-easter-etc -47 "Pancake Day")
+             (holiday-easter-etc -21 "Mother's Day")
+             (holiday-easter-etc 0 "Easter Sunday")
+             (holiday-float 6 0 3 "Father's Day")
+             (holiday-fixed 10 31 "Halloween")
+             (holiday-fixed 12 24 "Christmas Eve")
+             (holiday-fixed 12 25 "Christmas Day")
+             (holiday-fixed 12 26 "Boxing Day")
+             (holiday-fixed 12 31 "New Year's Eve"))))
 
 
 (setup eldoc
@@ -550,7 +574,7 @@
 
 (setup (:package eglot)
   (:with-mode eglot-ensure
-    (:hook-into java-mode clojure-mode clojurescript-mode  python-mode))
+    (:hook-into prog-mode))
 
   (:option eglot-autoshutdown t))
 
@@ -558,21 +582,13 @@
 (setup (:package json-mode))
 
 
-(setup (:package clojure-mode))
-
-(setup (:package flymake-kondor)
+(setup (:package clojure-mode cider flymake-kondor)
   (:with-mode flymake-kondor-setup
     (:hook-into clojure-mode)))
 
-(setup (:package cider))
-
-
-(setup xml-mode
-  (:file-match "\\.xlf\\'"))
 
 (setup (:package olivetti)
-  (:hook-into org-mode markdown-mode nov-mode olivetti-mode)
-  (:option olivetti-body-width 80))
+  (:hook-into text-mode))
 
 
 (setup (:package markdown-mode)
@@ -582,7 +598,6 @@
 
 
 (setup tex
-  (setq doc-view-continuous t)
   (:package auctex)
   (:option latex-run-command "pdflatex"
            TeX-auto-save t
@@ -592,11 +607,13 @@
            TeX-view-program-selection '((output-pdf "PDF Tools"))
            TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view))
            TeX-source-correlate-start-server t)
+  (setq doc-view-continuous t)
   (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
 
 
-(setup (:package csv-mode)
-  (:file-match "\\.csv\\'"))
+(setup (:package csv-mode))
 
 
-(require system-type nil t)
+(setup work
+  (:only-if (eq system-type 'darwin))
+  (:require work))
