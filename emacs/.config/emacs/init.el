@@ -614,6 +614,13 @@
 (setup (:package csv-mode))
 
 
+(setup (:package vundo)
+  (:global "C-x u" #'vundo)
+  (:when-loaded
+    (:option vundo-glyph-alist vundo-unicode-symbols)))
+
+
+
 (setup work
   (:only-if (eq system-type 'darwin))
   (:require work))
