@@ -67,9 +67,10 @@
 
 
 (setup simple
-  (:with-mode text-mode (:hook turn-on-visual-line-mode))
+  (:with-feature turn-on-visual-line (:hook-into text-mode))
   (:option completion-show-help nil
-           async-shell-command-buffer 'rename-buffer)
+           async-shell-command-buffer 'rename-buffer
+           save-interprogram-paste-before-kill t)
   (column-number-mode))
 
 
@@ -129,12 +130,13 @@
    '(variable-pitch ((t (:family "Libre Baskerville" :height 115))))))
 
 
-(setup (:package modus-themes) ;;TODO: Isn't this included with Emacs?
+(setup (:require modus-themes)
   (:option modus-themes-bold-constructs t
+           modus-themes-headings '((1 1.7) (2 1.4) (3 1.2) (4 1.1) (t t))
            modus-themes-mixed-fonts t
            modus-themes-mode-line '(accented)
            modus-themes-org-blocks 'gray-background
-           modus-themes-scale-headings t
+           modus-themes-region '(bg-only no-extend)
            modus-themes-slanted-constructs t)
 
   (let ((daily (* 60 60 24)))
@@ -144,7 +146,8 @@
 
 
 (setup savehist
-  (:option history-length 99999)
+  (:option history-delete-duplicates t
+           history-length 10000)
   (savehist-mode 1))
 
 
@@ -245,10 +248,10 @@
     (:bind "RET" nil
            "<down-mouse-1>" nil
            "SPC" #'evil-execute-in-emacs-state
-           "i" #'evil-insert))
+           "i" #'evil-insert
+           "Q" #'unbury-buffer))
   (:with-map evil-normal-state-map
-    (:bind "q" #'previous-buffer
-           "Q" #'next-buffer
+    (:bind "q" #'bury-buffer
            "g q" #'evil-record-macro))
   (:with-map evil-visual-state-map
     (:bind "v" #'evil-visual-line))
@@ -363,13 +366,11 @@
 
 
 (setup dired
+  (:also-load dired-x)
   (:hook dired-hide-details-mode
          hl-line-mode)
   (:option dired-listing-switches "-hal"
            dired-dwim-target t))
-
-
-(setup (:require dired-x))
 
 
 (setup image-dired
