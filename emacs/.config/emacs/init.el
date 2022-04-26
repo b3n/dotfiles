@@ -7,9 +7,6 @@
 
 ;;; Code:
 
-(setup nsm
-  (:option network-security-level 'paranoid))
-
 
 (setup (:package exec-path-from-shell)
   (:option exec-path-from-shell-arguments nil)
@@ -189,7 +186,7 @@
 
 
 (setup icomplete
-  (defun my-icomplete-root ()
+  (defun b3n-icomplete-root ()
     "Go to the project root in find-file, or the parent dir"
     (interactive)
     (if (and
@@ -205,7 +202,7 @@
            "<down>" #'icomplete-forward-completions
            "<up>" #'icomplete-backward-completions
            "DEL" #'icomplete-fido-backward-updir
-           "M-DEL" #'my-icomplete-root
+           "M-DEL" #'b3n-icomplete-root
            "<return>" #'icomplete-fido-ret
            "C-k" #'icomplete-fido-kill
            "DEL" #'icomplete-fido-backward-updir
@@ -225,13 +222,13 @@
 
 
 (setup evil
-  (defun my-evil-normal-or-motion-state ()
+  (defun b3n-evil-normal-or-motion-state ()
     (interactive)
     (if (eq evil-previous-state 'motion)
         (evil-motion-state)
       (evil-normal-state)))
 
-  (defun my-evil-lookup-func ()
+  (defun b3n-evil-lookup-func ()
     (or (call-interactively #'eldoc)
         (call-interactively #'woman-follow)))
 
@@ -243,7 +240,7 @@
 
   (:with-map evil-insert-state-map
     (:bind "C-w" #'evil-window-map
-           "<escape>" #'my-evil-normal-or-motion-state))
+           "<escape>" #'b3n-evil-normal-or-motion-state))
   (:with-map evil-motion-state-map
     (:bind "RET" nil
            "<down-mouse-1>" nil
@@ -268,7 +265,7 @@
            evil-visual-region-expanded t
            evil-want-Y-yank-to-eol t
            evil-want-minibuffer t
-           evil-lookup-func #'my-evil-lookup-func)
+           evil-lookup-func #'b3n-evil-lookup-func)
 
   (setq evil-motion-state-modes (append evil-emacs-state-modes evil-motion-state-modes))
   (setq evil-emacs-state-modes nil)
@@ -314,14 +311,14 @@
   (add-hook 'eshell-prompt-load-hook #'eshell-buffer-name)
   (add-hook 'eshell-directory-change-hook #'eshell-buffer-name)
 
-  (defun my-make-field ()
+  (defun b3n-make-field ()
     "Make text in front of the point a field, useful for prompts."
     (let ((inhibit-read-only t))
       (add-text-properties
        (line-beginning-position) (point)
        (list 'field t
              'rear-nonsticky t))))
-  (add-hook 'eshell-after-prompt-hook #'my-make-field)
+  (add-hook 'eshell-after-prompt-hook #'b3n-make-field)
 
   (defun eshell/in-term (prog &rest args)
     "Run shell command in term buffer."
@@ -382,28 +379,28 @@
 
 
 (setup browse-url
-  (defun my/browse-url-xdg-open (url &optional ignored)
+  (defun b3n-browse-url-xdg-open (url &optional ignored)
     (browse-url-xdg-open (replace-regexp-in-string "%20" "\\\\ " url)))
 
-  (:option browse-url-handlers '(("\\`file:" #'my/browse-url-xdg-open))))
+  (:option browse-url-handlers '(("\\`file:" #'b3n-browse-url-xdg-open))))
 
 (setup exwm
-  (defun my-same-mode-next-buffer ()
+  (defun b3n-same-mode-next-buffer ()
     "Select next buffer of the same type"
     (interactive)
-    (let ((new-buffer (car (my--same-mode-buffer-list))))
+    (let ((new-buffer (car (b3n--same-mode-buffer-list))))
       (when new-buffer
         (bury-buffer)
         (switch-to-buffer new-buffer))))
 
 
-  (defun my-same-mode-previous-buffer ()
+  (defun b3n-same-mode-previous-buffer ()
     "Select previous buffer of the same type"
     (interactive)
-    (let ((new-buffer (car (last (my--same-mode-buffer-list)))))
+    (let ((new-buffer (car (last (b3n--same-mode-buffer-list)))))
       (when new-buffer (switch-to-buffer new-buffer))))
 
-  (defun my--same-mode-buffer-list (&optional mode)
+  (defun b3n--same-mode-buffer-list (&optional mode)
     "List buffers of mode `mode' that are not already visible"
     (let ((mode (or mode major-mode)))
       (seq-filter (lambda (buffer) 
@@ -411,14 +408,14 @@
                          (eq (buffer-local-value 'major-mode buffer) mode)))
                   (buffer-list))))
 
-  (global-set-key [mode-line mouse-4] #'my-same-mode-previous-buffer)
-  (global-set-key [mode-line mouse-5] #'my-same-mode-next-buffer)
+  (global-set-key [mode-line mouse-4] #'b3n-same-mode-previous-buffer)
+  (global-set-key [mode-line mouse-5] #'b3n-same-mode-next-buffer)
   
   (:only-if (eq window-system 'x))
 
   (setq focus-follows-mouse t)
 
-  (defun my/exwm-set-buffer-name ()
+  (defun b3n-exwm-set-buffer-name ()
     "Make a nicer title and file name for the buffer"
 
     (setq-local exwm-title
@@ -432,7 +429,7 @@
 
     (exwm-workspace-rename-buffer exwm-title))
 
-  (defun my/gtk-launch ()
+  (defun b3n-gtk-launch ()
     "Launch an X application via `gtk-launch'."
     (interactive)
     (require 'xdg)
@@ -445,15 +442,15 @@
                                           collect (replace-regexp-in-string extention "" file)))))
       (call-process "gtk-launch" nil 0 nil (completing-read "Launch: " apps))))
 
-  (defun my/exwm-buffer-settings ()
+  (defun b3n-exwm-buffer-settings ()
     (setq-local left-fringe-width 0)
     (setq-local right-fringe-width 0))
 
   (:package exwm)
   (:require exwm-randr)
 
-  (:hook my/exwm-buffer-settings)
-  (:with-hook '(exwm-update-class exwm-update-title) (:hook my/exwm-set-buffer-name))
+  (:hook b3n-exwm-buffer-settings)
+  (:with-hook '(exwm-update-class exwm-update-title) (:hook b3n-exwm-set-buffer-name))
 
   (:option exwm-randr-workspace-monitor-plist '(0 "HDMI-2" 1 "DP-1")
            exwm-workspace-number 2
@@ -476,7 +473,7 @@
            exwm-input-global-keys
            `(([?\s-r] . exwm-reset)
              ([?\s-o] . exwm-workspace-swap)
-             ([?\s-\s] . my/gtk-launch)))
+             ([?\s-\s] . b3n-gtk-launch)))
 
   (scroll-bar-mode 0)
   (horizontal-scroll-bar-mode 0)
