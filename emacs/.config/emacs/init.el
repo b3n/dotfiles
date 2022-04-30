@@ -7,36 +7,44 @@
 
 ;;; Code:
 
+
+;;; Basic settings
 
-(setup (:package exec-path-from-shell)
-  (:option exec-path-from-shell-arguments nil)
-  (exec-path-from-shell-initialize))
+(setup auth-source
+  (:option auth-sources `(,(expand-file-name "authinfo.gpg" user-emacs-directory)
+                          ,(expand-file-name "authinfo" temporary-file-directory)
+                          "~/.netrc")))
 
+(setup cus-edit
+  (:option custom-file (make-temp-file "emacs-custom")))
 
-(setup (:package minibuffer-line)
-  (:option minibuffer-line-format '(:eval global-mode-string)
-           minibuffer-line-refresh-interval 1)
-  (setq mode-line-misc-info nil)
-  (minibuffer-line-mode))
+(setup simple
+  (:with-feature turn-on-visual-line (:hook-into text-mode))
+  (:option completion-show-help nil
+           async-shell-command-buffer 'rename-buffer
+           save-interprogram-paste-before-kill t)
+  (column-number-mode))
 
+(setup flyspell
+  (:hook-into text-mode)
+  (:with-feature flyspell-prog (:hook-into prog-mode)))
 
-(setup window
-  (:option display-buffer-alist
-           '((".*" (display-buffer-reuse-window display-buffer-same-window)))))
+(setup saveplace
+  (save-place-mode 1))
 
+(setup uniquify
+  (:option uniquify-buffer-name-style 'forward))
+
+;; Testing without this, as I can always use winner-undo
+;;     (setup window
+;;       (:option display-buffer-alist
+;;                '((".*" (display-buffer-reuse-window display-buffer-same-window)))))
 
 (setup startup
   (:option initial-scratch-message ""))
 
-
 (setup indent
   (:option tab-always-indent 'complete))
-
-
-(setup mb-depth
-  (setq enable-recursive-minibuffers t)
-  (minibuffer-depth-indicate-mode 1))
-
 
 (setup files
   (:option auto-save-default t
@@ -51,74 +59,80 @@
            enable-local-variables nil
            kept-new-versions 99
            vc-make-backup-files t
-           version-control t)
+           version-control t
+           view-read-only t)
   (auto-save-visited-mode 1))
-
-
-(setup auth-source
-  (:option auth-sources '("/tmp/.authinfo" "~/.authinfo.gpg")))
-
-
-(setup cus-edit
-  (:option custom-file (make-temp-file "emacs-custom")))
-
-
-(setup simple
-  (:with-feature turn-on-visual-line (:hook-into text-mode))
-  (:option completion-show-help nil
-           async-shell-command-buffer 'rename-buffer
-           save-interprogram-paste-before-kill t)
-  (column-number-mode))
-
-
-(setup flyspell
-  (:hook-into text-mode)
-  (:with-feature flyspell-prog (:hook-into prog-mode)))
-
-
-(setup saveplace
-  (save-place-mode 1))
-
-
-(setup uniquify
-  (:option uniquify-buffer-name-style 'forward))
-
-
-(setup (:package find-file-in-project)
-  (:global "C-x F" #'find-file-in-project
-           "C-x f" #'find-file-in-project-by-selected)
-  (:option ffip-use-rust-fd t))
-
 
 (setup isearch
   (:option isearch-lazy-count t))
 
-
-(setup ibuffer
-  (:global "C-x C-b" #'ibuffer))
-
-
-(setup flymake
-  (:hook-into prog-mode)
-  (:option flymake-no-changes-timeout nil
-           flymake-wrap-around nil))
-
-
-(setup man
-  (:option Man-notify-method 'pushy))
-
-
-(setup (:package yasnippet yasnippet-snippets)
-  (:with-mode yas-minor-mode
-    (:unbind "TAB" [(tab)]))
-  (:global [remap dabbrev-expand] #'hippie-expand)
-  (add-to-list 'hippie-expand-try-functions-list #'yas-hippie-try-expand)
-  (yas-global-mode 1))
-
-
 (setup bookmark
   (:option bookmark-save-flag 1))
+
+;;; Minibuffer and completions
 
+(setup (:package minibuffer-line)
+  (:option minibuffer-line-format '(:eval global-mode-string)
+           minibuffer-line-refresh-interval 1)
+  (setq mode-line-misc-info nil)
+  (minibuffer-line-mode))
+
+(setup mb-depth
+  (setq enable-recursive-minibuffers t)
+  (minibuffer-depth-indicate-mode 1))
+
+(setup icomplete
+  (defun b3n-icomplete-root ()
+    "Go to the project root in find-file, or the parent dir"
+    (interactive)
+    (if (and (eq (icomplete--category) 'file) (project-current))
+        (progn (delete-minibuffer-contents)
+               (insert (project-root (project-current))))
+      (call-interactively 'icomplete-fido-backward-updir)))
+
+  (:with-map icomplete-fido-mode-map
+    (:bind "M-DEL" #'b3n-icomplete-root
+           "M-<return>" #'icomplete-fido-exit)
+    (:unbind "C-r" "C-s"))
+
+  (:option icomplete-prospects-height 1
+           icomplete-separator (propertize ", " 'face 'shadow))
+
+  (fido-mode 1)
+
+  ;; Override the default fido-mode flex completion style, as flex doesn't order by
+  ;; history. This has to happen in a hook, because fido-mode also sets a hook to do
+  ;; this.
+  (defun b3n-completion-styles ()
+    (setq-local completion-styles '(substring flex basic)))
+  (add-hook 'minibuffer-setup-hook #'b3n-completion-styles 99))
+
+(setup minibuffer
+  (:also-load completion-in-buffer)
+  (:option completion-category-overrides
+            '((file (styles . (partial-completion flex basic))))
+           completions-detailed t
+           read-buffer-completion-ignore-case t
+           read-file-name-completion-ignore-case t)
+
+  (minibuffer-electric-default-mode 1))
+
+(setup (:require restricto)
+  (:with-map minibuffer-local-completion-map
+    (:bind "SPC" restricto-narrow
+           "S-SPC" restricto-widen))
+
+  (restricto-mode))
+
+(setup rfn-eshadow
+  (file-name-shadow-mode 1))
+
+(setup savehist
+  (:option history-delete-duplicates t
+           history-length 1000)
+  (savehist-mode 1))
+
+;;; Theme and display options
 
 (setup cus-face
   (custom-set-faces
@@ -126,14 +140,12 @@
    '(fixed-pitch ((t (:family "JetBrains Mono NL" :height 130))))
    '(variable-pitch ((t (:family "Libre Baskerville" :height 115))))))
 
-
 (setup (:require modus-themes)
   (:option modus-themes-bold-constructs t
-           modus-themes-headings '((1 1.7) (2 1.4) (3 1.2) (4 1.1) (t t))
+           modus-themes-headings '((1 1.4) (2 1.2) (3 1.1) (t t))
            modus-themes-mixed-fonts t
            modus-themes-mode-line '(accented)
            modus-themes-org-blocks 'gray-background
-           modus-themes-region '(bg-only no-extend)
            modus-themes-slanted-constructs t)
 
   (let ((daily (* 60 60 24)))
@@ -141,85 +153,20 @@
     (run-at-time "16:00" daily #'modus-themes-load-operandi)
     (run-at-time "00:30" daily #'modus-themes-load-vivendi)))
 
+
+;;; Text editing
 
-(setup savehist
-  (:option history-delete-duplicates t
-           history-length 10000)
-  (savehist-mode 1))
+(setup (:package vundo)
+  (:global "C-x u" #'vundo)
+  (:when-loaded
+    (:option vundo-glyph-alist vundo-unicode-symbols)))
 
-
-(setup rfn-eshadow
-  (file-name-shadow-mode 1))
-
-
-(setup minibuffer
-  (:with-map minibuffer-local-completion-map
-    (:bind "S-<return>" #'minibuffer-complete-and-exit))
-  (:option completion-styles '(substring partial-completion flex)
-           completions-detailed t
-           read-buffer-completion-ignore-case t
-           read-file-name-completion-ignore-case t)
-
-  (setq completion-category-defaults nil)
-  (setq completion-in-region-function (lambda (start end collection &optional predicate)
-    "Prompt for completion of region in the minibuffer if non-unique."
-    (if (and (minibufferp) (not (string= (minibuffer-prompt) "Eval: ")))
-        (completion--in-region start end collection predicate)
-      (let* ((initial (buffer-substring-no-properties start end))
-             (limit (car (completion-boundaries initial collection predicate "")))
-             (all (completion-all-completions initial collection predicate (length initial)))
-             (completion (cond
-                          ((atom all) nil)
-                          ((and (consp all) (atom (cdr all)))
-                           (concat (substring initial 0 limit) (car all)))
-                          (t (completing-read "Completion: " collection predicate t initial)))))
-        (if (null completion)
-            (progn (message "No completion") nil)
-          (delete-region start end)
-          (insert completion)
-          t)))))
-  (minibuffer-electric-default-mode 1))
-
-
-(setup (:package orderless)
-  (:option completion-styles '(orderless partial-completion flex)))
-
-
-(setup icomplete
-  (defun b3n-icomplete-root ()
-    "Go to the project root in find-file, or the parent dir"
-    (interactive)
-    (if (and
-         (eq (icomplete--category) 'file)
-         (project-current))
-        (progn (delete-minibuffer-contents)
-               (insert (project-root (project-current))))
-      (call-interactively 'icomplete-fido-backward-updir)))
-
-  (:with-map icomplete-minibuffer-map
-    (:bind "<left>" #'icomplete-backward-completions
-           "<right>" #'icomplete-forward-completions
-           "<down>" #'icomplete-forward-completions
-           "<up>" #'icomplete-backward-completions
-           "DEL" #'icomplete-fido-backward-updir
-           "M-DEL" #'b3n-icomplete-root
-           "<return>" #'icomplete-fido-ret
-           "C-k" #'icomplete-fido-kill
-           "DEL" #'icomplete-fido-backward-updir
-           "M-<return>" #'icomplete-fido-exit)
-
-    (:option icomplete-prospects-height 1
-             icomplete-separator (propertize ", " 'face 'shadow)
-             icomplete-show-matches-on-no-input t)
-
-    (setq icomplete-tidy-shadowed-file-names t)
-    (icomplete-mode)))
-
-
-(setup (:require password-gen)
-  (:global "C-c p" #'password-gen)
-  (:option password-gen-length 32))
-
+(setup (:package yasnippet yasnippet-snippets)
+  (:with-mode yas-minor-mode
+    (:unbind "TAB" [(tab)]))
+  (:global [remap dabbrev-expand] #'hippie-expand)
+  (add-to-list 'hippie-expand-try-functions-list #'yas-hippie-try-expand)
+  (yas-global-mode 1))
 
 (setup evil
   (defun b3n-evil-normal-or-motion-state ()
@@ -272,11 +219,19 @@
 
   (evil-mode 1))
 
+;; Instead of Surround, let's try using Electric Pair Mode, e.g. `viw\)' to surround a
+;; word in parenthesise.
+;;  (setup (:package evil-surround)
+;;    (evil-define-key 'visual evil-surround-mode-map "s" 'evil-surround-region)
+;;    (global-evil-surround-mode 1))
+(setup elec-pair
+  (electric-pair-mode 1))
 
-(setup (:package evil-surround)
-  (evil-define-key 'visual evil-surround-mode-map "s" 'evil-surround-region)
-  (global-evil-surround-mode 1))
+
+;;; Window and buffer management
 
+(setup ibuffer
+  (:global "C-x C-b" #'ibuffer))
 
 (setup winner
   (:with-map evil-window-map
@@ -286,22 +241,43 @@
 
   (winner-mode 1))
 
+(setup midnight
+  (midnight-mode))
+
+;;; File management
 
-(setup (:package rg)
-  (:global "C-c s" #'rg-menu)
+(setup dired
+  (:also-load dired-x)
+  (:hook dired-hide-details-mode
+         hl-line-mode)
+  (:option dired-listing-switches "-hal"
+           dired-dwim-target t))
 
-  (:option rg-command-line-flags '("--max-columns=999")
-           rg-default-alias-fallback "everything"))
+(setup image-dired
+  (:option image-dired-thumb-size 500))
+
+(setup (:package async)
+  (:with-hook dired-mode-hook (:hook dired-async-mode)))
+
+(setup browse-url
+  (defun b3n-browse-url-xdg-open (url &optional ignored)
+    (browse-url-xdg-open (replace-regexp-in-string "%20" "\\\\ " url)))
+
+  (:option browse-url-handlers '(("\\`file:" #'b3n-browse-url-xdg-open))))
 
 
-(setup (:package with-editor))
+
+;;; Shell
 
+(setup (:package exec-path-from-shell with-editor)
+  (:option exec-path-from-shell-arguments nil)
+  (exec-path-from-shell-initialize))
 
 (setup eshell
   (:global "C-c e" #'eshell)
   (:hook with-editor-export-editor)
   (:option eshell-hist-ignoredups t
-           eshell-history-size 99999
+           eshell-history-size 1000
            eshell-destroy-buffer-when-process-dies t
            eshell-scroll-to-bottom-on-output t)
   (setenv "PAGER" "cat")
@@ -348,11 +324,100 @@
 
   (add-hook 'eshell-mode-hook #'eshell-current-command-time-track))
 
+
+;;; Programming
+
+(setup flymake
+  (:hook-into prog-mode)
+  (:option flymake-no-changes-timeout nil
+           flymake-wrap-around nil))
+
+(setup eldoc
+  (:option eldoc-echo-area-use-multiline-p nil))
+
+(setup (:package eglot)
+  (:with-mode eglot-ensure
+    (:hook-into prog-mode))
+
+  (:option eglot-autoshutdown t))
+
+(setup (:package json-mode))
+
+(setup (:package csv-mode))
+
+(setup (:package clojure-mode cider flymake-kondor)
+  (:with-mode flymake-kondor-setup
+    (:hook-into clojure-mode)))
+
+
+;;; Writing and organisation
+
+(setup (:package olivetti)
+  (:hook-into text-mode))
+
+(setup (:package markdown-mode)
+  (:file-match "\\.md\\'")
+  (:with-mode gfm-mode
+    (:file-match "README\\.md\\'")))
+
+(setup tex
+  (:package auctex)
+  (:option latex-run-command "pdflatex"
+           TeX-auto-save t
+           TeX-parse-self t
+           TeX-save-query nil
+           TeX-PDF-mode t
+           TeX-view-program-selection '((output-pdf "PDF Tools"))
+           TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view))
+           TeX-source-correlate-start-server t)
+  (setq doc-view-continuous t)
+  (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
+
+(setup (:require org org-habit ob-calc)
+  (:global "C-c a" #'org-agenda
+           "C-c c" #'org-capture)
+
+  (:option org-agenda-custom-commands
+           '((" " "My agenda"
+              ((agenda "")
+               (todo "IN-PROGRESS")
+               (todo "NEXT")
+               (todo "READING"))))
+           org-agenda-files '("~/todo/" "~/notes/books.org")
+           org-agenda-start-on-weekday nil
+           org-agenda-window-setup 'current-window
+           org-capture-templates
+           `(("t" "Todo" entry (file+headline "~/todo/inbox.org" "Inbox") "* TODO %?")
+             ("n" "Note" entry
+              (file ,(lambda () (format-time-string "~/tmp/%Y-%m-%d.org")))
+              "* %<%H:%M>\n%?\n"))
+           org-ellipsis "  ⬎ "
+           org-image-actual-width 300
+           org-link-frame-setup '((file . find-file))
+           org-log-done 'time
+           org-return-follows-link t
+           org-startup-folded 'content
+           org-startup-indented t
+           org-todo-keywords '((sequence "TODO" "IN-PROGRESS" "|" "DONE" "CANCELED")))
+
+  (:hook (lambda () (electric-indent-local-mode -1))))
+
+
+;;; Miscellaneous (to be categorised)
+
+(setup page
+  (:global "M-]" (lambda () (interactive) (narrow-to-page 1))
+           "M-[" (lambda () (interactive) (narrow-to-page -1) (goto-char (point-min)))))
+
+;; `project-find-file' is too slow on the monorepo
+(setup (:package find-file-in-project)
+  (:global "C-x F" #'find-file-in-project
+           "C-x f" #'find-file-in-project-by-selected)
+  (:option ffip-use-rust-fd t))
 
 (setup vc-hooks
   (:option vc-follow-symlinks t)
   (delete '(vc-mode vc-mode) mode-line-format))
-
 
 (setup (:package magit)
   (:global "C-c g" #'magit-status)
@@ -361,28 +426,63 @@
            magit-no-confirm '(stage-all-changes)
            magit-refresh-status-buffer nil))
 
+(setup so-long
+  (global-so-long-mode 1))
 
-(setup dired
-  (:also-load dired-x)
-  (:hook dired-hide-details-mode
-         hl-line-mode)
-  (:option dired-listing-switches "-hal"
-           dired-dwim-target t))
+(setup (:package vlf)
+  (:require vlf-setup))
 
+
+;;; Applications
 
-(setup image-dired
-  (:option image-dired-thumb-size 500))
+(setup (:package rg)
+  (:global "C-c s" #'rg-menu)
 
+  (:option rg-command-line-flags '("--max-columns=999")
+           rg-default-alias-fallback "everything"))
 
-(setup (:package async)
-  (:with-hook dired-mode-hook (:hook dired-async-mode)))
+(setup man
+  (:option Man-notify-method 'pushy))
 
+(setup calendar
+  (:option calendar-week-start-day 1
+           calendar-holidays
+           '((holiday-fixed 1 1 "New Year's Day")
+             (holiday-fixed 2 14 "Valentine's Day")
+             (holiday-fixed 3 17 "St. Patrick's Day")
+             (holiday-fixed 4 1 "April Fools' Day")
+             (holiday-easter-etc -47 "Pancake Day")
+             (holiday-easter-etc -21 "Mother's Day")
+             (holiday-easter-etc 0 "Easter Sunday")
+             (holiday-float 6 0 3 "Father's Day")
+             (holiday-fixed 10 31 "Halloween")
+             (holiday-fixed 12 24 "Christmas Eve")
+             (holiday-fixed 12 25 "Christmas Day")
+             (holiday-fixed 12 26 "Boxing Day")
+             (holiday-fixed 12 31 "New Year's Eve"))))
 
-(setup browse-url
-  (defun b3n-browse-url-xdg-open (url &optional ignored)
-    (browse-url-xdg-open (replace-regexp-in-string "%20" "\\\\ " url)))
+(setup erc
+  (:option erc-fill-function 'erc-fill-static
+           erc-fill-static-center 14
+           erc-fill-column (- (/ (frame-width) 2) 3)
+           erc-hide-list '("JOIN" "PART" "QUIT")
+           erc-auto-query 'bury
+           erc-kill-server-buffer-on-quit t
+           erc-kill-queries-on-quit t
+           erc-kill-buffer-on-part t
+           erc-disable-ctcp-replies t
+           erc-prompt (lambda () (format "%s>" (buffer-name)))
+           erc-user-mode "+iR"
+           erc-server "irc.libera.chat"
+           erc-port "6697")
+  (erc-spelling-mode))
 
-  (:option browse-url-handlers '(("\\`file:" #'b3n-browse-url-xdg-open))))
+(setup (:require password-gen)
+  (:global "C-c p" #'password-gen)
+  (:option password-gen-length 32))
+
+
+;;; X11 window manager
 
 (setup exwm
   (defun b3n-same-mode-next-buffer ()
@@ -483,141 +583,12 @@
 
   (exwm-randr-enable))
 
-
 (setup time
   (:option display-time-format "%F %R\t")
   (display-time-mode t))
 
-
-(setup midnight
-  (midnight-mode))
-
-
-(setup erc
-  (:option erc-fill-function 'erc-fill-static
-           erc-fill-static-center 14
-           erc-fill-column (- (/ (frame-width) 2) 3)
-           erc-hide-list '("JOIN" "PART" "QUIT")
-           erc-auto-query 'bury
-           erc-kill-server-buffer-on-quit t
-           erc-kill-queries-on-quit t
-           erc-kill-buffer-on-part t
-           erc-disable-ctcp-replies t
-           erc-prompt (lambda () (format "%s>" (buffer-name)))
-           erc-user-mode "+iR"
-           erc-server "irc.libera.chat"
-           erc-port "6697")
-  (erc-spelling-mode))
-
-
-(setup so-long
-  (global-so-long-mode 1))
-
-
-(setup (:package vlf)
-  (:require vlf-setup))
-
-
-(setup (:require org org-habit ob-calc)
-  (:global "C-c a" #'org-agenda
-           "C-c c" #'org-capture)
-
-  (:option org-agenda-custom-commands
-           '((" " "My agenda"
-              ((agenda "")
-               (todo "IN-PROGRESS")
-               (todo "NEXT")
-               (todo "READING"))))
-           org-agenda-files '("~/todo/" "~/notes/books.org")
-           org-agenda-start-on-weekday nil
-           org-agenda-window-setup 'current-window
-           org-capture-templates
-           `(("t" "Todo" entry (file+headline "~/todo/inbox.org" "Inbox") "* TODO %?")
-             ("n" "Note" entry
-              (file ,(lambda () (format-time-string "~/tmp/%Y-%m-%d.org")))
-              "* %<%H:%M>\n%?\n"))
-           org-ellipsis "  ⬎ "
-           org-image-actual-width 300
-           org-link-frame-setup '((file . find-file))
-           org-log-done 'time
-           org-return-follows-link t
-           org-startup-folded 'content
-           org-startup-indented t
-           org-todo-keywords '((sequence "TODO" "IN-PROGRESS" "|" "DONE" "CANCELED")))
-
-  (:hook (lambda () (electric-indent-local-mode -1))))
-
-
-(setup calendar
-  (:option calendar-week-start-day 1
-           calendar-holidays
-           '((holiday-fixed 1 1 "New Year's Day")
-             (holiday-fixed 2 14 "Valentine's Day")
-             (holiday-fixed 3 17 "St. Patrick's Day")
-             (holiday-fixed 4 1 "April Fools' Day")
-             (holiday-easter-etc -47 "Pancake Day")
-             (holiday-easter-etc -21 "Mother's Day")
-             (holiday-easter-etc 0 "Easter Sunday")
-             (holiday-float 6 0 3 "Father's Day")
-             (holiday-fixed 10 31 "Halloween")
-             (holiday-fixed 12 24 "Christmas Eve")
-             (holiday-fixed 12 25 "Christmas Day")
-             (holiday-fixed 12 26 "Boxing Day")
-             (holiday-fixed 12 31 "New Year's Eve"))))
-
-
-(setup eldoc
-  (:option eldoc-echo-area-use-multiline-p nil))
-
-
-(setup (:package eglot)
-  (:with-mode eglot-ensure
-    (:hook-into prog-mode))
-
-  (:option eglot-autoshutdown t))
-
-
-(setup (:package json-mode))
-
-
-(setup (:package clojure-mode cider flymake-kondor)
-  (:with-mode flymake-kondor-setup
-    (:hook-into clojure-mode)))
-
-
-(setup (:package olivetti)
-  (:hook-into text-mode))
-
-
-(setup (:package markdown-mode)
-  (:file-match "\\.md\\'")
-  (:with-mode gfm-mode
-    (:file-match "README\\.md\\'")))
-
-
-(setup tex
-  (:package auctex)
-  (:option latex-run-command "pdflatex"
-           TeX-auto-save t
-           TeX-parse-self t
-           TeX-save-query nil
-           TeX-PDF-mode t
-           TeX-view-program-selection '((output-pdf "PDF Tools"))
-           TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view))
-           TeX-source-correlate-start-server t)
-  (setq doc-view-continuous t)
-  (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
-
-
-(setup (:package csv-mode))
-
-
-(setup (:package vundo)
-  (:global "C-x u" #'vundo)
-  (:when-loaded
-    (:option vundo-glyph-alist vundo-unicode-symbols)))
-
-
+
+;;; System specific initiation
 
 (setup work
   (:only-if (eq system-type 'darwin))

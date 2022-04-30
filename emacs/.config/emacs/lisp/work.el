@@ -64,7 +64,7 @@
 (setup (:package bazel))
 
 
-(setup web-mode
+(setup (:package web-mode)
   (:file-match "\\.tsx\\'"))
 
 

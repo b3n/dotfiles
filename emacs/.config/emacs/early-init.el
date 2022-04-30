@@ -7,6 +7,7 @@
 
 ;;; Code:
 
+
 (setq completion-ignore-case t)
 (setq create-lockfiles nil)
 (setq frame-inhibit-implied-resize t)
@@ -21,6 +22,7 @@
 (setq-default tab-width 4)
 
 (put 'narrow-to-region 'disabled nil)
+(put 'narrow-to-page 'disabled nil)
 
 (menu-bar-mode 0)
 (tool-bar-mode 0)
