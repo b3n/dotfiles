@@ -1,7 +1,7 @@
 ;;; password-gen.el --- Generate a password  -*- lexical-binding: t; -*-
 
 (defcustom password-gen-command
-  "/home/ben/bin/password_gen"
+  "~/bin/password_gen"
   "The command to generate a password"
   :type 'string)
 
