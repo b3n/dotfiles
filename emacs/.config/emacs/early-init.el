@@ -36,3 +36,6 @@
 (package-initialize)
 (package-refresh-contents)
 (unless (package-installed-p 'setup) (package-install 'setup))
+
+
+;;; early-init.el ends here

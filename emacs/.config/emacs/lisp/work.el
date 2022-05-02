@@ -9,7 +9,6 @@
 (setq-default fill-column 100
               tab-width 2)
 
-
 (setup cus-face
   (custom-set-faces
    '(default ((t (:family "Fira Code" :height 150))))
@@ -90,4 +89,13 @@
   (eglot-java-init))
 
 
+;; `project-find-file' is too slow on the monorepo
+(setup (:package find-file-in-project)
+  (:global "C-x F" #'find-file-in-project
+           "C-x f" #'find-file-in-project-by-selected)
+  (:option ffip-use-rust-fd t))
+
+
 (provide 'work)
+
+;;; work.el ends here
