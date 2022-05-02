@@ -41,7 +41,8 @@
                                          display-buffer-pop-up-window)))))
 
 (setup startup
-  (:option initial-scratch-message ""))
+  (:option initial-buffer-choice "~/todo.org"
+           initial-scratch-message ""))
 
 (setup indent
   (:option tab-always-indent 'complete))
