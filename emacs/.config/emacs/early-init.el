@@ -1,9 +1,9 @@
-;;; init.el -- Ben's configuration   -*- lexical-binding: t -*-
+;;; early-init.el -- Ben's configuration   -*- lexical-binding: t -*-
 
 ;;; Commentary:
 
 ;; The initiation of the initiation.  This file is loaded before the package
-;; system and GUI are initialised.
+;; system and GUI are initialised.  See also: `init.el'.
 
 ;;; Code:
 

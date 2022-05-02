@@ -2,8 +2,8 @@
 
 ;;; Commentary:
 
-;; This is part 2 of my personal configuration, it's unlikely to be useful to
-;; anyone else.  See `early-init.el' for part 1.
+;; This is my personal Emacs configuration, it's unlikely to be useful to
+;; anyone else.  See also: `early-init.el'.
 
 ;;; Code:
 
@@ -35,10 +35,10 @@
 (setup uniquify
   (:option uniquify-buffer-name-style 'forward))
 
-;; Testing without this, as I can always use winner-undo
-;;     (setup window
-;;       (:option display-buffer-alist
-;;                '((".*" (display-buffer-reuse-window display-buffer-same-window)))))
+(setup window
+  (:option display-buffer-alist '((".*" (display-buffer-reuse-window
+                                         display-buffer-same-window
+                                         display-buffer-pop-up-window)))))
 
 (setup startup
   (:option initial-scratch-message ""))
@@ -219,11 +219,6 @@
 
   (evil-mode 1))
 
-;; Instead of Surround, let's try using Electric Pair Mode, e.g. `viw\)' to surround a
-;; word in parenthesise.
-;;  (setup (:package evil-surround)
-;;    (evil-define-key 'visual evil-surround-mode-map "s" 'evil-surround-region)
-;;    (global-evil-surround-mode 1))
 (setup elec-pair
   (electric-pair-mode 1))
 
@@ -243,6 +238,7 @@
 
 (setup midnight
   (midnight-mode))
+
 
 ;;; File management
 
@@ -301,7 +297,8 @@
     (apply #'make-term (format "in-term %s %s" prog args) prog nil args))
 
 
-  ;; Output the value of $? in eshell as well as the time taken by the previous command before printing $PS1.
+  ;; Output the value of $? in eshell as well as the time taken by the previous command
+  ;; before printing $PS1.
   (defvar-local eshell-current-command-start-time nil)
   (defvar-local eshell-last-command-prompt nil)
 
@@ -424,7 +421,9 @@
   (:option magit-diff-refine-hunk t
            magit-save-repository-buffers 'dontask
            magit-no-confirm '(stage-all-changes)
-           magit-refresh-status-buffer nil))
+           magit-refresh-status-buffer nil)
+  (add-to-list 'display-buffer-alist '("magit-diff: .*" (display-buffer-at-bottom
+                                                         display-buffer-pop-up-window))))
 
 (setup so-long
   (global-so-long-mode 1))
