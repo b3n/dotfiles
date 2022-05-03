@@ -1,4 +1,4 @@
-;;; early-init.el -- Ben's configuration   -*- lexical-binding: t -*-
+;;; early-init.el --- Ben's configuration   -*- lexical-binding: t -*-
 
 ;;; Commentary:
 
@@ -8,23 +8,22 @@
 ;;; Code:
 
 
-(setq completion-ignore-case t)
 (setq create-lockfiles nil)
 (setq frame-inhibit-implied-resize t)
+(setq frame-title-format '("%b — %F"))
 (setq indicate-buffer-boundaries 'right)
 (setq mouse-autoselect-window t)
 (setq network-security-level 'paranoid)
 (setq visible-bell t)
 
 (setq-default fill-column 80)
-(setq-default frame-title-format '("%n %b - %F"))
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 4)
 
-(put 'narrow-to-region 'disabled nil)
+(put 'narrow-to-defun 'disabled nil)
 (put 'narrow-to-page 'disabled nil)
+(put 'narrow-to-region 'disabled nil)
 
-(menu-bar-mode 0)
 (tool-bar-mode 0)
 
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))

@@ -75,7 +75,7 @@
   (minibuffer-line-mode))
 
 (setup mb-depth
-  (setq enable-recursive-minibuffers t)
+  (:option enable-recursive-minibuffers t)
   (minibuffer-depth-indicate-mode 1))
 
 (setup icomplete
@@ -85,15 +85,14 @@
     (if (and (eq (icomplete--category) 'file) (project-current))
         (progn (delete-minibuffer-contents)
                (insert (project-root (project-current))))
-      (call-interactively 'icomplete-fido-backward-updir)))
+      (call-interactively #'icomplete-fido-backward-updir)))
 
   (:with-map icomplete-fido-mode-map
     (:bind "M-DEL" #'my-icomplete-root
            "M-<return>" #'icomplete-fido-exit)
     (:unbind "C-r" "C-s"))
 
-  (:option icomplete-prospects-height 1
-           icomplete-separator (propertize ", " 'face 'shadow))
+  (:option icomplete-prospects-height 1)
 
   (fido-mode 1)
 
@@ -101,16 +100,14 @@
   ;; history. This has to happen in a hook, because fido-mode also uses a hook to do
   ;; this.
   (defun my-completion-styles ()
-    (setq-local completion-styles '(substring flex basic)))
-  (add-hook 'minibuffer-setup-hook #'my-completion-styles 99))
+    (setq-local completion-styles '(substring flex)))
+  (add-hook 'minibuffer-setup-hook #'my-completion-styles 1))
 
 (setup minibuffer
   (:also-load completion-in-buffer)
   (:option completion-category-overrides
             '((file (styles . (partial-completion flex basic))))
-           completions-detailed t
-           read-buffer-completion-ignore-case t
-           read-file-name-completion-ignore-case t)
+           completions-detailed t)
 
   (minibuffer-electric-default-mode 1))
 
@@ -128,6 +125,8 @@
   (:option history-delete-duplicates t
            history-length 1000)
   (savehist-mode 1))
+
+;;TODO: I would like a way to resume a minibuffer (with input) after it has been exited.
 
 
 ;;; Theme and display options
@@ -148,6 +147,7 @@
 
   (let ((daily (* 60 60 24)))
     ;; Set a light theme during work hours, otherwise dark.
+    ;;TODO: Adjust back to normal working times.
     (run-at-time "16:00" daily #'modus-themes-load-operandi)
     (run-at-time "00:30" daily #'modus-themes-load-vivendi)))
 
@@ -172,9 +172,6 @@
     (if (eq evil-previous-state 'motion)
         (evil-motion-state)
       (evil-normal-state)))
-
-  (setq evil-want-keybinding nil)
-  (setq evil-want-integration nil)
 
   (:package evil)
   (:require evil)
@@ -205,11 +202,13 @@
            evil-undo-system 'undo-redo
            evil-visual-region-expanded t
            evil-want-Y-yank-to-eol t
+           evil-want-integration nil
+           evil-want-keybinding nil
            evil-want-minibuffer t
            evil-lookup-func (lambda () (or (eldoc t) (call-interactively #'man-follow))))
 
   (setq evil-motion-state-modes (append evil-emacs-state-modes evil-motion-state-modes))
-  (setq evil-emacs-state-modes nil)
+  (setq evil-emacs-state-modes '(exwm-mode))
 
   (evil-mode 1))
 
@@ -288,7 +287,6 @@
   (add-hook 'eshell-prompt-load-hook #'eshell-buffer-name)
   (add-hook 'eshell-directory-change-hook #'eshell-buffer-name)
 
-  ;;TODO: Check if this is still needed
   (defun my-make-field ()
     "Make text in front of the point a field, useful for prompts."
     (let ((inhibit-read-only t))
@@ -463,8 +461,8 @@
 
 (setup exwm
   (:only-if (eq window-system 'x))
-
-  (setq focus-follows-mouse t)
+  (:package exwm)
+  (:require exwm-randr)
 
   (defun my-exwm-set-buffer-name ()
     "Make a nicer title and file name for the buffer"
@@ -473,9 +471,9 @@
                 (concat
                  exwm-class-name
                  "<"
-                 (if (<= (length exwm-title) 160)
+                 (if (<= (length exwm-title) 120)
                      exwm-title
-                   (concat (substring exwm-title 0 150) "…"))
+                   (concat (substring exwm-title 0 100) "…"))
                  ">"))
 
     (exwm-workspace-rename-buffer exwm-title))
@@ -494,11 +492,8 @@
       (call-process "gtk-launch" nil 0 nil (completing-read "Launch: " apps))))
 
   (defun my-exwm-buffer-settings ()
-    (setq-local left-fringe-width 0)
-    (setq-local right-fringe-width 0))
-
-  (:package exwm)
-  (:require exwm-randr)
+    (setq-local left-fringe-width 0
+                right-fringe-width 0))
 
   (:hook my-exwm-buffer-settings)
   (:with-hook '(exwm-update-class exwm-update-title) (:hook my-exwm-set-buffer-name))
@@ -508,34 +503,33 @@
            exwm-workspace-show-all-buffers t
            exwm-layout-show-all-buffers t
            exwm-input-simulation-keys
-           `(([?\s-x] .  [?\C-x])
-             ([?\s-c] .  [?\C-c])
-             ([?\s-w] .  [?\C-w])
+           `(([?\C-a] .  [?\C-a])
+             ([?\C-y] .  [?\C-v])
              ([?\s-a] .  [?\C-a])
+             ([?\s-c] .  [?\C-c])
              ([?\s-f] .  [?\C-f])
              ([?\s-l] .  [?\C-l])
              ([?\s-n] .  [?\C-n])
              ([?\s-o] .  [?\C-o])
-             ([?\C-y] .  [?\C-v])
-             ([?\C-a] .  [?\C-a])
-             ([?\s-/] .  [?\C-f]) ;; Chrome search
-             ([?\s-b] .  ,(kbd "C-S-a")) ;; Chrome switch tab with search
-             ([?\s-v] .  [?\C-v]))
+             ([?\s-v] .  [?\C-v])
+             ([?\s-w] .  [?\C-w])
+             ([?\s-x] .  [?\C-x]))
            exwm-input-global-keys
            `(([?\s-r] . exwm-reset)
              ([?\s-o] . exwm-workspace-swap)
-             ([?\s-\s] . my-gtk-launch)))
-
-  (scroll-bar-mode 0)
+             ([?\s-\s] . my-gtk-launch))
+           focus-follows-mouse t
+           menu-bar-mode nil
+           scroll-bar-mode nil)
 
   (push ?\C-w exwm-input-prefix-keys)
-  (push 'exwm-mode evil-insert-state-modes)
 
   (exwm-randr-enable))
 
 (setup time
+  (:if-feature exwm)
   (:option display-time-format "%F %R\t")
-  (display-time-mode t))
+  (:with-feature display-time (:hook-into exwm-init)))
 
 
 ;;; System specific initiation
