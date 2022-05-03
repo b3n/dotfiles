@@ -235,6 +235,12 @@
 
   (winner-mode 1))
 
+(setup (:require same-mode-buffer)
+  (:global [mode-line mouse-4] #'same-mode-buffer-previous
+           "C-<tab>" #'same-mode-buffer-previous
+           [mode-line mouse-5] #'same-mode-buffer-next
+           "C-S-<tab>" #'same-mode-buffer-next))
+
 (setup midnight
   (midnight-mode))
 
@@ -456,32 +462,6 @@
 ;;; X11 window manager
 
 (setup exwm
-  (defun my-same-mode-next-buffer ()
-    "Select next buffer of the same type"
-    (interactive)
-    (let ((new-buffer (car (my--same-mode-buffer-list))))
-      (when new-buffer
-        (bury-buffer)
-        (switch-to-buffer new-buffer))))
-
-
-  (defun my-same-mode-previous-buffer ()
-    "Select previous buffer of the same type"
-    (interactive)
-    (let ((new-buffer (car (last (my--same-mode-buffer-list)))))
-      (when new-buffer (switch-to-buffer new-buffer))))
-
-  (defun my--same-mode-buffer-list (&optional mode)
-    "List buffers of mode `mode' that are not already visible"
-    (let ((mode (or mode major-mode)))
-      (seq-filter (lambda (buffer) 
-                    (and (not (get-buffer-window buffer 'visible))
-                         (eq (buffer-local-value 'major-mode buffer) mode)))
-                  (buffer-list))))
-
-  (global-set-key [mode-line mouse-4] #'my-same-mode-previous-buffer)
-  (global-set-key [mode-line mouse-5] #'my-same-mode-next-buffer)
-  
   (:only-if (eq window-system 'x))
 
   (setq focus-follows-mouse t)
