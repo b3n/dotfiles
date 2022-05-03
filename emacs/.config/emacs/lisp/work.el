@@ -84,8 +84,7 @@
                               (electric-indent-local-mode -1)
                               (setq c-basic-offset 2
                                     tab-width 2
-                                    evil-shift-width 2
-                                    indent-tabs-mode t)))
+                                    evil-shift-width 2)))
   (eglot-java-init))
 
 

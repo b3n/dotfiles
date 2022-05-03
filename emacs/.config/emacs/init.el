@@ -173,10 +173,6 @@
         (evil-motion-state)
       (evil-normal-state)))
 
-  (defun my-evil-lookup-func ()
-    (or (eldoc t)
-        (call-interactively #'woman-follow)))
-
   (setq evil-want-keybinding nil)
   (setq evil-want-integration nil)
 
@@ -210,7 +206,7 @@
            evil-visual-region-expanded t
            evil-want-Y-yank-to-eol t
            evil-want-minibuffer t
-           evil-lookup-func #'my-evil-lookup-func)
+           evil-lookup-func (lambda () (or (eldoc t) (call-interactively #'man-follow))))
 
   (setq evil-motion-state-modes (append evil-emacs-state-modes evil-motion-state-modes))
   (setq evil-emacs-state-modes nil)
@@ -270,22 +266,23 @@
 
 (setup (:package exec-path-from-shell with-editor)
   (:option exec-path-from-shell-arguments nil)
-  (exec-path-from-shell-initialize))
+  (:with-mode with-editor-export-editor
+    (:hook-into eshell-mode shell-mode term-exec vterm-mode))
+  (exec-path-from-shell-initialize)
+  (setenv "PAGER" "cat"))
 
 (setup eshell
   (:global "C-c e" #'eshell)
-  (:hook with-editor-export-editor)
   (:option eshell-hist-ignoredups t
            eshell-history-size 1000
-           eshell-destroy-buffer-when-process-dies t
-           eshell-scroll-to-bottom-on-output t)
-  (setenv "PAGER" "cat")
-
+           eshell-destroy-buffer-when-process-dies t)
+  
   (defun eshell-buffer-name ()
     (rename-buffer (concat "*eshell*<" (eshell/pwd) ">") t))
   (add-hook 'eshell-prompt-load-hook #'eshell-buffer-name)
   (add-hook 'eshell-directory-change-hook #'eshell-buffer-name)
 
+  ;;TODO: Check if this is still needed
   (defun my-make-field ()
     "Make text in front of the point a field, useful for prompts."
     (let ((inhibit-read-only t))
@@ -297,32 +294,7 @@
 
   (defun eshell/in-term (prog &rest args)
     "Run shell command in term buffer."
-    (apply #'make-term (format "in-term %s %s" prog args) prog nil args))
-
-
-  ;; Output the value of $? in eshell as well as the time taken by the previous command
-  ;; before printing $PS1.
-  (defvar-local eshell-current-command-start-time nil)
-  (defvar-local eshell-last-command-prompt nil)
-
-  (defun eshell-current-command-start ()
-    (setq eshell-current-command-start-time (current-time)))
-
-  (defun eshell-current-command-stop ()
-    (when eshell-current-command-start-time
-      (setq eshell-last-command-prompt
-            (format "\n(%i)(%.4fs)\n"
-                    eshell-last-command-status
-                    (float-time (time-subtract (current-time) eshell-current-command-start-time))))
-      (setq eshell-current-command-start-time nil))
-    (when eshell-last-command-prompt
-      (eshell-interactive-print eshell-last-command-prompt)))
-
-  (defun eshell-current-command-time-track ()
-    (add-hook 'eshell-pre-command-hook #'eshell-current-command-start nil t)
-    (add-hook 'eshell-post-command-hook #'eshell-current-command-stop nil t))
-
-  (add-hook 'eshell-mode-hook #'eshell-current-command-time-track))
+    (apply #'make-term (format "in-term %s %s" prog args) prog nil args)))
 
 
 ;;; Programming
@@ -336,6 +308,8 @@
   (:option eldoc-echo-area-use-multiline-p nil))
 
 (setup (:package eglot)
+  ;;TODO: Create wrapper around eglot-ensure which checks the major mode exists in
+  ;; `eglot-server-programs' before trying to start eglot
   (:with-mode eglot-ensure
     (:hook-into prog-mode))
   (:bind "C-c C-c" #'eglot-code-actions)
@@ -573,7 +547,6 @@
              ([?\s-\s] . my-gtk-launch)))
 
   (scroll-bar-mode 0)
-  (horizontal-scroll-bar-mode 0)
 
   (push ?\C-w exwm-input-prefix-keys)
   (push 'exwm-mode evil-insert-state-modes)
