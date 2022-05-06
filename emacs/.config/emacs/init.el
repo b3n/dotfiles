@@ -53,7 +53,7 @@
            enable-dir-local-variables nil
            enable-local-eval nil
            enable-local-variables nil
-           kept-new-versions 99
+           kept-new-versions 10
            vc-make-backup-files t
            version-control t
            view-read-only t)
@@ -134,12 +134,12 @@
 (setup cus-face
   (custom-set-faces
    '(default ((t (:family "JetBrains Mono NL" :height 145))))
-   '(fixed-pitch ((t (:family "JetBrains Mono NL" :height 130))))
-   '(variable-pitch ((t (:family "Libre Baskerville" :height 115))))))
+   '(fixed-pitch ((t (:family "JetBrains Mono NL" :height 150))))
+   '(variable-pitch ((t (:family "Baskerville" :height 195))))))
 
 (setup (:require modus-themes)
   (:option modus-themes-bold-constructs t
-           modus-themes-headings '((1 1.4) (2 1.2) (3 1.1) (t t))
+           modus-themes-headings '((1 1.2) (2 1.1) (t t))
            modus-themes-mixed-fonts t
            modus-themes-mode-line '(accented)
            modus-themes-org-blocks 'gray-background
@@ -163,7 +163,7 @@
   (:with-mode yas-minor-mode
     (:unbind "TAB" [(tab)]))
   (:global [remap dabbrev-expand] #'hippie-expand)
-  (add-to-list 'hippie-expand-try-functions-list #'yas-hippie-try-expand)
+  (:option (prepend hippie-expand-try-functions-list) #'yas-hippie-try-expand)
   (yas-global-mode 1))
 
 (setup evil
@@ -219,9 +219,11 @@
 ;;; Window and buffer management
 
 (setup window
-  (:option display-buffer-alist '((".*" (display-buffer-reuse-window
-                                         display-buffer-same-window
-                                         display-buffer-pop-up-window)))))
+  (:option display-buffer-alist
+           '(("\*Register Preview\*" (display-buffer-pop-up-window))
+             ("." (display-buffer-reuse-window
+                   display-buffer-same-window
+                   display-buffer-pop-up-window)))))
 
 (setup ibuffer
   (:global "C-x C-b" #'ibuffer))
@@ -291,7 +293,8 @@
     "Make text in front of the point a field, useful for prompts."
     (let ((inhibit-read-only t))
       (add-text-properties
-       (line-beginning-position) (point)
+       (line-beginning-position)
+       (point)
        (list 'field t
              'rear-nonsticky t))))
   (add-hook 'eshell-after-prompt-hook #'my-make-field)
@@ -378,7 +381,8 @@
            org-startup-indented t
            org-todo-keywords '((sequence "TODO" "IN-PROGRESS" "|" "DONE" "CANCELED")))
 
-  (:hook (lambda () (electric-indent-local-mode -1))))
+  (:hook (lambda () (electric-indent-local-mode -1))
+         variable-pitch-mode))
 
 
 ;;; Version control
@@ -392,9 +396,10 @@
   (:option magit-diff-refine-hunk t
            magit-save-repository-buffers 'dontask
            magit-no-confirm '(stage-all-changes)
-           magit-refresh-status-buffer nil)
-  (add-to-list 'display-buffer-alist '("magit-diff: .*" (display-buffer-at-bottom
-                                                         display-buffer-pop-up-window))))
+           magit-refresh-status-buffer nil
+           (prepend display-buffer-alist) '("magit-diff: .*"
+                                            (display-buffer-at-bottom
+                                             display-buffer-pop-up-window))))
 
 
 ;;; Miscellaneous (to be categorised)
@@ -404,9 +409,6 @@
 
 (setup (:package vlf)
   (:require vlf-setup))
-
-
-;;; Applications
 
 (setup (:package restclient))
 
@@ -436,107 +438,21 @@
              (holiday-fixed 12 26 "Boxing Day")
              (holiday-fixed 12 31 "New Year's Eve"))))
 
-(setup erc
-  (:option erc-fill-function 'erc-fill-static
-           erc-fill-static-center 14
-           erc-fill-column (- (/ (frame-width) 2) 3)
-           erc-hide-list '("JOIN" "PART" "QUIT")
-           erc-auto-query 'bury
-           erc-kill-server-buffer-on-quit t
-           erc-kill-queries-on-quit t
-           erc-kill-buffer-on-part t
-           erc-disable-ctcp-replies t
-           erc-prompt (lambda () (format "%s>" (buffer-name)))
-           erc-user-mode "+iR"
-           erc-server "irc.libera.chat"
-           erc-port "6697")
-  (erc-spelling-mode))
-
 (setup (:require password-gen)
   (:global "C-c p" #'password-gen)
   (:option password-gen-length 32))
 
 
-;;; X11 window manager
-
-(setup exwm
-  (:only-if (eq window-system 'x))
-  (:package exwm)
-  (:require exwm-randr)
-
-  (defun my-exwm-set-buffer-name ()
-    "Make a nicer title and file name for the buffer"
-
-    (setq-local exwm-title
-                (concat
-                 exwm-class-name
-                 "<"
-                 (if (<= (length exwm-title) 120)
-                     exwm-title
-                   (concat (substring exwm-title 0 100) "…"))
-                 ">"))
-
-    (exwm-workspace-rename-buffer exwm-title))
-
-  (defun my-gtk-launch ()
-    "Launch an X application via `gtk-launch'."
-    (interactive)
-    (require 'xdg)
-    (let* ((extention "\\.desktop$")
-           (dirs (mapcar (lambda (dir) (expand-file-name "applications" dir))
-                         (cons (xdg-data-home) (xdg-data-dirs))))
-           (apps (cl-loop for dir in dirs
-                          if (file-exists-p dir)
-                          append (cl-loop for file in (directory-files dir nil extention)
-                                          collect (replace-regexp-in-string extention "" file)))))
-      (call-process "gtk-launch" nil 0 nil (completing-read "Launch: " apps))))
-
-  (defun my-exwm-buffer-settings ()
-    (setq-local left-fringe-width 0
-                right-fringe-width 0))
-
-  (:hook my-exwm-buffer-settings)
-  (:with-hook '(exwm-update-class exwm-update-title) (:hook my-exwm-set-buffer-name))
-
-  (:option exwm-randr-workspace-monitor-plist '(0 "HDMI-2" 1 "DP-1")
-           exwm-workspace-number 2
-           exwm-workspace-show-all-buffers t
-           exwm-layout-show-all-buffers t
-           exwm-input-simulation-keys
-           `(([?\C-a] .  [?\C-a])
-             ([?\C-y] .  [?\C-v])
-             ([?\s-a] .  [?\C-a])
-             ([?\s-c] .  [?\C-c])
-             ([?\s-f] .  [?\C-f])
-             ([?\s-l] .  [?\C-l])
-             ([?\s-n] .  [?\C-n])
-             ([?\s-o] .  [?\C-o])
-             ([?\s-v] .  [?\C-v])
-             ([?\s-w] .  [?\C-w])
-             ([?\s-x] .  [?\C-x]))
-           exwm-input-global-keys
-           `(([?\s-r] . exwm-reset)
-             ([?\s-o] . exwm-workspace-swap)
-             ([?\s-\s] . my-gtk-launch))
-           focus-follows-mouse t
-           menu-bar-mode nil
-           scroll-bar-mode nil)
-
-  (push ?\C-w exwm-input-prefix-keys)
-
-  (exwm-randr-enable))
-
-(setup time
-  (:if-feature exwm)
-  (:option display-time-format "%F %R\t")
-  (:with-feature display-time (:hook-into exwm-init)))
-
-
 ;;; System specific initiation
 
 (setup work
-  (:only-if (eq system-type 'darwin))
+  (:only-if (equal system-name "Bens-MacBook-Pro-15"))
   (:require work))
+
+(setup home
+  ;;TODO: Use system name
+  (:only-if (eq system-type 'gnu/linux))
+  (:require home))
 
 
 ;;; init.el ends here
