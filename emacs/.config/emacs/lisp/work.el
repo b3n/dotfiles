@@ -79,12 +79,24 @@
   (:file-match "\\.xlf\\'"))
 
 
-(setup (:package eglot-java)
-  (add-hook 'java-mode-hook (lambda ()
-                              (electric-indent-local-mode -1)
-                              (setq c-basic-offset 2
-                                    tab-width 2
-                                    evil-shift-width 2)))
+(setup java-mode
+  (defun dprint ()
+    "Format current buffer with dprint."
+    (interactive)
+    (let ((dprint "~/work/canva/tools/dprint/dprint")
+          (point (point))
+          (window-start (window-start)))
+      (call-process-region nil nil dprint t t nil "fmt" "--stdin" (buffer-name))
+      (goto-char point)
+      (set-window-start nil window-start)))
+  (:hook (lambda ()
+           (electric-indent-local-mode -1)
+           (add-hook 'before-save-hook #'dprint nil 'local)
+           (setq-local c-basic-offset 2
+                       c-offsets-alist nil
+                       indent-tabs-mode nil
+                       evil-shift-width 2)))
+  (:package eglot-java)
   (eglot-java-init))
 
 
