@@ -412,11 +412,14 @@
 
 (setup (:package restclient))
 
-(setup (:package rg)
-  (:global "C-c s" #'rg-menu)
+(setup (:require grep)
+  (:global "C-c s" #'grep-find)
+  (:option grep-save-buffers 'dontask)
 
-  (:option rg-command-line-flags '("--max-columns=999")
-           rg-default-alias-fallback "everything"))
+  (:only-if (executable-find "rg"))
+  (grep-apply-setting
+   'grep-find-command
+   '("rg --no-heading --with-filename --max-columns=800 --glob='' '' " . 62)))
 
 (setup man
   (:option Man-notify-method 'pushy))
