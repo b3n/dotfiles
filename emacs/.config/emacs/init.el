@@ -1,4 +1,4 @@
-;;; init.el -- Ben's configuration   -*- lexical-binding: t -*-
+;;; init.el --- Ben's Emacs configuration   -*- lexical-binding: t -*-
 
 ;;; Commentary:
 
@@ -8,15 +8,38 @@
 ;;; Code:
 
 
+;;; Setup `setup'
+
+;; First make sure we have setup from ELPA. In the following pages everything will be
+;; organised within a `setup' macro.
+(unless (package-installed-p 'setup)
+  ;;TODO: Move to `/lisp'?
+  (package-install 'setup))
+
+
 ;;; Basic settings
 
+(setup package
+  ;;TODO: Now there's the nongnu ELPA, do we really need MELPA?
+  (:option (append package-archives) '("melpa" . "https://melpa.org/packages/")))
+
+(setup startup
+  (:option initial-buffer-choice "~/todo.org"
+           initial-scratch-message ""))
+
 (setup auth-source
+  ;; By default passwords were getting stored on disk unencrypted...
   (:option auth-sources `(,(expand-file-name "authinfo.gpg" user-emacs-directory)
                           ,(expand-file-name "authinfo" temporary-file-directory)
                           "~/.netrc")))
 
 (setup cus-edit
-  (:option custom-file (make-temp-file "emacs-custom")))
+  (:option custom-file (make-temp-file "emacs-custom-"))
+  (defun my-standard-value (symbl)
+    "Get SYMBL's standard value.
+
+This is the default value, prior to any customizations."
+    (eval (car (get symbl 'standard-value)))))
 
 (setup simple
   (:with-feature turn-on-visual-line (:hook-into text-mode))
@@ -35,10 +58,6 @@
 (setup uniquify
   (:option uniquify-buffer-name-style 'forward))
 
-(setup startup
-  (:option initial-buffer-choice "~/todo.org"
-           initial-scratch-message ""))
-
 (setup indent
   (:option tab-always-indent 'complete))
 
@@ -47,7 +66,8 @@
            auto-save-visited-interval 60
            backup-by-copying t
            backup-directory-alist `((,tramp-file-name-regexp . nil)
-                                    (".*" . ,(expand-file-name "backups" user-emacs-directory)))
+                                    (".*" . ,(expand-file-name "backups"
+                                                               user-emacs-directory)))
            confirm-kill-emacs 'yes-or-no-p
            delete-old-versions t
            enable-dir-local-variables nil
@@ -131,15 +151,9 @@
 
 ;;; Theme and display options
 
-(setup cus-face
-  (custom-set-faces
-   '(default ((t (:family "JetBrains Mono NL" :height 145))))
-   '(fixed-pitch ((t (:family "JetBrains Mono NL" :height 150))))
-   '(variable-pitch ((t (:family "Baskerville" :height 195))))))
-
 (setup (:require modus-themes)
   (:option modus-themes-bold-constructs t
-           modus-themes-headings '((1 1.2) (2 1.1) (t t))
+           modus-themes-headings '((1 1.2) (t t))
            modus-themes-mixed-fonts t
            modus-themes-mode-line '(accented)
            modus-themes-org-blocks 'gray-background
@@ -150,6 +164,12 @@
     ;;TODO: Adjust back to normal working times.
     (run-at-time "16:00" daily #'modus-themes-load-operandi)
     (run-at-time "00:30" daily #'modus-themes-load-vivendi)))
+
+(setup cus-face
+  (custom-set-faces
+   '(default ((t (:family "JetBrains Mono NL" :height 145))))
+   '(fixed-pitch ((t (:family "JetBrains Mono NL" :height 150))))
+   '(variable-pitch ((t (:family "Baskerville" :height 185))))))
 
 
 ;;; Text editing
@@ -166,28 +186,20 @@
   (:option (prepend hippie-expand-try-functions-list) #'yas-hippie-try-expand)
   (yas-global-mode 1))
 
-(setup evil
-  (defun my-evil-normal-or-motion-state ()
-    (interactive)
-    (if (eq evil-previous-state 'motion)
-        (evil-motion-state)
-      (evil-normal-state)))
-
-  (:package evil)
-  (:require evil)
-
+(setup (:package evil god-mode)
   (:with-map evil-insert-state-map
-    (:bind "C-w" #'evil-window-map
-           "<escape>" #'my-evil-normal-or-motion-state))
+    (:bind "C-w" #'evil-window-map))
   (:with-map evil-motion-state-map
     (:bind "RET" nil
            "<down-mouse-1>" nil
-           "SPC" #'evil-execute-in-emacs-state
+           "SPC" #'god-execute-with-current-bindings
+           ;; "Insert" is our "Emacs-state", so we want it even from motion state
            "i" #'evil-insert
            "Q" #'unbury-buffer))
   (:with-map evil-normal-state-map
-    (:bind "q" #'bury-buffer
-           "g q" #'evil-record-macro))
+    (:bind "s" nil ;;TODO: Put something useful here
+           "K" #'join-line
+           "q" #'bury-buffer)) ;; Use Emacs macros, which frees up `q'
   (:with-map evil-visual-state-map
     (:bind "v" #'evil-visual-line))
   (:with-map evil-window-map
@@ -205,10 +217,9 @@
            evil-want-integration nil
            evil-want-keybinding nil
            evil-want-minibuffer t
-           evil-lookup-func (lambda () (or (eldoc t) (call-interactively #'man-follow))))
-
-  (setq evil-motion-state-modes (append evil-emacs-state-modes evil-motion-state-modes))
-  (setq evil-emacs-state-modes '(exwm-mode))
+           evil-insert-state-modes (append (my-standard-value 'evil-emacs-state-modes)
+                                           (my-standard-value 'evil-insert-state-modes))
+           evil-emacs-state-modes '(exwm-mode vundo-mode))
 
   (evil-mode 1))
 
@@ -250,22 +261,20 @@
 
 (setup dired
   (:also-load dired-x)
-  (:hook dired-hide-details-mode
+  (:package async)
+  (:hook dired-async-mode
+         dired-hide-details-mode
          hl-line-mode)
   (:option dired-listing-switches "-hal"
-           dired-dwim-target t))
+           dired-dwim-target t
+           image-dired-thumb-size 500))
 
-(setup image-dired
-  (:option image-dired-thumb-size 500))
+;;TODO: Is this still needed?
+;; (setup browse-url
+;;   (defun my-browse-url-xdg-open (url &optional ignored)
+;;     (browse-url-xdg-open (replace-regexp-in-string "%20" "\\\\ " url)))
 
-(setup (:package async)
-  (:with-hook dired-mode-hook (:hook dired-async-mode)))
-
-(setup browse-url
-  (defun my-browse-url-xdg-open (url &optional ignored)
-    (browse-url-xdg-open (replace-regexp-in-string "%20" "\\\\ " url)))
-
-  (:option browse-url-handlers '(("\\`file:" #'my-browse-url-xdg-open))))
+;;   (:option browse-url-handlers '(("\\`file:" #'my-browse-url-xdg-open))))
 
 
 
@@ -315,20 +324,15 @@
   (:option eldoc-echo-area-use-multiline-p nil))
 
 (setup (:package eglot)
-  ;;TODO: Create wrapper around eglot-ensure which checks the major mode exists in
-  ;; `eglot-server-programs' before trying to start eglot
   (:with-mode eglot-ensure
-    (:hook-into prog-mode))
+    (:hook-into python-mode java-mode clojure-mode))
   (:bind "C-c C-c" #'eglot-code-actions)
   (:option eglot-autoshutdown t))
-
-(setup (:package json-mode))
 
 (setup (:package csv-mode))
 
 (setup (:package clojure-mode cider flymake-kondor)
-  (:with-mode flymake-kondor-setup
-    (:hook-into clojure-mode)))
+  (:hook flymake-kondor-setup))
 
 
 ;;; Writing and organisation
@@ -392,11 +396,11 @@
   (delete '(vc-mode vc-mode) mode-line-format))
 
 (setup (:package magit)
-  (:global "C-c g" #'magit-status)
-  (:option magit-diff-refine-hunk t
+  (:global "C-c g" #'magit-file-dispatch)
+  (:option magit-define-global-key-bindings nil
+           magit-diff-refine-hunk t
            magit-save-repository-buffers 'dontask
            magit-no-confirm '(stage-all-changes)
-           magit-refresh-status-buffer nil
            (prepend display-buffer-alist) '("magit-diff: .*"
                                             (display-buffer-at-bottom
                                              display-buffer-pop-up-window))))
@@ -409,8 +413,6 @@
 
 (setup (:package vlf)
   (:require vlf-setup))
-
-(setup (:package restclient))
 
 (setup (:require grep)
   (:global "C-c s" #'grep-find)

@@ -40,6 +40,7 @@
       (browse-url (format "https://github.com/Canva/%s/blob/master/%s#L%s-L%s" repo path start end))))
   
   ;; Monorepo makes git slow, so do a little less on magit refresh
+  (:option magit-refresh-status-buffer nil)
   (remove-hook 'magit-status-sections-hook 'magit-insert-stashes)
   (remove-hook 'magit-status-sections-hook 'magit-insert-tags-header))
 
@@ -105,6 +106,9 @@
   (:global "C-x F" #'find-file-in-project
            "C-x f" #'find-file-in-project-by-selected)
   (:option ffip-use-rust-fd t))
+
+
+(setup (:package restclient))
 
 
 (provide 'work)

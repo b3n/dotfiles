@@ -12,8 +12,8 @@
 (setq frame-inhibit-implied-resize t)
 (setq frame-title-format '("%b — %F"))
 (setq indicate-buffer-boundaries 'right)
+(setq inhibit-startup-screen t)
 (setq mouse-autoselect-window t)
-(setq network-security-level 'paranoid)
 (setq visible-bell t)
 
 (setq-default fill-column 80)
@@ -29,12 +29,6 @@
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
-
-(require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-(package-initialize)
-(package-refresh-contents)
-(unless (package-installed-p 'setup) (package-install 'setup))
 
 
 ;;; early-init.el ends here
