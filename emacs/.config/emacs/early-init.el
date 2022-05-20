@@ -12,7 +12,6 @@
 (setq frame-inhibit-implied-resize t)
 (setq frame-title-format '("%b — %F"))
 (setq indicate-buffer-boundaries 'right)
-(setq inhibit-startup-screen t)
 (setq mouse-autoselect-window t)
 (setq visible-bell t)
 
@@ -20,12 +19,7 @@
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 4)
 
-(put 'narrow-to-defun 'disabled nil)
-(put 'narrow-to-page 'disabled nil)
-(put 'narrow-to-region 'disabled nil)
-
 (tool-bar-mode 0)
-
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))

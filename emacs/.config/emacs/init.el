@@ -13,7 +13,7 @@
 ;; First make sure we have setup from ELPA. In the following pages everything will be
 ;; organised within a `setup' macro.
 (unless (package-installed-p 'setup)
-  ;;TODO: Move to `/lisp'?
+  ;;TODO: Move to `/lisp' so an Internet connection is not required?
   (package-install 'setup))
 
 
@@ -25,7 +25,7 @@
 
 (setup startup
   (:option initial-buffer-choice "~/todo.org"
-           initial-scratch-message ""))
+           initial-scratch-message nil))
 
 (setup auth-source
   ;; By default passwords were getting stored on disk unencrypted...
@@ -85,6 +85,13 @@ This is the default value, prior to any customizations."
 (setup bookmark
   (:option bookmark-save-flag 1))
 
+(setup narrow
+  (:option narrow-to-defun-include-comments t)
+  (put 'narrow-to-defun 'disabled nil)
+  (put 'narrow-to-page 'disabled nil)
+  (put 'narrow-to-region 'disabled nil))
+
+
 
 ;;; Minibuffer and completions
 
@@ -125,8 +132,7 @@ This is the default value, prior to any customizations."
 
 (setup minibuffer
   (:also-load completion-in-buffer)
-  (:option completion-category-overrides
-            '((file (styles . (partial-completion flex basic))))
+  (:option completion-category-overrides '((file (styles basic partial-completion flex)))
            completions-detailed t)
 
   (minibuffer-electric-default-mode 1))
@@ -146,7 +152,27 @@ This is the default value, prior to any customizations."
            history-length 1000)
   (savehist-mode 1))
 
-;;TODO: I would like a way to resume a minibuffer (with input) after it has been exited.
+;;TODO: Move to `lisp/' package
+(setup minibuffer-repeat
+  (defvar minibuffer-repeat--command nil)
+  (defvar minibuffer-repeat--input nil)
+
+  (defun minibuffer-repeat-save ()
+    (setq minibuffer-repeat--command this-command)
+    (add-hook 'post-command-hook
+              (lambda () (setq minibuffer-repeat--input (minibuffer-contents)))
+              nil 'local))
+
+  (defun minibuffer-repeat ()
+    (interactive)
+    (minibuffer-with-setup-hook
+        (lambda ()
+          (delete-minibuffer-contents)
+          (insert minibuffer-repeat--input))
+      (command-execute (setq this-command minibuffer-repeat--command))))
+
+  (add-hook 'minibuffer-setup-hook #'minibuffer-repeat-save)
+  (:global "C-c m" #'minibuffer-repeat))
 
 
 ;;; Theme and display options
@@ -161,15 +187,19 @@ This is the default value, prior to any customizations."
 
   (let ((daily (* 60 60 24)))
     ;; Set a light theme during work hours, otherwise dark.
-    ;;TODO: Adjust back to normal working times.
-    (run-at-time "16:00" daily #'modus-themes-load-operandi)
-    (run-at-time "00:30" daily #'modus-themes-load-vivendi)))
+    (run-at-time "09:00" daily #'modus-themes-load-operandi)
+    (run-at-time "17:30" daily #'modus-themes-load-vivendi)))
 
 (setup cus-face
   (custom-set-faces
    '(default ((t (:family "JetBrains Mono NL" :height 145))))
    '(fixed-pitch ((t (:family "JetBrains Mono NL" :height 150))))
    '(variable-pitch ((t (:family "Baskerville" :height 185))))))
+
+;; Helps to visualise wrapped and hidden lines
+(setup display-line-numbers
+  (:hook-into prog-mode)
+  (setq-default display-line-numbers-widen t))
 
 
 ;;; Text editing
@@ -180,8 +210,7 @@ This is the default value, prior to any customizations."
     (:option vundo-glyph-alist vundo-unicode-symbols)))
 
 (setup (:package yasnippet yasnippet-snippets)
-  (:with-mode yas-minor-mode
-    (:unbind "TAB" [(tab)]))
+  (:with-mode yas-minor-mode (:unbind "TAB"))
   (:global [remap dabbrev-expand] #'hippie-expand)
   (:option (prepend hippie-expand-try-functions-list) #'yas-hippie-try-expand)
   (yas-global-mode 1))
@@ -197,7 +226,7 @@ This is the default value, prior to any customizations."
            "i" #'evil-insert
            "Q" #'unbury-buffer))
   (:with-map evil-normal-state-map
-    (:bind "s" nil ;;TODO: Put something useful here
+    (:bind "s" #'evil-switch-to-windows-last-buffer ;;TODO: Put something more useful here
            "K" #'join-line
            "q" #'bury-buffer)) ;; Use Emacs macros, which frees up `q'
   (:with-map evil-visual-state-map
@@ -269,14 +298,6 @@ This is the default value, prior to any customizations."
            dired-dwim-target t
            image-dired-thumb-size 500))
 
-;;TODO: Is this still needed?
-;; (setup browse-url
-;;   (defun my-browse-url-xdg-open (url &optional ignored)
-;;     (browse-url-xdg-open (replace-regexp-in-string "%20" "\\\\ " url)))
-
-;;   (:option browse-url-handlers '(("\\`file:" #'my-browse-url-xdg-open))))
-
-
 
 ;;; Shell
 
@@ -345,20 +366,8 @@ This is the default value, prior to any customizations."
   (:with-mode gfm-mode
     (:file-match "README\\.md\\'")))
 
-(setup tex
-  (:package auctex)
-  (:option latex-run-command "pdflatex"
-           TeX-auto-save t
-           TeX-parse-self t
-           TeX-save-query nil
-           TeX-PDF-mode t
-           TeX-view-program-selection '((output-pdf "PDF Tools"))
-           TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view))
-           TeX-source-correlate-start-server t)
-  (setq doc-view-continuous t)
-  (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
-
-(setup (:require org org-habit ob-calc)
+(setup org
+  (:also-load org-habit ob-calc)
   (:global "C-c a" #'org-agenda
            "C-c c" #'org-capture)
 

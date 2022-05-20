@@ -1,4 +1,10 @@
-;;; zkeleton.el  -*- lexical-binding: t; -*-
+;;; zkeleton.el --- A collection of skeletons   -*- lexical-binding: t; -*-
+
+;;; Commentary:
+
+;; This is my collection of skeletons.
+
+;;; Code:
 
 (defcustom zkeleton-prefix
   "z"

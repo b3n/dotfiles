@@ -1,4 +1,4 @@
-;;; work.el -- Ben's MacOS configuration   -*- lexical-binding: t -*-
+;;; work.el --- Ben's MacOS configuration   -*- lexical-binding: t -*-
 
 ;;; Commentary:
 
@@ -9,26 +9,16 @@
 (setq-default fill-column 100
               tab-width 2)
 
-(setup cus-face
-  (custom-set-faces
-   '(default ((t (:family "Fira Code" :height 150))))
-   '(fixed-pitch ((t (:family "JetBrains Mono" :height 145))))
-   '(variable-pitch ((t (:family "Libre Baskerville" :height 200))))))
-
-
 (setup js
   (:option js-indent-level 2))
-
 
 (setup (:package typescript-mode)
   (:option typescript-indent-level 2))
 
-
 (setup sh-script
   (:option sh-basic-offset 2))
 
-
-(setup (:require magit)
+(setup (:if-package magit)
   (defun github-open ()
     "Open Canva GitHub for the current file."
     (interactive)
@@ -44,7 +34,6 @@
   (remove-hook 'magit-status-sections-hook 'magit-insert-stashes)
   (remove-hook 'magit-status-sections-hook 'magit-insert-tags-header))
 
-
 (setup (:package vterm)
   (:option vterm-max-scrollback 100000
            vterm-buffer-name-string "vterm<%s>")
@@ -52,33 +41,25 @@
   (:bind "C-<escape>"
          (lambda () (interactive) (vterm-send-key (kbd "C-[")))))
 
-
 (setup (:package blacken)
   (:hook-into python-mode)
   (:option blacken-line-length 100))
 
-
 (setup (:package terraform-mode))
 
-
 (setup (:package bazel))
-
 
 (setup (:package web-mode)
   (:file-match "\\.tsx\\'"))
 
-
 (setup (:package dockerfile-mode)
   (:file-match "Dockerfile\\'"))
-
 
 (setup (:package yaml-mode)
   (:file-match "\\.ya?ml\\(\\.j2\\)?\\'"))
 
-
 (setup xml-mode
   (:file-match "\\.xlf\\'"))
-
 
 (setup java-mode
   (defun dprint ()
@@ -100,16 +81,13 @@
   (:package eglot-java)
   (eglot-java-init))
 
-
 ;; `project-find-file' is too slow on the monorepo
 (setup (:package find-file-in-project)
   (:global "C-x F" #'find-file-in-project
            "C-x f" #'find-file-in-project-by-selected)
   (:option ffip-use-rust-fd t))
 
-
 (setup (:package restclient))
-
 
 (provide 'work)
 
