@@ -9,6 +9,8 @@
 
 ;;; Code:
 
+(require 'minibuffer)
+
 (defun completion-in-buffer (start end col &optional pred)
   "Completion in region function utilizing `completing-read'."
   (if (minibufferp) (completion--in-region start end col pred)

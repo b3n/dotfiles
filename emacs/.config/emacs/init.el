@@ -7,296 +7,284 @@
 
 ;;; Code:
 
-
-;;; Setup `setup'
+(require 'cl-macs)
+(require 'package)
 
-;; First make sure we have setup from ELPA. In the following pages everything will be
-;; organised within a `setup' macro.
-(unless (package-installed-p 'setup)
-  ;;TODO: Move to `/lisp' so an Internet connection is not required?
-  (package-install 'setup))
+
+;;; Setup
+
+(defun my-plist-map (fn list)
+  (cl-loop for (key val) on list by 'cddr
+           collect (funcall fn key val)))
+
+(defmacro my-set (&rest body)
+  "Set VARIABLE to VALUE, and return VALUE."
+  `(progn ,@(my-plist-map
+             (lambda (var val)
+               `(funcall (or (get ',var 'custom-set)
+                             'set-default)
+                         ',var ,val))
+             body)))
+
+(defmacro my-init-val (symbl)
+  "Get SYMBL's standard value, prior to any customizations."
+  `(eval (car (get ',symbl 'standard-value))))
+
+(my-set custom-file (make-temp-file "emacs-custom-"))
+
+(defmacro my-key (mode &rest defs)
+  "Helper for defining keys."
+  (declare (indent defun))
+  `(progn
+     ,@(my-plist-map
+        (lambda (key def)
+          `(define-key ,(intern (format "%s-map" mode))
+             ,(if (stringp key) (kbd key) key)
+             #',def))
+        defs)))
+
+;;TODO: Now there's the nongnu ELPA, do we really need MELPA?
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+
+(defmacro my-use (package &rest body)
+  "Install PACKAGE if needed, then eval the BODY after load."
+  (declare (indent defun))
+  `(progn
+     (unless (package-installed-p ,package)
+       (or (ignore-errors (package-install-file
+                           (expand-file-name
+                            ;;TODO: Rename `lisp' and remove from `load-path'
+                            (concat "lisp/" (symbol-name ,package) ".el")
+                            user-emacs-directory)))
+           (ignore-errors (package-install ,package t))
+           (require ,package)))
+     (with-eval-after-load ,package ,@body)))
+
+;; TODO: Remove when I am no longer using this
+(my-use 'setup)
 
 
 ;;; Basic settings
 
-(setup package
-  ;;TODO: Now there's the nongnu ELPA, do we really need MELPA?
-  (:option (append package-archives) '("melpa" . "https://melpa.org/packages/")))
+(my-set initial-buffer-choice "~/todo.org")
+(my-set initial-scratch-message nil)
 
-(setup startup
-  (:option initial-buffer-choice "~/todo.org"
-           initial-scratch-message nil))
+;; By default passwords were getting stored on disk unencrypted...
+(my-set auth-sources
+        `(,(expand-file-name "authinfo.gpg" user-emacs-directory)
+          ,(expand-file-name "authinfo" temporary-file-directory)
+          "~/.netrc"))
 
-(setup auth-source
-  ;; By default passwords were getting stored on disk unencrypted...
-  (:option auth-sources `(,(expand-file-name "authinfo.gpg" user-emacs-directory)
-                          ,(expand-file-name "authinfo" temporary-file-directory)
-                          "~/.netrc")))
+(add-hook 'text-mode-hook #'turn-on-visual-line-mode)
+(my-set completion-show-help nil)
+(my-set async-shell-command-buffer 'rename-buffer)
+(my-set save-interprogram-paste-before-kill t)
+(column-number-mode)
 
-(setup cus-edit
-  (:option custom-file (make-temp-file "emacs-custom-"))
-  (defun my-standard-value (symbl)
-    "Get SYMBL's standard value.
+(save-place-mode 1)
 
-This is the default value, prior to any customizations."
-    (eval (car (get symbl 'standard-value)))))
+(my-set uniquify-buffer-name-style 'forward)
 
-(setup simple
-  (:with-feature turn-on-visual-line (:hook-into text-mode))
-  (:option completion-show-help nil
-           async-shell-command-buffer 'rename-buffer
-           save-interprogram-paste-before-kill t)
-  (column-number-mode))
+(my-set tab-always-indent 'complete)
 
-(setup flyspell
-  (:hook-into text-mode)
-  (:with-feature flyspell-prog (:hook-into prog-mode)))
+(my-set auto-save-default t)
+(my-set auto-save-visited-interval 60)
+(my-set backup-by-copying t)
+(my-set backup-directory-alist
+        `((,tramp-file-name-regexp . nil)
+          (".*" . ,(expand-file-name "backups" user-emacs-directory))))
+(my-set confirm-kill-emacs 'yes-or-no-p)
+(my-set delete-old-versions t)
+(my-set enable-dir-local-variables nil)
+(my-set enable-local-eval nil)
+(my-set enable-local-variables nil)
+(my-set kept-new-versions 10)
+(my-set vc-make-backup-files t)
+(my-set version-control t)
+(my-set view-read-only t)
+(auto-save-visited-mode 1)
 
-(setup saveplace
-  (save-place-mode 1))
+(my-set isearch-lazy-count t)
 
-(setup uniquify
-  (:option uniquify-buffer-name-style 'forward))
+(my-set bookmark-save-flag 1)
 
-(setup indent
-  (:option tab-always-indent 'complete))
-
-(setup files
-  (:option auto-save-default t
-           auto-save-visited-interval 60
-           backup-by-copying t
-           backup-directory-alist `((,tramp-file-name-regexp . nil)
-                                    (".*" . ,(expand-file-name "backups"
-                                                               user-emacs-directory)))
-           confirm-kill-emacs 'yes-or-no-p
-           delete-old-versions t
-           enable-dir-local-variables nil
-           enable-local-eval nil
-           enable-local-variables nil
-           kept-new-versions 10
-           vc-make-backup-files t
-           version-control t
-           view-read-only t)
-  (auto-save-visited-mode 1))
-
-(setup isearch
-  (:option isearch-lazy-count t))
-
-(setup bookmark
-  (:option bookmark-save-flag 1))
-
-(setup narrow
-  (:option narrow-to-defun-include-comments t)
-  (put 'narrow-to-defun 'disabled nil)
-  (put 'narrow-to-page 'disabled nil)
-  (put 'narrow-to-region 'disabled nil))
-
+(my-set narrow-to-defun-include-comments t)
+(put 'narrow-to-defun 'disabled nil)
+(put 'narrow-to-page 'disabled nil)
+(put 'narrow-to-region 'disabled nil)
 
 
 ;;; Minibuffer and completions
 
-(setup (:package minibuffer-line)
-  (:option minibuffer-line-format '(:eval global-mode-string)
-           minibuffer-line-refresh-interval 1)
-  (setq mode-line-misc-info nil)
-  (minibuffer-line-mode))
+(my-set enable-recursive-minibuffers t)
+(minibuffer-depth-indicate-mode 1)
 
-(setup mb-depth
-  (:option enable-recursive-minibuffers t)
-  (minibuffer-depth-indicate-mode 1))
+(require 'icomplete)
 
-(setup icomplete
-  (defun my-icomplete-root ()
-    "Go to the project root in find-file, or the parent dir"
-    (interactive)
-    (if (and (eq (icomplete--category) 'file) (project-current))
-        (progn (delete-minibuffer-contents)
-               (insert (project-root (project-current))))
-      (call-interactively #'icomplete-fido-backward-updir)))
+(defun my-icomplete-root ()
+  "Go to the project root in find-file, or the parent dir"
+  (interactive)
+  (if (and (eq (icomplete--category) 'file) (project-current))
+      (progn (delete-minibuffer-contents)
+             (insert (project-root (project-current))))
+    (call-interactively #'icomplete-fido-backward-updir)))
 
-  (:with-map icomplete-fido-mode-map
-    (:bind "M-DEL" #'my-icomplete-root
-           "M-<return>" #'icomplete-fido-exit)
-    (:unbind "C-r" "C-s"))
+(my-key icomplete-fido-mode "M-DEL" #'my-icomplete-root)
+(my-key icomplete-fido-mode "M-<return>" #'icomplete-fido-exit)
+(my-key icomplete-fido-mode "C-r" nil)
+(my-key icomplete-fido-mode "C-s" nil)
 
-  (:option icomplete-prospects-height 1)
+(my-set icomplete-prospects-height 1)
 
-  (fido-mode 1)
+(fido-mode 1)
 
-  ;; Override the default fido-mode flex completion style, as flex doesn't order by
-  ;; history. This has to happen in a hook, because fido-mode also uses a hook to do
-  ;; this.
-  (defun my-completion-styles ()
-    (setq-local completion-styles '(substring flex)))
-  (add-hook 'minibuffer-setup-hook #'my-completion-styles 1))
+;; Override the default fido-mode flex completion style, as flex doesn't order by
+;; history. This has to happen in a hook, because fido-mode also uses a hook to do
+;; this.
+(defun my-completion-styles ()
+  (setq-local completion-styles '(substring flex basic)))
+(add-hook 'minibuffer-setup-hook #'my-completion-styles 1)
 
-(setup minibuffer
-  (:also-load completion-in-buffer)
-  (:option completion-category-overrides '((file (styles basic partial-completion flex)))
-           completions-detailed t)
+(require 'completion-in-buffer)
 
-  (minibuffer-electric-default-mode 1))
+(my-set completion-category-overrides
+        '((file (styles basic partial-completion flex))))
+(my-set completions-detailed t)
 
-(setup (:require restricto)
-  (:with-map minibuffer-local-completion-map
-    (:bind "SPC" restricto-narrow
-           "S-SPC" restricto-widen))
+(minibuffer-electric-default-mode 1)
 
-  (restricto-mode))
+(require 'restricto)
+(let ((map minibuffer-local-completion-map))
+  (define-key map (kbd "SPC") #'restricto-narrow)
+  (define-key map (kbd "S-SPC") #'restricto-widen))
+(restricto-mode)
 
-(setup rfn-eshadow
-  (file-name-shadow-mode 1))
+(file-name-shadow-mode 1)
 
-(setup savehist
-  (:option history-delete-duplicates t
-           history-length 1000)
-  (savehist-mode 1))
+(my-set history-delete-duplicates t)
+(my-set history-length 1000)
+(savehist-mode 1)
 
-;;TODO: Move to `lisp/' package
-(setup minibuffer-repeat
-  (defvar minibuffer-repeat--command nil)
-  (defvar minibuffer-repeat--input nil)
+(my-use 'minibuffer-repeat)
+(add-hook 'minibuffer-setup-hook #'minibuffer-repeat-save)
+(global-set-key (kbd "C-c m") #'minibuffer-repeat)
 
-  (defun minibuffer-repeat-save ()
-    (setq minibuffer-repeat--command this-command)
-    (add-hook 'post-command-hook
-              (lambda () (setq minibuffer-repeat--input (minibuffer-contents)))
-              nil 'local))
-
-  (defun minibuffer-repeat ()
-    (interactive)
-    (minibuffer-with-setup-hook
-        (lambda ()
-          (delete-minibuffer-contents)
-          (insert minibuffer-repeat--input))
-      (command-execute (setq this-command minibuffer-repeat--command))))
-
-  (add-hook 'minibuffer-setup-hook #'minibuffer-repeat-save)
-  (:global "C-c m" #'minibuffer-repeat))
 
 
 ;;; Theme and display options
 
-(setup (:require modus-themes)
-  (:option modus-themes-bold-constructs t
-           modus-themes-headings '((1 1.2) (t t))
-           modus-themes-mixed-fonts t
-           modus-themes-mode-line '(accented)
-           modus-themes-org-blocks 'gray-background
-           modus-themes-slanted-constructs t)
+(my-use 'minibuffer-line
+  (my-set minibuffer-line-format '(:eval global-mode-string))
+  (my-set minibuffer-line-refresh-interval 1)
+  (my-set mode-line-misc-info nil))
+(minibuffer-line-mode)
 
-  (let ((daily (* 60 60 24)))
-    ;; Set a light theme during work hours, otherwise dark.
-    (run-at-time "09:00" daily #'modus-themes-load-operandi)
-    (run-at-time "17:30" daily #'modus-themes-load-vivendi)))
+(load-theme 'modus-vivendi t)
+(my-set modus-themes-bold-constructs t)
+(my-set modus-themes-headings '((1 1.2) (t t)))
+(my-set modus-themes-mixed-fonts t)
+(my-set modus-themes-mode-line '(accented))
+(my-set modus-themes-org-blocks 'gray-background)
+(my-set modus-themes-slanted-constructs t)
+(let ((daily (* 60 60 24)))
+  ;; Set a light theme during work hours, otherwise dark.
+  (run-at-time "09:00" daily #'modus-themes-load-operandi)
+  (run-at-time "17:30" daily #'modus-themes-load-vivendi))
 
-(setup cus-face
-  (custom-set-faces
-   '(default ((t (:family "JetBrains Mono NL" :height 145))))
-   '(fixed-pitch ((t (:family "JetBrains Mono NL" :height 150))))
-   '(variable-pitch ((t (:family "Baskerville" :height 185))))))
+(custom-set-faces
+ '(default ((t (:family "JetBrains Mono NL" :height 145))))
+ '(fixed-pitch ((t (:family "JetBrains Mono NL" :height 150))))
+ '(variable-pitch ((t (:family "Baskerville" :height 185)))))
 
 ;; Helps to visualise wrapped and hidden lines
-(setup display-line-numbers
-  (:hook-into prog-mode)
-  (setq-default display-line-numbers-widen t))
+(add-hook 'prog-mode-hook #'display-line-numbers-mode)
+(set-default 'display-line-numbers-widen t)
 
 
 ;;; Text editing
 
-(setup (:package vundo)
-  (:global "C-x u" #'vundo)
-  (:when-loaded
-    (:option vundo-glyph-alist vundo-unicode-symbols)))
+(my-use 'vundo
+  (my-set vundo-glyph-alist vundo-unicode-symbols))
+(global-set-key (kbd "C-x u") #'vundo)
 
-(setup (:package yasnippet yasnippet-snippets)
-  (:with-mode yas-minor-mode (:unbind "TAB"))
-  (:global [remap dabbrev-expand] #'hippie-expand)
-  (:option (prepend hippie-expand-try-functions-list) #'yas-hippie-try-expand)
-  (yas-global-mode 1))
+(global-set-key [remap dabbrev-expand] #'hippie-expand)
+(my-use 'yasnippet
+  (my-use 'yasnippet-snippets)
+  (define-key yas-minor-mode-map [tab] nil)
+  (add-to-list hippie-expand-try-functions-list #'yas-hippie-try-expand))
+(yas-global-mode)
 
-(setup (:package evil god-mode)
-  (:with-map evil-insert-state-map
-    (:bind "C-w" #'evil-window-map))
-  (:with-map evil-motion-state-map
-    (:bind "RET" nil
-           "<down-mouse-1>" nil
-           "SPC" #'god-execute-with-current-bindings
-           ;; "Insert" is our "Emacs-state", so we want it even from motion state
-           "i" #'evil-insert
-           "Q" #'unbury-buffer))
-  (:with-map evil-normal-state-map
-    (:bind "s" #'evil-switch-to-windows-last-buffer ;;TODO: Put something more useful here
-           "K" #'join-line
-           "q" #'bury-buffer)) ;; Use Emacs macros, which frees up `q'
-  (:with-map evil-visual-state-map
-    (:bind "v" #'evil-visual-line))
-  (:with-map evil-window-map
-    (:bind "C-f" #'other-frame
-           "f" #'other-frame))
+(my-use 'evil
+  (my-set evil-disable-insert-state-bindings t)
+  (my-set evil-echo-state nil)
+  (my-set evil-kill-on-visual-paste nil)
+  (my-set evil-mode-line-format 'after)
+  (my-set evil-symbol-word-search t)
+  (my-set evil-undo-system 'undo-redo)
+  (my-set evil-visual-region-expanded t)
+  (my-set evil-want-Y-yank-to-eol t)
+  (my-set evil-want-integration nil)
+  (my-set evil-want-keybinding nil)
+  (my-set evil-want-minibuffer t)
+  (my-set evil-insert-state-modes
+          (append (my-init-val evil-emacs-state-modes)
+                  (my-init-val evil-insert-state-modes)))
+  (my-set evil-emacs-state-modes '(exwm-mode vundo-mode))
+  (my-key evil-insert-state "C-w" #'evil-window-map)
+  (my-key evil-motion-state
+    "RET" nil
+    "<down-mouse-1>" nil
+    "i" evil-insert ;; "Insert" is our "Emacs-state"
+    "Q" unbury-buffer)
+  (my-key evil-normal-state
+    "K" join-line
+    "q" bury-buffer) ;; Use Emacs macros, which frees up `q'
+  (my-key evil-visual-state
+    "v" evil-visual-line)
+  (my-key evil-window
+    "C-f" other-frame
+    "f" other-frame
+    "u" winner-undo
+    "C-u" winner-undo
+    "C-r" winner-redo))
+(evil-mode)
 
-  (:option evil-disable-insert-state-bindings t
-           evil-echo-state nil
-           evil-kill-on-visual-paste nil
-           evil-mode-line-format 'after
-           evil-symbol-word-search t
-           evil-undo-system 'undo-redo
-           evil-visual-region-expanded t
-           evil-want-Y-yank-to-eol t
-           evil-want-integration nil
-           evil-want-keybinding nil
-           evil-want-minibuffer t
-           evil-insert-state-modes (append (my-standard-value 'evil-emacs-state-modes)
-                                           (my-standard-value 'evil-insert-state-modes))
-           evil-emacs-state-modes '(exwm-mode vundo-mode))
-
-  (evil-mode 1))
-
-(setup elec-pair
-  (electric-pair-mode 1))
+(electric-pair-mode 1)
 
 
 ;;; Window and buffer management
 
-(setup window
-  (:option display-buffer-alist
-           '(("\*Register Preview\*" (display-buffer-pop-up-window))
-             ("." (display-buffer-reuse-window
-                   display-buffer-same-window
-                   display-buffer-pop-up-window)))))
+(my-set display-buffer-alist
+        '(("\*Register Preview\*" (display-buffer-pop-up-window))
+          ("." (display-buffer-reuse-window
+                display-buffer-same-window
+                display-buffer-pop-up-window))))
 
-(setup ibuffer
-  (:global "C-x C-b" #'ibuffer))
+(my-key global "C-x C-b" ibuffer)
 
-(setup winner
-  (:with-map evil-window-map
-    (:bind "u" #'winner-undo
-           "C-u" #'winner-undo
-           "C-r" #'winner-redo))
+(winner-mode)
 
-  (winner-mode 1))
+(my-use 'same-mode-buffer)
+(my-key global
+  [mode-line mouse-4] same-mode-buffer-previous
+  "C-<tab>" same-mode-buffer-previous
+  [mode-line mouse-5] same-mode-buffer-next
+  "C-S-<tab>" same-mode-buffer-next)
 
-(setup (:require same-mode-buffer)
-  (:global [mode-line mouse-4] #'same-mode-buffer-previous
-           "C-<tab>" #'same-mode-buffer-previous
-           [mode-line mouse-5] #'same-mode-buffer-next
-           "C-S-<tab>" #'same-mode-buffer-next))
-
-(setup midnight
-  (midnight-mode))
+(midnight-mode)
 
 
 ;;; File management
 
-(setup dired
-  (:also-load dired-x)
-  (:package async)
-  (:hook dired-async-mode
-         dired-hide-details-mode
-         hl-line-mode)
-  (:option dired-listing-switches "-hal"
-           dired-dwim-target t
-           image-dired-thumb-size 500))
+(with-eval-after-load 'dired
+  (require 'dired-x)
+  (my-use async)
+  (add-hook 'dired-mode-hook #'dired-async-mode)
+  (my-set dired-listing-switches "-hal"
+          dired-dwim-target t))
+(add-hook 'dired-mode-hook #'dired-hide-details-mode)
+(add-hook 'dired-mode-hook #'hl-line-mode)
+
 
 
 ;;; Shell
@@ -336,6 +324,8 @@ This is the default value, prior to any customizations."
 
 ;;; Programming
 
+(add-hook 'prog-mode-hook #'flyspell-prog-mode)
+
 (setup flymake
   (:hook-into prog-mode)
   (:option flymake-no-changes-timeout nil
@@ -357,6 +347,8 @@ This is the default value, prior to any customizations."
 
 
 ;;; Writing and organisation
+
+(add-hook 'text-mode-hook #'flyspell-mode)
 
 (setup (:package olivetti)
   (:hook-into text-mode))
