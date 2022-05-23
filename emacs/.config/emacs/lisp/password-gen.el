@@ -15,7 +15,8 @@
   "Generate a password."
   (interactive)
   ;;TODO: Use `auth-sources'
-  (unless (boundp 'password-gen-password) (setq password-gen-password (read-passwd "Master: ")))
+  (unless (boundp 'password-gen-password)
+    (setq password-gen-password (read-passwd "Master: ")))
   (gui-set-selection 'CLIPBOARD
                      (substring
                       (shell-command-to-string

@@ -6,19 +6,20 @@
 
 ;;; Code:
 
+;; TODO: Remove when I am no longer using this
+(my-use 'setup)
+
 (setq-default fill-column 100
               tab-width 2)
 
-(setup js
-  (:option js-indent-level 2))
+(setq sh-basic-offset 2
+      js-indent-level 2)
 
-(setup (:package typescript-mode)
-  (:option typescript-indent-level 2))
+(my-use 'typescript-mode
+  (setq typescript-indent-level 2))
 
-(setup sh-script
-  (:option sh-basic-offset 2))
 
-(setup (:if-package magit)
+(with-eval-after-load 'magit
   (defun github-open ()
     "Open Canva GitHub for the current file."
     (interactive)
@@ -30,39 +31,32 @@
       (browse-url (format "https://github.com/Canva/%s/blob/master/%s#L%s-L%s" repo path start end))))
   
   ;; Monorepo makes git slow, so do a little less on magit refresh
-  (:option magit-refresh-status-buffer nil)
+  (setq magit-refresh-status-buffer nil)
   (remove-hook 'magit-status-sections-hook 'magit-insert-stashes)
   (remove-hook 'magit-status-sections-hook 'magit-insert-tags-header))
 
-(setup (:package vterm)
-  (:option vterm-max-scrollback 100000
-           vterm-buffer-name-string "vterm<%s>")
-  (:global "C-c v" #'vterm)
-  (:bind "C-<escape>"
-         (lambda () (interactive) (vterm-send-key (kbd "C-[")))))
+(my-use 'blacken
+  (setq blacken-line-length 100))
+(add-hook 'python-mode-hook #'blacken-mode)
 
-(setup (:package blacken)
-  (:hook-into python-mode)
-  (:option blacken-line-length 100))
+(my-use 'terraform-mode)
 
-(setup (:package terraform-mode))
+(my-use 'bazel)
 
-(setup (:package bazel))
+(my-use 'web-mode)
+(add-to-list 'auto-mode-alist ("\\.tsx\\'" . 'web-mode))
 
-(setup (:package web-mode)
-  (:file-match "\\.tsx\\'"))
+(my-use 'dockerfile-mode)
+(add-to-list 'auto-mode-alist ("Dockerfile\\'" . 'dockerfile-mode))
 
-(setup (:package dockerfile-mode)
-  (:file-match "Dockerfile\\'"))
+(my-use 'yaml-mode)
+(add-to-list 'auto-mode-alist ("\\.ya?ml\\(\\.j2\\)?\\'" . 'yaml-mode))
 
-(setup (:package yaml-mode)
-  (:file-match "\\.ya?ml\\(\\.j2\\)?\\'"))
+(add-to-list 'auto-mode-alist ("\\.xlf\\'" . 'xml-mode))
 
-(setup xml-mode
-  (:file-match "\\.xlf\\'"))
-
-(setup java-mode
-  (defun dprint ()
+(with-eval-after-load 'java-mode
+  ;;TODO: Move dprint to its own package
+  (defun my-dprint ()
     "Format current buffer with dprint."
     (interactive)
     (let ((dprint "~/work/canva/tools/dprint/dprint")
@@ -71,14 +65,15 @@
       (call-process-region nil nil dprint t t nil "fmt" "--stdin" (buffer-name))
       (goto-char point)
       (set-window-start nil window-start)))
-  (:hook (lambda ()
+
+  (add-hook 'java-mode-hook (lambda ()
            (electric-indent-local-mode -1)
-           (add-hook 'before-save-hook #'dprint nil 'local)
+           (add-hook 'before-save-hook #'my-dprint nil 'local)
            (setq-local c-basic-offset 2
                        c-offsets-alist nil
                        indent-tabs-mode nil
                        evil-shift-width 2)))
-  (:package eglot-java)
+  (my-use eglot-java)
   (eglot-java-init))
 
 ;; `project-find-file' is too slow on the monorepo

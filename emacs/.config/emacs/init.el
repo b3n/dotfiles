@@ -7,108 +7,61 @@
 
 ;;; Code:
 
-(require 'cl-macs)
-(require 'package)
+(require 'my-helpers)
 
 
 ;;; Setup
 
-(defun my-plist-map (fn list)
-  (cl-loop for (key val) on list by 'cddr
-           collect (funcall fn key val)))
+(setq custom-file (make-temp-file "emacs-custom-"))
 
-(defmacro my-set (&rest body)
-  "Set VARIABLE to VALUE, and return VALUE."
-  `(progn ,@(my-plist-map
-             (lambda (var val)
-               `(funcall (or (get ',var 'custom-set)
-                             'set-default)
-                         ',var ,val))
-             body)))
-
-(defmacro my-init-val (symbl)
-  "Get SYMBL's standard value, prior to any customizations."
-  `(eval (car (get ',symbl 'standard-value))))
-
-(my-set custom-file (make-temp-file "emacs-custom-"))
-
-(defmacro my-key (mode &rest defs)
-  "Helper for defining keys."
-  (declare (indent defun))
-  `(progn
-     ,@(my-plist-map
-        (lambda (key def)
-          `(define-key ,(intern (format "%s-map" mode))
-             ,(if (stringp key) (kbd key) key)
-             #',def))
-        defs)))
-
-;;TODO: Now there's the nongnu ELPA, do we really need MELPA?
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-
-(defmacro my-use (package &rest body)
-  "Install PACKAGE if needed, then eval the BODY after load."
-  (declare (indent defun))
-  `(progn
-     (unless (package-installed-p ,package)
-       (or (ignore-errors (package-install-file
-                           (expand-file-name
-                            ;;TODO: Rename `lisp' and remove from `load-path'
-                            (concat "lisp/" (symbol-name ,package) ".el")
-                            user-emacs-directory)))
-           (ignore-errors (package-install ,package t))
-           (require ,package)))
-     (with-eval-after-load ,package ,@body)))
-
-;; TODO: Remove when I am no longer using this
-(my-use 'setup)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+(setq package-archive-priorities '(("gnu" . 2) ("nongnu" . 1)))
+(package-refresh-contents t)
 
 
 ;;; Basic settings
 
-(my-set initial-buffer-choice "~/todo.org")
-(my-set initial-scratch-message nil)
+(setq initial-buffer-choice "~/todo.org")
+(setq initial-scratch-message nil)
 
 ;; By default passwords were getting stored on disk unencrypted...
-(my-set auth-sources
+(setq auth-sources
         `(,(expand-file-name "authinfo.gpg" user-emacs-directory)
           ,(expand-file-name "authinfo" temporary-file-directory)
           "~/.netrc"))
 
 (add-hook 'text-mode-hook #'turn-on-visual-line-mode)
-(my-set completion-show-help nil)
-(my-set async-shell-command-buffer 'rename-buffer)
-(my-set save-interprogram-paste-before-kill t)
+(setq completion-show-help nil)
+(setq async-shell-command-buffer 'rename-buffer)
+(setq save-interprogram-paste-before-kill t)
 (column-number-mode)
 
 (save-place-mode 1)
 
-(my-set uniquify-buffer-name-style 'forward)
+(setq uniquify-buffer-name-style 'forward)
 
-(my-set tab-always-indent 'complete)
+(setq tab-always-indent 'complete)
 
-(my-set auto-save-default t)
-(my-set auto-save-visited-interval 60)
-(my-set backup-by-copying t)
-(my-set backup-directory-alist
+(setq auto-save-default t)
+(setq auto-save-visited-interval 60)
+(setq backup-by-copying t)
+(setq backup-directory-alist
         `((,tramp-file-name-regexp . nil)
           (".*" . ,(expand-file-name "backups" user-emacs-directory))))
-(my-set confirm-kill-emacs 'yes-or-no-p)
-(my-set delete-old-versions t)
-(my-set enable-dir-local-variables nil)
-(my-set enable-local-eval nil)
-(my-set enable-local-variables nil)
-(my-set kept-new-versions 10)
-(my-set vc-make-backup-files t)
-(my-set version-control t)
-(my-set view-read-only t)
+(setq confirm-kill-emacs 'yes-or-no-p)
+(setq delete-old-versions t)
+(setq enable-dir-local-variables nil)
+(setq enable-local-eval nil)
+(setq enable-local-variables nil)
+(setq kept-new-versions 10)
+(setq vc-make-backup-files t)
+(setq version-control t)
+(setq view-read-only t)
 (auto-save-visited-mode 1)
 
-(my-set isearch-lazy-count t)
+(setq isearch-lazy-count t)
 
-(my-set bookmark-save-flag 1)
-
-(my-set narrow-to-defun-include-comments t)
+(setq narrow-to-defun-include-comments t)
 (put 'narrow-to-defun 'disabled nil)
 (put 'narrow-to-page 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
@@ -116,53 +69,53 @@
 
 ;;; Minibuffer and completions
 
-(my-set enable-recursive-minibuffers t)
+(setq enable-recursive-minibuffers t)
 (minibuffer-depth-indicate-mode 1)
 
-(require 'icomplete)
-
 (defun my-icomplete-root ()
-  "Go to the project root in find-file, or the parent dir"
+  "Go to the project root in `find-file', or the parent dir."
   (interactive)
   (if (and (eq (icomplete--category) 'file) (project-current))
       (progn (delete-minibuffer-contents)
              (insert (project-root (project-current))))
     (call-interactively #'icomplete-fido-backward-updir)))
 
-(my-key icomplete-fido-mode "M-DEL" #'my-icomplete-root)
-(my-key icomplete-fido-mode "M-<return>" #'icomplete-fido-exit)
-(my-key icomplete-fido-mode "C-r" nil)
-(my-key icomplete-fido-mode "C-s" nil)
+(my-key icomplete-fido-mode
+  "M-DEL" my-icomplete-root
+  "M-<return>" icomplete-fido-exit
+  "C-r" nil
+  "C-s" nil)
 
-(my-set icomplete-prospects-height 1)
+(setq icomplete-prospects-height 1)
 
 (fido-mode 1)
 
-;; Override the default fido-mode flex completion style, as flex doesn't order by
-;; history. This has to happen in a hook, because fido-mode also uses a hook to do
-;; this.
 (defun my-completion-styles ()
+"Override the default completion style.
+
+This has to happen in a hook, because `fido-mode' also uses a hook to set the
+flex style."
   (setq-local completion-styles '(substring flex basic)))
 (add-hook 'minibuffer-setup-hook #'my-completion-styles 1)
 
-(require 'completion-in-buffer)
+(my-use 'completion-in-buffer)
 
-(my-set completion-category-overrides
+(setq completion-category-overrides
         '((file (styles basic partial-completion flex))))
-(my-set completions-detailed t)
+(setq completions-detailed t)
 
 (minibuffer-electric-default-mode 1)
 
-(require 'restricto)
-(let ((map minibuffer-local-completion-map))
-  (define-key map (kbd "SPC") #'restricto-narrow)
-  (define-key map (kbd "S-SPC") #'restricto-widen))
+(my-use 'restricto
+  (my-key minibuffer-local-completion
+    "SPC" restricto-narrow
+    "S-SPC" restricto-widen))
 (restricto-mode)
 
 (file-name-shadow-mode 1)
 
-(my-set history-delete-duplicates t)
-(my-set history-length 1000)
+(setq history-delete-duplicates t)
+(setq history-length 1000)
 (savehist-mode 1)
 
 (my-use 'minibuffer-repeat)
@@ -174,71 +127,72 @@
 ;;; Theme and display options
 
 (my-use 'minibuffer-line
-  (my-set minibuffer-line-format '(:eval global-mode-string))
-  (my-set minibuffer-line-refresh-interval 1)
-  (my-set mode-line-misc-info nil))
+  (setq minibuffer-line-format '(:eval global-mode-string))
+  (setq minibuffer-line-refresh-interval 1)
+  (setq mode-line-misc-info nil))
 (minibuffer-line-mode)
 
 (load-theme 'modus-vivendi t)
-(my-set modus-themes-bold-constructs t)
-(my-set modus-themes-headings '((1 1.2) (t t)))
-(my-set modus-themes-mixed-fonts t)
-(my-set modus-themes-mode-line '(accented))
-(my-set modus-themes-org-blocks 'gray-background)
-(my-set modus-themes-slanted-constructs t)
+(setq modus-themes-bold-constructs t)
+(setq modus-themes-headings '((1 1.2) (t t)))
+(setq modus-themes-mixed-fonts t)
+(setq modus-themes-mode-line '(accented))
+(setq modus-themes-org-blocks 'gray-background)
+(setq modus-themes-slanted-constructs t)
 (let ((daily (* 60 60 24)))
   ;; Set a light theme during work hours, otherwise dark.
   (run-at-time "09:00" daily #'modus-themes-load-operandi)
   (run-at-time "17:30" daily #'modus-themes-load-vivendi))
 
 (custom-set-faces
- '(default ((t (:family "JetBrains Mono NL" :height 145))))
- '(fixed-pitch ((t (:family "JetBrains Mono NL" :height 150))))
- '(variable-pitch ((t (:family "Baskerville" :height 185)))))
+ '(default ((t (:family "JetBrains Mono NL" :height 175))))
+ '(fixed-pitch ((t (:family "JetBrains Mono NL" :height 185))))
+ '(variable-pitch ((t (:family "Baskerville" :height 195)))))
 
 ;; Helps to visualise wrapped and hidden lines
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
-(set-default 'display-line-numbers-widen t)
+(setq-default display-line-numbers-widen t)
 
 
 ;;; Text editing
 
 (my-use 'vundo
-  (my-set vundo-glyph-alist vundo-unicode-symbols))
+  (setq vundo-glyph-alist vundo-unicode-symbols))
 (global-set-key (kbd "C-x u") #'vundo)
 
 (global-set-key [remap dabbrev-expand] #'hippie-expand)
 (my-use 'yasnippet
   (my-use 'yasnippet-snippets)
   (define-key yas-minor-mode-map [tab] nil)
-  (add-to-list hippie-expand-try-functions-list #'yas-hippie-try-expand))
+  (delete 'try-expand-list hippie-expand-try-functions-list)
+  (add-to-list 'hippie-expand-try-functions-list #'yas-hippie-try-expand))
 (yas-global-mode)
 
 (my-use 'evil
-  (my-set evil-disable-insert-state-bindings t)
-  (my-set evil-echo-state nil)
-  (my-set evil-kill-on-visual-paste nil)
-  (my-set evil-mode-line-format 'after)
-  (my-set evil-symbol-word-search t)
-  (my-set evil-undo-system 'undo-redo)
-  (my-set evil-visual-region-expanded t)
-  (my-set evil-want-Y-yank-to-eol t)
-  (my-set evil-want-integration nil)
-  (my-set evil-want-keybinding nil)
-  (my-set evil-want-minibuffer t)
-  (my-set evil-insert-state-modes
-          (append (my-init-val evil-emacs-state-modes)
-                  (my-init-val evil-insert-state-modes)))
-  (my-set evil-emacs-state-modes '(exwm-mode vundo-mode))
-  (my-key evil-insert-state "C-w" #'evil-window-map)
+  (setq evil-disable-insert-state-bindings t)
+  (setq evil-echo-state nil)
+  (setq evil-kill-on-visual-paste nil)
+  (setq evil-mode-line-format 'after)
+  (setq evil-symbol-word-search t)
+  (setq evil-undo-system 'undo-redo)
+  (setq evil-visual-region-expanded t)
+  (setq evil-want-Y-yank-to-eol t)
+  (setq evil-want-minibuffer t)
+  (setq evil-insert-state-modes (append evil-emacs-state-modes evil-insert-state-modes))
+  (setq evil-emacs-state-modes '(exwm-mode vundo-mode))
+  (my-key evil-insert-state
+    "C-w" evil-window-map)
   (my-key evil-motion-state
     "RET" nil
     "<down-mouse-1>" nil
-    "i" evil-insert ;; "Insert" is our "Emacs-state"
+    "SPC" evil-execute-in-emacs-state
+    "i" evil-insert ;; "Insert" is our "Emacs-state", so we want it here
     "Q" unbury-buffer)
   (my-key evil-normal-state
     "K" join-line
-    "q" bury-buffer) ;; Use Emacs macros, which frees up `q'
+    "S" kmacro-start-macro-or-insert-counter
+    "s" kmacro-end-or-call-macro
+    "q" bury-buffer)
   (my-key evil-visual-state
     "v" evil-visual-line)
   (my-key evil-window
@@ -247,14 +201,16 @@
     "u" winner-undo
     "C-u" winner-undo
     "C-r" winner-redo))
+(setq evil-want-integration nil)
+(setq evil-want-keybinding nil)
 (evil-mode)
 
-(electric-pair-mode 1)
+;;(electric-pair-mode 1)
 
 
 ;;; Window and buffer management
 
-(my-set display-buffer-alist
+(setq display-buffer-alist
         '(("\*Register Preview\*" (display-buffer-pop-up-window))
           ("." (display-buffer-reuse-window
                 display-buffer-same-window
@@ -278,9 +234,9 @@
 
 (with-eval-after-load 'dired
   (require 'dired-x)
-  (my-use async)
+  (my-use 'async)
   (add-hook 'dired-mode-hook #'dired-async-mode)
-  (my-set dired-listing-switches "-hal"
+  (setq dired-listing-switches "-hal"
           dired-dwim-target t))
 (add-hook 'dired-mode-hook #'dired-hide-details-mode)
 (add-hook 'dired-mode-hook #'hl-line-mode)
@@ -289,176 +245,167 @@
 
 ;;; Shell
 
-(setup (:package exec-path-from-shell with-editor)
-  (:option exec-path-from-shell-arguments nil)
-  (:with-mode with-editor-export-editor
-    (:hook-into eshell-mode shell-mode term-exec vterm-mode))
-  (exec-path-from-shell-initialize)
-  (setenv "PAGER" "cat"))
+;; (setup (:package exec-path-from-shell with-editor)
+;;   (:option exec-path-from-shell-arguments nil)
+;;   (:with-mode with-editor-export-editor
+;;     (:hook-into eshell-mode shell-mode term-exec vterm-mode))
+;;   (exec-path-from-shell-initialize))
+(setenv "PAGER" "cat")
 
-(setup eshell
-  (:global "C-c e" #'eshell)
-  (:option eshell-hist-ignoredups t
-           eshell-history-size 1000
-           eshell-destroy-buffer-when-process-dies t)
-  
-  (defun eshell-buffer-name ()
-    (rename-buffer (concat "*eshell*<" (eshell/pwd) ">") t))
-  (add-hook 'eshell-prompt-load-hook #'eshell-buffer-name)
-  (add-hook 'eshell-directory-change-hook #'eshell-buffer-name)
+(my-key global "C-c e" eshell)
+(setq eshell-hist-ignoredups t
+      eshell-history-size 1000
+      eshell-destroy-buffer-when-process-dies t)
 
-  (defun my-make-field ()
-    "Make text in front of the point a field, useful for prompts."
-    (let ((inhibit-read-only t))
-      (add-text-properties
-       (line-beginning-position)
-       (point)
-       (list 'field t
-             'rear-nonsticky t))))
-  (add-hook 'eshell-after-prompt-hook #'my-make-field)
+(defun my-eshell-buffer-name ()
+  "Include pwd in eshell prompt."
+  (rename-buffer (concat "*eshell*<" (eshell/pwd) ">") t))
+(add-hook 'eshell-prompt-load-hook #'my-eshell-buffer-name)
+(add-hook 'eshell-directory-change-hook #'my-eshell-buffer-name)
 
-  (defun eshell/in-term (prog &rest args)
-    "Run shell command in term buffer."
-    (apply #'make-term (format "in-term %s %s" prog args) prog nil args)))
+(defun my-make-field ()
+  "Make text in front of the point a field."
+  (let ((inhibit-read-only t))
+    (add-text-properties
+     (line-beginning-position)
+     (point)
+     (list 'field t
+           'rear-nonsticky t))))
+(add-hook 'eshell-after-prompt-hook #'my-make-field)
+
+(defun eshell/in-term (prog &rest args)
+  "Run shell command PROG with args ARGS in term buffer."
+  (apply #'make-term (format "in-term %s %s" prog args) prog nil args))
+
+(my-use 'vterm
+  (setq vterm-max-scrollback 100000
+        vterm-buffer-name-string "vterm<%s>")
+  (my-key vterm-mode
+    "C-<escape>" (lambda () (interactive) (vterm-send-key (kbd "C-[")))))
+(my-key global "C-c v" vterm)
 
 
 ;;; Programming
 
 (add-hook 'prog-mode-hook #'flyspell-prog-mode)
+(add-hook 'prog-mode-hook #'flymake-mode)
 
-(setup flymake
-  (:hook-into prog-mode)
-  (:option flymake-no-changes-timeout nil
-           flymake-wrap-around nil))
+(setq flymake-no-changes-timeout nil
+      flymake-wrap-around nil)
 
-(setup eldoc
-  (:option eldoc-echo-area-use-multiline-p nil))
+(setq eldoc-echo-area-use-multiline-p nil)
 
-(setup (:package eglot)
-  (:with-mode eglot-ensure
-    (:hook-into python-mode java-mode clojure-mode))
-  (:bind "C-c C-c" #'eglot-code-actions)
-  (:option eglot-autoshutdown t))
+(my-use 'csv-mode)
 
-(setup (:package csv-mode))
+(my-use 'clojure-mode
+  (my-use 'cider)
+  (my-use 'flymake-kondor)
+  (add-hook 'clojure-mode-hook #'flymake-kondor-setup))
 
-(setup (:package clojure-mode cider flymake-kondor)
-  (:hook flymake-kondor-setup))
+(my-use 'eglot
+  (my-key eglot-mode
+    "C-c C-c" eglot-code-actions))
+(dolist (hook '(python-mode-hook java-mode-hook clojure-mode-hook))
+  (add-hook hook #'eglot-ensure))
 
 
 ;;; Writing and organisation
 
 (add-hook 'text-mode-hook #'flyspell-mode)
 
-(setup (:package olivetti)
-  (:hook-into text-mode))
+(my-use 'olivetti)
+(add-hook 'text-mode-hook #'olivetti-mode)
 
-(setup (:package markdown-mode)
-  (:file-match "\\.md\\'")
-  (:with-mode gfm-mode
-    (:file-match "README\\.md\\'")))
+(my-use 'markdown-mode)
+(add-to-list 'auto-mode-alist ("\\.md\\'" . 'markdown-mode))
+(add-to-list 'auto-mode-alist ("README\\.md\\'" . 'gfm-mode))
 
-(setup org
-  (:also-load org-habit ob-calc)
-  (:global "C-c a" #'org-agenda
-           "C-c c" #'org-capture)
-
-  (:option org-agenda-custom-commands
-           '((" " "My agenda"
-              ((agenda "")
-               (todo "IN-PROGRESS")
-               (todo "NEXT")
-               (todo "READING"))))
-           org-agenda-files '("~/todo/" "~/notes/books.org")
-           org-agenda-start-on-weekday nil
-           org-agenda-window-setup 'current-window
-           org-capture-templates
-           `(("t" "Todo" entry (file+headline "~/todo/inbox.org" "Inbox") "* TODO %?")
-             ("n" "Note" entry
-              (file ,(lambda () (format-time-string "~/tmp/%Y-%m-%d.org")))
-              "* %<%H:%M>\n%?\n"))
-           org-ellipsis "  ⬎ "
-           org-image-actual-width 300
-           org-link-frame-setup '((file . find-file))
-           org-log-done 'time
-           org-return-follows-link t
-           org-startup-folded 'content
-           org-startup-indented t
-           org-todo-keywords '((sequence "TODO" "IN-PROGRESS" "|" "DONE" "CANCELED")))
-
-  (:hook (lambda () (electric-indent-local-mode -1))
-         variable-pitch-mode))
+(my-key global
+  "C-c a" org-agenda
+  "C-c c" org-capture)
+(with-eval-after-load 'org
+  (require 'org-habit)
+  (setq org-agenda-custom-commands
+        '((" " "My agenda"
+           ((agenda "")
+            (todo "IN-PROGRESS")
+            (todo "NEXT")
+            (todo "READING"))))
+        org-agenda-files '("~/todo/" "~/notes/books.org")
+        org-agenda-start-on-weekday nil
+        org-agenda-window-setup 'current-window
+        org-capture-templates
+        `(("t" "Todo" entry (file+headline "~/todo/inbox.org" "Inbox") "* TODO %?")
+          ("n" "Note" entry
+           (file ,(lambda () (format-time-string "~/tmp/%Y-%m-%d.org")))
+           "* %<%H:%M>\n%?\n"))
+        org-ellipsis "  ⬎ "
+        org-image-actual-width 300
+        org-link-frame-setup '((file . find-file))
+        org-log-done 'time
+        org-return-follows-link t
+        org-startup-folded 'content
+        org-startup-indented t
+        org-todo-keywords '((sequence "TODO" "IN-PROGRESS" "|" "DONE" "CANCELED"))))
 
 
 ;;; Version control
 
-(setup vc-hooks
-  (:option vc-follow-symlinks t)
-  (delete '(vc-mode vc-mode) mode-line-format))
+(setq vc-follow-symlinks t)
+(delete '(vc-mode vc-mode) mode-line-format)
 
-(setup (:package magit)
-  (:global "C-c g" #'magit-file-dispatch)
-  (:option magit-define-global-key-bindings nil
-           magit-diff-refine-hunk t
-           magit-save-repository-buffers 'dontask
-           magit-no-confirm '(stage-all-changes)
-           (prepend display-buffer-alist) '("magit-diff: .*"
-                                            (display-buffer-at-bottom
-                                             display-buffer-pop-up-window))))
+(when (executable-find "git")
+  (my-use 'magit
+    (setq magit-diff-refine-hunk t
+          magit-save-repository-buffers 'dontask
+          magit-no-confirm '(stage-all-changes))
+          (add-to-list 'display-buffer-alist
+                       '("magit-diff: .*" (display-buffer-at-bottom display-buffer-pop-up-window))))
+  (my-key global "C-c g" magit-file-dispatch))
 
 
 ;;; Miscellaneous (to be categorised)
 
-(setup so-long
-  (global-so-long-mode 1))
+(global-so-long-mode 1)
 
-(setup (:package vlf)
-  (:require vlf-setup))
+(my-use 'vlf)
+(require 'vlf-setup)
 
-(setup (:require grep)
-  (:global "C-c s" #'grep-find)
-  (:option grep-save-buffers 'dontask)
 
-  (:only-if (executable-find "rg"))
-  (grep-apply-setting
-   'grep-find-command
-   '("rg --no-heading --with-filename --max-columns=800 --glob='' '' " . 62)))
+(with-eval-after-load 'grep
+  (setq grep-save-buffers 'dontask)
+  (when (executable-find "rg")
+    (grep-apply-setting
+     'grep-find-command
+     '("rg --no-heading --with-filename --max-columns=800 --glob='' '\\b\\b' " . 64))))
+(my-key global "C-c s" grep-find)
 
-(setup man
-  (:option Man-notify-method 'pushy))
+(setq Man-notify-method 'pushy)
 
-(setup calendar
-  (:option calendar-week-start-day 1
-           calendar-holidays
-           '((holiday-fixed 1 1 "New Year's Day")
-             (holiday-fixed 2 14 "Valentine's Day")
-             (holiday-fixed 3 17 "St. Patrick's Day")
-             (holiday-fixed 4 1 "April Fools' Day")
-             (holiday-easter-etc -47 "Pancake Day")
-             (holiday-easter-etc -21 "Mother's Day")
-             (holiday-easter-etc 0 "Easter Sunday")
-             (holiday-float 6 0 3 "Father's Day")
-             (holiday-fixed 10 31 "Halloween")
-             (holiday-fixed 12 24 "Christmas Eve")
-             (holiday-fixed 12 25 "Christmas Day")
-             (holiday-fixed 12 26 "Boxing Day")
-             (holiday-fixed 12 31 "New Year's Eve"))))
+(setq calendar-week-start-day 1)
+(setq calendar-holidays
+      '((holiday-fixed 1 1 "New Year's Day")
+        (holiday-fixed 2 14 "Valentine's Day")
+        (holiday-fixed 3 17 "St. Patrick's Day")
+        (holiday-fixed 4 1 "April Fools' Day")
+        (holiday-easter-etc -47 "Pancake Day")
+        (holiday-easter-etc -21 "Mother's Day")
+        (holiday-easter-etc 0 "Easter Sunday")
+        (holiday-float 6 0 3 "Father's Day")
+        (holiday-fixed 10 31 "Halloween")
+        (holiday-fixed 12 24 "Christmas Eve")
+        (holiday-fixed 12 25 "Christmas Day")
+        (holiday-fixed 12 26 "Boxing Day")
+        (holiday-fixed 12 31 "New Year's Eve")))
 
-(setup (:require password-gen)
-  (:global "C-c p" #'password-gen)
-  (:option password-gen-length 32))
+(my-use 'password-gen
+  (setq password-gen-length 32))
+(my-key global "C-c p" password-gen)
 
 
-;;; System specific initiation
+;;; System specific initiation (yes, there's more...)
 
-(setup work
-  (:only-if (equal system-name "Bens-MacBook-Pro-15"))
-  (:require work))
-
-(setup home
-  ;;TODO: Use system name
-  (:only-if (eq system-type 'gnu/linux))
-  (:require home))
+(require system-name nil t)
 
 
 ;;; init.el ends here

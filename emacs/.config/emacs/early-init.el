@@ -7,7 +7,6 @@
 
 ;;; Code:
 
-
 (setq create-lockfiles nil)
 (setq frame-inhibit-implied-resize t)
 (setq frame-title-format '("%b — %F"))
@@ -24,5 +23,4 @@
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
-
 ;;; early-init.el ends here
