@@ -212,6 +212,7 @@ flex style."
 
 (setq display-buffer-alist
         '(("\*Register Preview\*" (display-buffer-pop-up-window))
+          ("\*Async Shell Command\*" (display-buffer-no-window))
           ("." (display-buffer-reuse-window
                 display-buffer-same-window
                 display-buffer-pop-up-window))))
