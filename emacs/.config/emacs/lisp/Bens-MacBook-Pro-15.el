@@ -6,9 +6,6 @@
 
 ;;; Code:
 
-;; TODO: Remove when I am no longer using this
-(my-use 'setup)
-
 (setq-default fill-column 100
               tab-width 2)
 
@@ -44,15 +41,15 @@
 (my-use 'bazel)
 
 (my-use 'web-mode)
-(add-to-list 'auto-mode-alist ("\\.tsx\\'" . 'web-mode))
+(add-to-list 'auto-mode-alist '("\\.tsx\\'" . 'web-mode))
 
 (my-use 'dockerfile-mode)
-(add-to-list 'auto-mode-alist ("Dockerfile\\'" . 'dockerfile-mode))
+(add-to-list 'auto-mode-alist '("Dockerfile\\'" . 'dockerfile-mode))
 
 (my-use 'yaml-mode)
-(add-to-list 'auto-mode-alist ("\\.ya?ml\\(\\.j2\\)?\\'" . 'yaml-mode))
+(add-to-list 'auto-mode-alist '("\\.ya?ml\\(\\.j2\\)?\\'" . 'yaml-mode))
 
-(add-to-list 'auto-mode-alist ("\\.xlf\\'" . 'xml-mode))
+(add-to-list 'auto-mode-alist '("\\.xlf\\'" . 'xml-mode))
 
 (with-eval-after-load 'java-mode
   ;;TODO: Move dprint to its own package
@@ -73,16 +70,17 @@
                        c-offsets-alist nil
                        indent-tabs-mode nil
                        evil-shift-width 2)))
-  (my-use eglot-java)
+  (my-use 'eglot-java)
   (eglot-java-init))
 
 ;; `project-find-file' is too slow on the monorepo
-(setup (:package find-file-in-project)
-  (:global "C-x F" #'find-file-in-project
-           "C-x f" #'find-file-in-project-by-selected)
-  (:option ffip-use-rust-fd t))
+(my-use 'find-file-in-project
+  (setq ffip-use-rust-fd t))
+(my-key global
+  "C-x F" find-file-in-project
+  "C-x f" find-file-in-project-by-selected)
 
-(setup (:package restclient))
+(my-use 'restclient)
 
 (provide 'work)
 
