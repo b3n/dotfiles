@@ -16,14 +16,15 @@
   "Install PACKAGE if needed, then eval the BODY after load."
   (declare (indent defun))
   `(progn
-     (unless (package-installed-p ,package)
+     (unless
+         (or (featurep ,package)
+             (package-installed-p ,package))
        (or (ignore-errors (package-install-file
                            (expand-file-name
                             ;;TODO: Rename `lisp' and remove from `load-path'
                             (concat "lisp/" (symbol-name ,package) ".el")
                             user-emacs-directory)))
-           (ignore-errors (package-install ,package t))
-           (require ,package)))
+           (ignore-errors (package-install ,package t))))
      (with-eval-after-load ,package ,@body)))
 
 (provide 'my-helpers)
