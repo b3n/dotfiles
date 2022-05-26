@@ -80,11 +80,12 @@
              (insert (project-root (project-current))))
     (call-interactively #'icomplete-fido-backward-updir)))
 
+(with-eval-after-load 'icomplete
 (my-key icomplete-fido-mode
   "M-DEL" my-icomplete-root
   "M-<return>" icomplete-fido-exit
   "C-r" nil
-  "C-s" nil)
+  "C-s" nil))
 
 (setq icomplete-prospects-height 1)
 
@@ -145,9 +146,9 @@ flex style."
   (run-at-time "17:30" daily #'modus-themes-load-vivendi))
 
 (custom-set-faces
- '(default ((t (:family "JetBrains Mono NL" :height 175))))
- '(fixed-pitch ((t (:family "JetBrains Mono NL" :height 185))))
- '(variable-pitch ((t (:family "Baskerville" :height 195)))))
+ '(default ((t (:family "JetBrains Mono NL" :height 170))))
+ '(fixed-pitch ((t (:family "JetBrains Mono NL" :height 170))))
+ '(variable-pitch ((t (:family "Baskerville" :height 180)))))
 
 ;; Helps to visualise wrapped and hidden lines
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
@@ -169,12 +170,10 @@ flex style."
 (yas-global-mode)
 
 (my-use 'evil
-  (setq evil-disable-insert-state-bindings t)
   (setq evil-echo-state nil)
   (setq evil-kill-on-visual-paste nil)
   (setq evil-mode-line-format 'after)
   (setq evil-symbol-word-search t)
-  (setq evil-undo-system 'undo-redo)
   (setq evil-visual-region-expanded t)
   (setq evil-want-Y-yank-to-eol t)
   (setq evil-want-minibuffer t)
@@ -201,6 +200,8 @@ flex style."
     "u" winner-undo
     "C-u" winner-undo
     "C-r" winner-redo))
+(setq evil-undo-system 'undo-redo)
+(setq evil-disable-insert-state-bindings t)
 (setq evil-want-integration nil)
 (setq evil-want-keybinding nil)
 (evil-mode)
@@ -251,6 +252,9 @@ flex style."
 ;;   (:with-mode with-editor-export-editor
 ;;     (:hook-into eshell-mode shell-mode term-exec vterm-mode))
 ;;   (exec-path-from-shell-initialize))
+(my-use 'with-editor)
+(add-hook 'eshell-mode-hook #'with-edeitor-export-editor)
+(add-hook 'vterm-mode-hook #'with-edeitor-export-editor)
 (setenv "PAGER" "cat")
 
 (my-key global "C-c e" eshell)
@@ -318,8 +322,8 @@ flex style."
 (add-hook 'text-mode-hook #'olivetti-mode)
 
 (my-use 'markdown-mode)
-(add-to-list 'auto-mode-alist ("\\.md\\'" . 'markdown-mode))
-(add-to-list 'auto-mode-alist ("README\\.md\\'" . 'gfm-mode))
+(add-to-list 'auto-mode-alist '("\\.md\\'" . 'markdown-mode))
+(add-to-list 'auto-mode-alist '("README\\.md\\'" . 'gfm-mode))
 
 (my-key global
   "C-c a" org-agenda
@@ -406,7 +410,7 @@ flex style."
 
 ;;; System specific initiation (yes, there's more...)
 
-(require system-name nil t)
+(require (intern system-name) nil t)
 
 
 ;;; init.el ends here

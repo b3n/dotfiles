@@ -1,4 +1,4 @@
-;;; work.el --- Ben's MacOS configuration   -*- lexical-binding: t -*-
+;;; Bens-MacBook-Pro-15.el --- Ben's MacOS configuration   -*- lexical-binding: t -*-
 
 ;;; Commentary:
 
@@ -82,6 +82,6 @@
 
 (my-use 'restclient)
 
-(provide 'work)
+(provide 'Bens-MacBook-Pro-15)
 
-;;; work.el ends here
+;;; Bens-MacBook-Pro-15.el ends here
