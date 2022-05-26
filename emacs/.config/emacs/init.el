@@ -205,8 +205,6 @@ flex style."
 (setq evil-want-keybinding nil)
 (evil-mode)
 
-;;(electric-pair-mode 1)
-
 
 ;;; Window and buffer management
 
@@ -235,12 +233,14 @@ flex style."
 
 (with-eval-after-load 'dired
   (require 'dired-x)
+  (setq dired-listing-switches "-hal")
+  (setq dired-dwim-target t)
+  (when (executable-find "xdg-open")
+    (setq dired-guess-shell-alist-user '(("." "xdg-open"))))
   (my-use 'async)
   (add-hook 'dired-mode-hook #'dired-async-mode)
-  (setq dired-listing-switches "-hal"
-          dired-dwim-target t))
-(add-hook 'dired-mode-hook #'dired-hide-details-mode)
-(add-hook 'dired-mode-hook #'hl-line-mode)
+  (add-hook 'dired-mode-hook #'dired-hide-details-mode)
+  (add-hook 'dired-mode-hook #'hl-line-mode))
 
 
 
