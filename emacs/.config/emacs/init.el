@@ -246,9 +246,9 @@ flex style."
 
 ;;; Shell
 
-(after after-editor)
-(add-hook 'eshell-mode-hook #'after-editor-export-editor)
-(add-hook 'vterm-mode-hook #'after-editor-export-editor)
+(after with-editor)
+(add-hook 'eshell-mode-hook #'with-editor-export-editor)
+(add-hook 'vterm-mode-hook #'with-editor-export-editor)
 (setenv "PAGER" "cat")
 
 (bind global "C-c e" eshell)
