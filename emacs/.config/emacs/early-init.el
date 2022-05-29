@@ -1,4 +1,4 @@
-;;; early-init.el --- Ben's configuration   -*- lexical-binding: t -*-
+;;; early-init.el --- Ben's Emacs configuration   -*- lexical-binding: t -*-
 
 ;;; Commentary:
 
@@ -8,6 +8,7 @@
 ;;; Code:
 
 (setq create-lockfiles nil)
+(setq fast-but-imprecise-scrolling t)
 (setq frame-inhibit-implied-resize t)
 (setq frame-title-format '("%b — %F"))
 (setq indicate-buffer-boundaries 'right)

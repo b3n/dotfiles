@@ -1,4 +1,4 @@
-;;; Bens-MacBook-Pro-15.el --- Ben's MacOS configuration   -*- lexical-binding: t -*-
+;;; Bens-MacBook-Pro-15.el --- Ben's Emacs configuration   -*- lexical-binding: t -*-
 
 ;;; Commentary:
 
@@ -6,17 +6,29 @@
 
 ;;; Code:
 
+(require 'helpers)
+
+
+;;; Miscellaneous (to be categorised)
+
+(custom-set-faces
+ '(default ((t (:family "JetBrains Mono NL" :height 170))))
+ '(fixed-pitch ((t (:family "JetBrains Mono NL" :height 170))))
+ '(variable-pitch ((t (:family "Baskerville" :height 180)))))
+
 (setq-default fill-column 100
               tab-width 2)
 
-(setq sh-basic-offset 2
+(setq default-directory "~/")
+
+(setc sh-basic-offset 2
       js-indent-level 2)
 
-(my-use 'typescript-mode
-  (setq typescript-indent-level 2))
+(after typescript-mode
+  (setc typescript-indent-level 2))
 
 
-(with-eval-after-load 'magit
+(after magit
   (defun github-open ()
     "Open Canva GitHub for the current file."
     (interactive)
@@ -28,30 +40,30 @@
       (browse-url (format "https://github.com/Canva/%s/blob/master/%s#L%s-L%s" repo path start end))))
   
   ;; Monorepo makes git slow, so do a little less on magit refresh
-  (setq magit-refresh-status-buffer nil)
+  (setc magit-refresh-status-buffer nil)
   (remove-hook 'magit-status-sections-hook 'magit-insert-stashes)
   (remove-hook 'magit-status-sections-hook 'magit-insert-tags-header))
 
-(my-use 'blacken
-  (setq blacken-line-length 100))
+(after blacken
+  (setc blacken-line-length 100))
 (add-hook 'python-mode-hook #'blacken-mode)
 
-(my-use 'terraform-mode)
+(after terraform-mode)
 
-(my-use 'bazel)
+(after bazel)
 
-(my-use 'web-mode)
+(after web-mode)
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . 'web-mode))
 
-(my-use 'dockerfile-mode)
+(after dockerfile-mode)
 (add-to-list 'auto-mode-alist '("Dockerfile\\'" . 'dockerfile-mode))
 
-(my-use 'yaml-mode)
+(after yaml-mode)
 (add-to-list 'auto-mode-alist '("\\.ya?ml\\(\\.j2\\)?\\'" . 'yaml-mode))
 
 (add-to-list 'auto-mode-alist '("\\.xlf\\'" . 'xml-mode))
 
-(with-eval-after-load 'java-mode
+(after java-mode
   ;;TODO: Move dprint to its own package
   (defun my-dprint ()
     "Format current buffer with dprint."
@@ -70,17 +82,17 @@
                        c-offsets-alist nil
                        indent-tabs-mode nil
                        evil-shift-width 2)))
-  (my-use 'eglot-java)
+  (after eglot-java)
   (eglot-java-init))
 
 ;; `project-find-file' is too slow on the monorepo
-(my-use 'find-file-in-project
-  (setq ffip-use-rust-fd t))
-(my-key global
+(after find-file-in-project
+  (setc ffip-use-rust-fd t))
+(bind global
   "C-x F" find-file-in-project
   "C-x f" find-file-in-project-by-selected)
 
-(my-use 'restclient)
+(after restclient)
 
 (provide 'Bens-MacBook-Pro-15)
 

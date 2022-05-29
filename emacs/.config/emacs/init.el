@@ -7,61 +7,60 @@
 
 ;;; Code:
 
-(require 'my-helpers)
-
-
-;;; Setup
-
-(setq custom-file (make-temp-file "emacs-custom-"))
-
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
-(setq package-archive-priorities '(("gnu" . 2) ("nongnu" . 1)))
-(package-refresh-contents t)
+(require 'helpers)
 
 
 ;;; Basic settings
 
-(setq initial-buffer-choice "~/todo.org")
-(setq initial-scratch-message nil)
+(setc custom-file (make-temp-file "emacs-custom-"))
+
+(after package
+  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
+  (setc package-archive-priorities '(("gnu" . 2) ("nongnu" . 1)))
+  (unless package-archive-contents
+    (package-refresh-contents)))
+
+(setc initial-buffer-choice "~/todo.org")
+(setc initial-scratch-message nil)
 
 ;; By default passwords were getting stored on disk unencrypted...
-(setq auth-sources
+(setc auth-sources
         `(,(expand-file-name "authinfo.gpg" user-emacs-directory)
           ,(expand-file-name "authinfo" temporary-file-directory)
           "~/.netrc"))
 
 (add-hook 'text-mode-hook #'turn-on-visual-line-mode)
-(setq completion-show-help nil)
-(setq async-shell-command-buffer 'rename-buffer)
-(setq save-interprogram-paste-before-kill t)
+(setc completion-show-help nil)
+(setc async-shell-command-buffer 'rename-buffer)
+(setc save-interprogram-paste-before-kill t)
 (column-number-mode)
 
 (save-place-mode 1)
 
-(setq uniquify-buffer-name-style 'forward)
+(setc uniquify-buffer-name-style 'forward)
 
-(setq tab-always-indent 'complete)
+(setc tab-always-indent 'complete)
 
-(setq auto-save-default t)
-(setq auto-save-visited-interval 60)
-(setq backup-by-copying t)
-(setq backup-directory-alist
+(setc auto-save-default t)
+(setc auto-save-visited-interval 60)
+(setc backup-by-copying t)
+(setc backup-directory-alist
         `((,tramp-file-name-regexp . nil)
           (".*" . ,(expand-file-name "backups" user-emacs-directory))))
-(setq confirm-kill-emacs 'yes-or-no-p)
-(setq delete-old-versions t)
-(setq enable-dir-local-variables nil)
-(setq enable-local-eval nil)
-(setq enable-local-variables nil)
-(setq kept-new-versions 10)
-(setq vc-make-backup-files t)
-(setq version-control t)
-(setq view-read-only t)
+(setc confirm-kill-emacs 'yes-or-no-p)
+(setc delete-old-versions t)
+(setc enable-dir-local-variables nil)
+(setc enable-local-eval nil)
+(setc enable-local-variables nil)
+(setc kept-new-versions 10)
+(setc vc-make-backup-files t)
+(setc version-control t)
+(setc view-read-only t)
 (auto-save-visited-mode 1)
 
-(setq isearch-lazy-count t)
+(setc isearch-lazy-count t)
 
-(setq narrow-to-defun-include-comments t)
+(setc narrow-to-defun-include-comments t)
 (put 'narrow-to-defun 'disabled nil)
 (put 'narrow-to-page 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
@@ -69,7 +68,7 @@
 
 ;;; Minibuffer and completions
 
-(setq enable-recursive-minibuffers t)
+(setc enable-recursive-minibuffers t)
 (minibuffer-depth-indicate-mode 1)
 
 (defun my-icomplete-root ()
@@ -80,14 +79,14 @@
              (insert (project-root (project-current))))
     (call-interactively #'icomplete-fido-backward-updir)))
 
-(with-eval-after-load 'icomplete
-(my-key icomplete-fido-mode
-  "M-DEL" my-icomplete-root
-  "M-<return>" icomplete-fido-exit
-  "C-r" nil
-  "C-s" nil))
+(after icomplete
+  (bind icomplete-fido-mode
+    "M-DEL" my-icomplete-root
+    ;; "M-<return>" icomplete-fido-exit
+    "C-r" nil
+    "C-s" nil))
 
-(setq icomplete-prospects-height 1)
+(setc icomplete-prospects-height 1)
 
 (fido-mode 1)
 
@@ -99,56 +98,52 @@ flex style."
   (setq-local completion-styles '(substring flex basic)))
 (add-hook 'minibuffer-setup-hook #'my-completion-styles 1)
 
-(my-use 'completion-in-buffer)
+(after completion-in-buffer)
 
-(setq completion-category-overrides
+(setc completion-category-overrides
         '((file (styles basic partial-completion flex))))
-(setq completions-detailed t)
+(setc completions-detailed t)
 
 (minibuffer-electric-default-mode 1)
 
-(my-use 'restricto
-  (my-key minibuffer-local-completion
+(after restricto
+  (bind minibuffer-local-completion
     "SPC" restricto-narrow
     "S-SPC" restricto-widen))
 (restricto-mode)
 
 (file-name-shadow-mode 1)
 
-(setq history-delete-duplicates t)
-(setq history-length 1000)
+(setc history-delete-duplicates t)
+(setc history-length 1000)
 (savehist-mode 1)
 
-(my-use 'minibuffer-repeat)
+(after minibuffer-repeat)
 (add-hook 'minibuffer-setup-hook #'minibuffer-repeat-save)
-(global-set-key (kbd "C-c m") #'minibuffer-repeat)
+(bind global "C-c m" minibuffer-repeat)
 
 
 
 ;;; Theme and display options
 
-(my-use 'minibuffer-line
-  (setq minibuffer-line-format '(:eval global-mode-string))
-  (setq minibuffer-line-refresh-interval 1)
-  (setq mode-line-misc-info nil))
+(after minibuffer-line
+  (setc minibuffer-line-format '(:eval global-mode-string))
+  (setc minibuffer-line-refresh-interval 1)
+  (setc mode-line-misc-info nil))
 (minibuffer-line-mode)
 
-(load-theme 'modus-vivendi t)
-(setq modus-themes-bold-constructs t)
-(setq modus-themes-headings '((1 1.2) (t t)))
-(setq modus-themes-mixed-fonts t)
-(setq modus-themes-mode-line '(accented))
-(setq modus-themes-org-blocks 'gray-background)
-(setq modus-themes-slanted-constructs t)
-(let ((daily (* 60 60 24)))
-  ;; Set a light theme during work hours, otherwise dark.
-  (run-at-time "09:00" daily #'modus-themes-load-operandi)
-  (run-at-time "17:30" daily #'modus-themes-load-vivendi))
-
-(custom-set-faces
- '(default ((t (:family "JetBrains Mono NL" :height 170))))
- '(fixed-pitch ((t (:family "JetBrains Mono NL" :height 170))))
- '(variable-pitch ((t (:family "Baskerville" :height 180)))))
+(after modus-themes
+  (setc modus-themes-bold-constructs t)
+  (setc modus-themes-headings '((1 1.2) (t t)))
+  (setc modus-themes-mixed-fonts t)
+  (setc modus-themes-mode-line '(accented))
+  (setc modus-themes-org-blocks 'gray-background)
+  (setc modus-themes-slanted-constructs t)
+  (let ((daily (* 60 60 24)))
+    ;; Set a light theme during work hours, otherwise dark.
+    (run-at-time "09:00" daily #'modus-themes-load-operandi)
+    (run-at-time "17:30" daily #'modus-themes-load-vivendi)))
+(modus-themes-load-themes)
 
 ;; Helps to visualise wrapped and hidden lines
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
@@ -157,51 +152,55 @@ flex style."
 
 ;;; Text editing
 
-(my-use 'vundo
-  (setq vundo-glyph-alist vundo-unicode-symbols))
-(global-set-key (kbd "C-x u") #'vundo)
+(setc sentence-end-double-space nil)
 
-(global-set-key [remap dabbrev-expand] #'hippie-expand)
-(my-use 'yasnippet
-  (my-use 'yasnippet-snippets)
-  (define-key yas-minor-mode-map [tab] nil)
+(add-hook 'before-save-hook #'delete-trailing-whitespace)
+
+(after vundo
+  (setc vundo-glyph-alist vundo-unicode-symbols))
+(bind global "C-x u" vundo)
+
+(bind global [remap dabbrev-expand] hippie-expand)
+(after yasnippet
+  (after yasnippet-snippets)
+  (bind yas-minor-mode [tab] nil)
   (delete 'try-expand-list hippie-expand-try-functions-list)
   (add-to-list 'hippie-expand-try-functions-list #'yas-hippie-try-expand))
 (yas-global-mode)
 
-(my-use 'evil
-  (setq evil-echo-state nil)
-  (setq evil-kill-on-visual-paste nil)
-  (setq evil-mode-line-format 'after)
-  (setq evil-symbol-word-search t)
-  (setq evil-visual-region-expanded t)
-  (setq evil-want-Y-yank-to-eol t)
-  (setq evil-want-minibuffer t)
-  (setq evil-insert-state-modes (append evil-emacs-state-modes evil-insert-state-modes))
-  (setq evil-emacs-state-modes '(exwm-mode vundo-mode))
-  (my-key evil-insert-state
+(after evil
+  (setc evil-disable-insert-state-bindings t)
+  (setc evil-echo-state nil)
+  (setc evil-insert-state-modes (append evil-emacs-state-modes evil-insert-state-modes))
+  (setc evil-kill-on-visual-paste nil)
+  (setc evil-mode-line-format 'after)
+  (setc evil-symbol-word-search t)
+  (setc evil-undo-system 'undo-redo)
+  (setc evil-visual-region-expanded t)
+  (setc evil-want-Y-yank-to-eol t)
+  (setc evil-want-minibuffer t)
+  ;; (setc evil-emacs-state-modes '(vundo-mode))
+  (bind evil-insert-state
     "C-w" evil-window-map)
-  (my-key evil-motion-state
+  (bind evil-motion-state
     "RET" nil
     "<down-mouse-1>" nil
     "SPC" evil-execute-in-emacs-state
     "i" evil-insert ;; "Insert" is our "Emacs-state", so we want it here
     "Q" unbury-buffer)
-  (my-key evil-normal-state
+  (bind evil-normal-state
     "K" join-line
     "S" kmacro-start-macro-or-insert-counter
     "s" kmacro-end-or-call-macro
     "q" bury-buffer)
-  (my-key evil-visual-state
+  (bind evil-visual-state
     "v" evil-visual-line)
-  (my-key evil-window
+  (bind evil-window
     "C-f" other-frame
     "f" other-frame
     "u" winner-undo
     "C-u" winner-undo
     "C-r" winner-redo))
-(setq evil-undo-system 'undo-redo)
-(setq evil-disable-insert-state-bindings t)
 (setq evil-want-integration nil)
 (setq evil-want-keybinding nil)
 (evil-mode)
@@ -209,19 +208,19 @@ flex style."
 
 ;;; Window and buffer management
 
-(setq display-buffer-alist
+(setc display-buffer-alist
         '(("\*Register Preview\*" (display-buffer-pop-up-window))
           ("\*Async Shell Command\*" (display-buffer-no-window))
           ("." (display-buffer-reuse-window
                 display-buffer-same-window
                 display-buffer-pop-up-window))))
 
-(my-key global "C-x C-b" ibuffer)
+(bind global "C-x C-b" ibuffer)
 
 (winner-mode)
 
-(my-use 'same-mode-buffer)
-(my-key global
+(after same-mode-buffer)
+(bind global
   [mode-line mouse-4] same-mode-buffer-previous
   "C-<tab>" same-mode-buffer-previous
   [mode-line mouse-5] same-mode-buffer-next
@@ -232,13 +231,13 @@ flex style."
 
 ;;; File management
 
-(with-eval-after-load 'dired
+(after dired
   (require 'dired-x)
-  (setq dired-listing-switches "-hal")
-  (setq dired-dwim-target t)
+  (setc dired-listing-switches "-hal")
+  (setc dired-dwim-target t)
   (when (executable-find "xdg-open")
-    (setq dired-guess-shell-alist-user '(("." "xdg-open"))))
-  (my-use 'async)
+    (setc dired-guess-shell-alist-user '(("." "xdg-open"))))
+  (after async)
   (add-hook 'dired-mode-hook #'dired-async-mode)
   (add-hook 'dired-mode-hook #'dired-hide-details-mode)
   (add-hook 'dired-mode-hook #'hl-line-mode))
@@ -247,18 +246,13 @@ flex style."
 
 ;;; Shell
 
-;; (setup (:package exec-path-from-shell with-editor)
-;;   (:option exec-path-from-shell-arguments nil)
-;;   (:with-mode with-editor-export-editor
-;;     (:hook-into eshell-mode shell-mode term-exec vterm-mode))
-;;   (exec-path-from-shell-initialize))
-(my-use 'with-editor)
-(add-hook 'eshell-mode-hook #'with-edeitor-export-editor)
-(add-hook 'vterm-mode-hook #'with-edeitor-export-editor)
+(after after-editor)
+(add-hook 'eshell-mode-hook #'after-editor-export-editor)
+(add-hook 'vterm-mode-hook #'after-editor-export-editor)
 (setenv "PAGER" "cat")
 
-(my-key global "C-c e" eshell)
-(setq eshell-hist-ignoredups t
+(bind global "C-c e" eshell)
+(setc eshell-hist-ignoredups t
       eshell-history-size 1000
       eshell-destroy-buffer-when-process-dies t)
 
@@ -279,15 +273,15 @@ flex style."
 (add-hook 'eshell-after-prompt-hook #'my-make-field)
 
 (defun eshell/in-term (prog &rest args)
-  "Run shell command PROG with args ARGS in term buffer."
+  "Run shell command PROG after args ARGS in term buffer."
   (apply #'make-term (format "in-term %s %s" prog args) prog nil args))
 
-(my-use 'vterm
-  (setq vterm-max-scrollback 100000
+(after vterm
+  (setc vterm-max-scrollback 100000
         vterm-buffer-name-string "vterm<%s>")
-  (my-key vterm-mode
-    "C-<escape>" (lambda () (interactive) (vterm-send-key (kbd "C-[")))))
-(my-key global "C-c v" vterm)
+  (bind vterm-mode
+    "C-<escape>" (lambda () (interactive) (vterm-send-bind (kbd "C-[")))))
+(bind global "C-c v" vterm)
 
 
 ;;; Programming
@@ -295,42 +289,45 @@ flex style."
 (add-hook 'prog-mode-hook #'flyspell-prog-mode)
 (add-hook 'prog-mode-hook #'flymake-mode)
 
-(setq flymake-no-changes-timeout nil
-      flymake-wrap-around nil)
+(after flymake
+  (setc flymake-no-changes-timeout nil
+        flymake-wrap-around nil))
 
-(setq eldoc-echo-area-use-multiline-p nil)
+(after eldoc
+  (setc eldoc-echo-area-use-multiline-p nil))
 
-(my-use 'csv-mode)
+(after csv-mode)
 
-(my-use 'clojure-mode
-  (my-use 'cider)
-  (my-use 'flymake-kondor)
+(after clojure-mode
+  (after cider)
+  (after flymake-kondor)
   (add-hook 'clojure-mode-hook #'flymake-kondor-setup))
 
-(my-use 'eglot
-  (my-key eglot-mode
+(after eglot
+  (bind eglot-mode
     "C-c C-c" eglot-code-actions))
 (dolist (hook '(python-mode-hook java-mode-hook clojure-mode-hook))
   (add-hook hook #'eglot-ensure))
 
+(after elisp-mode
+  (add-to-list 'elisp-flymake-byte-compile-load-path
+               (expand-file-name "lisp" user-emacs-directory)))
+
 
-;;; Writing and organisation
+;;; Writing and organization
 
 (add-hook 'text-mode-hook #'flyspell-mode)
 
-(my-use 'olivetti)
+(after olivetti)
 (add-hook 'text-mode-hook #'olivetti-mode)
 
-(my-use 'markdown-mode)
+(after markdown-mode)
 (add-to-list 'auto-mode-alist '("\\.md\\'" . 'markdown-mode))
 (add-to-list 'auto-mode-alist '("README\\.md\\'" . 'gfm-mode))
 
-(my-key global
-  "C-c a" org-agenda
-  "C-c c" org-capture)
-(with-eval-after-load 'org
+(after org
   (require 'org-habit)
-  (setq org-agenda-custom-commands
+  (setc org-agenda-custom-commands
         '((" " "My agenda"
            ((agenda "")
             (todo "IN-PROGRESS")
@@ -352,43 +349,45 @@ flex style."
         org-startup-folded 'content
         org-startup-indented t
         org-todo-keywords '((sequence "TODO" "IN-PROGRESS" "|" "DONE" "CANCELED"))))
+(bind global
+  "C-c a" org-agenda
+  "C-c c" org-capture)
 
 
 ;;; Version control
 
-(setq vc-follow-symlinks t)
+(setc vc-follow-symlinks t)
 (delete '(vc-mode vc-mode) mode-line-format)
 
 (when (executable-find "git")
-  (my-use 'magit
-    (setq magit-diff-refine-hunk t
+  (after magit
+    (setc magit-diff-refine-hunk t
           magit-save-repository-buffers 'dontask
           magit-no-confirm '(stage-all-changes))
           (add-to-list 'display-buffer-alist
                        '("magit-diff: .*" (display-buffer-at-bottom display-buffer-pop-up-window))))
-  (my-key global "C-c g" magit-file-dispatch))
+  (bind global "C-c g" magit-file-dispatch))
 
 
 ;;; Miscellaneous (to be categorised)
 
 (global-so-long-mode 1)
 
-(my-use 'vlf)
+(after vlf)
 (require 'vlf-setup)
 
-
-(with-eval-after-load 'grep
-  (setq grep-save-buffers 'dontask)
+(after grep
+  (setc grep-save-buffers 'dontask)
   (when (executable-find "rg")
     (grep-apply-setting
      'grep-find-command
-     '("rg --no-heading --with-filename --max-columns=800 --glob='' '\\b\\b' " . 64))))
-(my-key global "C-c s" grep-find)
+     '("rg --no-heading --after-filename --max-columns=800 --glob='' '\\b\\b' " . 64))))
+(bind global "C-c s" grep-find)
 
-(setq Man-notify-method 'pushy)
+(setc Man-notify-method 'pushy)
 
-(setq calendar-week-start-day 1)
-(setq calendar-holidays
+(setc calendar-week-start-day 1)
+(setc calendar-holidays
       '((holiday-fixed 1 1 "New Year's Day")
         (holiday-fixed 2 14 "Valentine's Day")
         (holiday-fixed 3 17 "St. Patrick's Day")
@@ -403,9 +402,9 @@ flex style."
         (holiday-fixed 12 26 "Boxing Day")
         (holiday-fixed 12 31 "New Year's Eve")))
 
-(my-use 'password-gen
-  (setq password-gen-length 32))
-(my-key global "C-c p" password-gen)
+(after password-gen
+  (setc password-gen-length 32))
+(bind global "C-c p" password-gen)
 
 
 ;;; System specific initiation (yes, there's more...)

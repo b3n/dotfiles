@@ -1,5 +1,7 @@
 ;;; same-mode-buffer.el --- Switch to buffer with same mode   -*- lexical-binding: t -*-
 
+;; Version: 0.1
+
 ;;; Commentary:
 
 ;; Defines two functions, `same-mode-buffer-next' and `same-mode-buffer-previous' which
@@ -9,12 +11,14 @@
 ;;; Code:
 
 
+;;;###autoload
 (defun same-mode-buffer-next ()
   "Select next buffer of the same mode."
   (interactive)
   (let ((switch-to-prev-buffer-skip #'same-mode-buffer--skip))
     (next-buffer)))
 
+;;;###autoload
 (defun same-mode-buffer-previous ()
   "Select previous buffer of the same mode."
   (interactive)

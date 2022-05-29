@@ -1,5 +1,13 @@
 ;;; password-gen.el --- Generate a password  -*- lexical-binding: t; -*-
 
+;; Version: 0.1
+
+;;; Commentary:
+
+;; TODO
+
+;;; Code:
+
 (defcustom password-gen-command
   "~/bin/password_gen"
   "The command to generate a password"
@@ -28,3 +36,5 @@
                       (or password-gen-length (read-number "Length: ")))))
 
 (provide 'password-gen)
+
+;;; password-gen.el ends here
