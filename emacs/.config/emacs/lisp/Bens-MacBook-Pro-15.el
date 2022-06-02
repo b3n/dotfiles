@@ -12,9 +12,9 @@
 ;;; Miscellaneous (to be categorised)
 
 (custom-set-faces
- '(default ((t (:family "JetBrains Mono NL" :height 170))))
- '(fixed-pitch ((t (:family "JetBrains Mono NL" :height 170))))
- '(variable-pitch ((t (:family "Baskerville" :height 180)))))
+ '(default ((t (:family "JetBrains Mono NL" :height 150))))
+ '(fixed-pitch ((t (:family "JetBrains Mono NL" :height 155))))
+ '(variable-pitch ((t (:family "Baskerville" :height 160)))))
 
 (setq-default fill-column 100
               tab-width 2)
