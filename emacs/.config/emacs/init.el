@@ -129,7 +129,7 @@ flex style."
 (after minibuffer-line
   (setc minibuffer-line-format '(:eval global-mode-string))
   (setc minibuffer-line-refresh-interval 1)
-  (setc mode-line-misc-info nil))
+  (setq mode-line-misc-info (delete '(global-mode-string ("" global-mode-string)) mode-line-misc-info)))
 (minibuffer-line-mode)
 
 (after modus-themes
