@@ -171,7 +171,9 @@ flex style."
 (after evil
   (setc evil-disable-insert-state-bindings t)
   (setc evil-echo-state nil)
-  (setc evil-insert-state-modes (append evil-emacs-state-modes evil-insert-state-modes))
+  (setc evil-default-state 'insert)
+  (setc evil-motion-state-modes nil)
+  (setc evil-emacs-state-modes nil)
   (setc evil-kill-on-visual-paste nil)
   (setc evil-mode-line-format 'after)
   (setc evil-symbol-word-search t)
@@ -179,7 +181,6 @@ flex style."
   (setc evil-visual-region-expanded t)
   (setc evil-want-Y-yank-to-eol t)
   (setc evil-want-minibuffer t)
-  ;; (setc evil-emacs-state-modes '(vundo-mode))
   (bind evil-insert-state
     "C-w" evil-window-map)
   (bind evil-motion-state
