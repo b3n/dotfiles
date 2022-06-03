@@ -53,15 +53,15 @@
 (after bazel)
 
 (after web-mode)
-(add-to-list 'auto-mode-alist '("\\.tsx\\'" . 'web-mode))
+(add-to-list 'auto-mode-alist '("\\.tsx\\'" . web-mode))
 
 (after dockerfile-mode)
-(add-to-list 'auto-mode-alist '("Dockerfile\\'" . 'dockerfile-mode))
+(add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
 
 (after yaml-mode)
-(add-to-list 'auto-mode-alist '("\\.ya?ml\\(\\.j2\\)?\\'" . 'yaml-mode))
+(add-to-list 'auto-mode-alist '("\\.ya?ml\\(\\.j2\\)?\\'" . yaml-mode))
 
-(add-to-list 'auto-mode-alist '("\\.xlf\\'" . 'xml-mode))
+(add-to-list 'auto-mode-alist '("\\.xlf\\'" . xml-mode))
 
 (after java-mode
   ;;TODO: Move dprint to its own package
