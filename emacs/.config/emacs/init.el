@@ -58,7 +58,9 @@
 (setc view-read-only t)
 (auto-save-visited-mode 1)
 
-(setc isearch-lazy-count t)
+(after isearch
+  (setc isearch-lazy-count t)
+  (setc lazy-highlight-cleanup nil))
 
 (setc narrow-to-defun-include-comments t)
 (put 'narrow-to-defun 'disabled nil)
@@ -170,8 +172,12 @@ flex style."
 
 (after evil
   (setc evil-disable-insert-state-bindings t)
+  (setc evil-default-state 'insert)
+  (setc evil-emacs-state-modes nil)
+  (setc evil-motion-state-modes nil)
+  (setc evil-normal-state-modes '(fundamental-mode text-mode prog-mode))
+
   (setc evil-echo-state nil)
-  (setc evil-insert-state-modes (append evil-emacs-state-modes evil-insert-state-modes))
   (setc evil-kill-on-visual-paste nil)
   (setc evil-mode-line-format 'after)
   (setc evil-symbol-word-search t)
@@ -179,14 +185,12 @@ flex style."
   (setc evil-visual-region-expanded t)
   (setc evil-want-Y-yank-to-eol t)
   (setc evil-want-minibuffer t)
-  ;; (setc evil-emacs-state-modes '(vundo-mode))
   (bind evil-insert-state
     "C-w" evil-window-map)
   (bind evil-motion-state
     "RET" nil
     "<down-mouse-1>" nil
     "SPC" evil-execute-in-emacs-state
-    "i" evil-insert ;; "Insert" is our "Emacs-state", so we want it here
     "Q" unbury-buffer)
   (bind evil-normal-state
     "K" join-line
@@ -200,8 +204,9 @@ flex style."
     "f" other-frame
     "u" winner-undo
     "C-u" winner-undo
-    "C-r" winner-redo))
-(setq evil-want-integration nil)
+    "C-r" winner-redo)
+  (after evil-surround)
+  (global-evil-surround-mode))
 (setq evil-want-keybinding nil)
 (evil-mode)
 
