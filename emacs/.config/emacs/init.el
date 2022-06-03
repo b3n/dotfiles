@@ -364,8 +364,8 @@ flex style."
     (setc magit-diff-refine-hunk t
           magit-save-repository-buffers 'dontask
           magit-no-confirm '(stage-all-changes))
-          (add-to-list 'display-buffer-alist
-                       '("magit-diff: .*" (display-buffer-at-bottom display-buffer-pop-up-window))))
+    (add-to-list 'display-buffer-alist
+                 '("magit-diff: .*" (display-buffer-at-bottom display-buffer-pop-up-window))))
   (bind global "C-c g" magit-file-dispatch))
 
 
