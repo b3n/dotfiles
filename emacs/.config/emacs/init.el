@@ -58,7 +58,9 @@
 (setc view-read-only t)
 (auto-save-visited-mode 1)
 
-(setc isearch-lazy-count t)
+(after isearch
+  (setc isearch-lazy-count t)
+  (setc lazy-highlight-cleanup nil))
 
 (setc narrow-to-defun-include-comments t)
 (put 'narrow-to-defun 'disabled nil)
@@ -129,7 +131,7 @@ flex style."
 (after minibuffer-line
   (setc minibuffer-line-format '(:eval global-mode-string))
   (setc minibuffer-line-refresh-interval 1)
-  (setc mode-line-misc-info nil))
+  (setq mode-line-misc-info (delete '(global-mode-string ("" global-mode-string)) mode-line-misc-info)))
 (minibuffer-line-mode)
 
 (after modus-themes
@@ -170,10 +172,12 @@ flex style."
 
 (after evil
   (setc evil-disable-insert-state-bindings t)
-  (setc evil-echo-state nil)
   (setc evil-default-state 'insert)
-  (setc evil-motion-state-modes nil)
   (setc evil-emacs-state-modes nil)
+  (setc evil-motion-state-modes nil)
+  (setc evil-normal-state-modes '(fundamental-mode text-mode prog-mode))
+
+  (setc evil-echo-state nil)
   (setc evil-kill-on-visual-paste nil)
   (setc evil-mode-line-format 'after)
   (setc evil-symbol-word-search t)
@@ -187,7 +191,6 @@ flex style."
     "RET" nil
     "<down-mouse-1>" nil
     "SPC" evil-execute-in-emacs-state
-    "i" evil-insert ;; "Insert" is our "Emacs-state", so we want it here
     "Q" unbury-buffer)
   (bind evil-normal-state
     "K" join-line
@@ -201,8 +204,9 @@ flex style."
     "f" other-frame
     "u" winner-undo
     "C-u" winner-undo
-    "C-r" winner-redo))
-(setq evil-want-integration nil)
+    "C-r" winner-redo)
+  (after evil-surround)
+  (global-evil-surround-mode))
 (setq evil-want-keybinding nil)
 (evil-mode)
 
@@ -365,8 +369,8 @@ flex style."
     (setc magit-diff-refine-hunk t
           magit-save-repository-buffers 'dontask
           magit-no-confirm '(stage-all-changes))
-          (add-to-list 'display-buffer-alist
-                       '("magit-diff: .*" (display-buffer-at-bottom display-buffer-pop-up-window))))
+    (add-to-list 'display-buffer-alist
+                 '("magit-diff: .*" (display-buffer-at-bottom display-buffer-pop-up-window))))
   (bind global "C-c g" magit-file-dispatch))
 
 
