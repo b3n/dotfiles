@@ -412,9 +412,10 @@ flex style."
 (bind global "C-c p" password-gen)
 
 
-;;; System specific initiation (yes, there's more...)
+;;; Confidential settings
 
-(require (intern system-name) nil t)
+;; Anything I don't want committed goes in `private.el'
+(require 'private nil t)
 
 
 ;;; init.el ends here

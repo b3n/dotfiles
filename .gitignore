@@ -3,3 +3,4 @@ emacs/.config/emacs/*
 !emacs/.config/emacs/*.el
 !emacs/.config/emacs/lisp/
 !emacs/.config/emacs/snippets/
+emacs/.config/emacs/lisp/private.el
