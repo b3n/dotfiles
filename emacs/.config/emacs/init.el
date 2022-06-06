@@ -551,4 +551,10 @@ flex style."
   (exwm-enable))
 
 
+;;; Confidential settings
+
+;; Anything I don't want committed goes in `private.el'
+(require 'private nil t)
+
+
 ;;; init.el ends here
