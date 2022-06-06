@@ -25,7 +25,7 @@
 
 ;; By default passwords were getting stored on disk unencrypted...
 (setc auth-sources
-        `(,(expand-file-name "authinfo.gpg" user-emacs-directory)
+        `(,(expand-file-name "authinfo.gpg" user-emacs-directory) ;;TODO: Fix this
           ,(expand-file-name "authinfo" temporary-file-directory)
           "~/.netrc"))
 
@@ -46,7 +46,7 @@
 (setc backup-by-copying t)
 (setc backup-directory-alist
         `((,tramp-file-name-regexp . nil)
-          (".*" . ,(expand-file-name "backups" user-emacs-directory))))
+          ("." . ,(expand-file-name "backups" user-emacs-directory))))
 (setc confirm-kill-emacs 'yes-or-no-p)
 (setc delete-old-versions t)
 (setc enable-dir-local-variables nil)
@@ -73,22 +73,22 @@
 (setc enable-recursive-minibuffers t)
 (minibuffer-depth-indicate-mode 1)
 
-(defun my-icomplete-root ()
-  "Go to the project root in `find-file', or the parent dir."
-  (interactive)
-  (if (and (eq (icomplete--category) 'file) (project-current))
-      (progn (delete-minibuffer-contents)
-             (insert (project-root (project-current))))
-    (call-interactively #'icomplete-fido-backward-updir)))
-
 (after icomplete
+  (defun my-icomplete-root ()
+    "Go to the project root in `find-file', or the parent dir."
+    (interactive)
+    (if (and (eq (icomplete--category) 'file) (project-current))
+        (progn (delete-minibuffer-contents)
+               (insert (project-root (project-current))))
+      (call-interactively #'icomplete-fido-backward-updir)))
+
   (bind icomplete-fido-mode
     "M-DEL" my-icomplete-root
     ;; "M-<return>" icomplete-fido-exit
     "C-r" nil
-    "C-s" nil))
+    "C-s" nil)
 
-(setc icomplete-prospects-height 1)
+  (setc icomplete-prospects-height 1))
 
 (fido-mode 1)
 
@@ -128,15 +128,9 @@ flex style."
 
 ;;; Theme and display options
 
-(after minibuffer-line
-  (setc minibuffer-line-format '(:eval global-mode-string))
-  (setc minibuffer-line-refresh-interval 1)
-  (setq mode-line-misc-info (delete '(global-mode-string ("" global-mode-string)) mode-line-misc-info)))
-(minibuffer-line-mode)
-
 (after modus-themes
   (setc modus-themes-bold-constructs t)
-  (setc modus-themes-headings '((1 1.2) (t t)))
+  (setc modus-themes-headings '((1 1.3) (2 1.1) (t t)))
   (setc modus-themes-mixed-fonts t)
   (setc modus-themes-mode-line '(accented))
   (setc modus-themes-org-blocks 'gray-background)
@@ -185,6 +179,7 @@ flex style."
   (setc evil-visual-region-expanded t)
   (setc evil-want-Y-yank-to-eol t)
   (setc evil-want-minibuffer t)
+
   (bind evil-insert-state
     "C-w" evil-window-map)
   (bind evil-motion-state
@@ -204,9 +199,12 @@ flex style."
     "f" other-frame
     "u" winner-undo
     "C-u" winner-undo
+    "C-/" winner-undo
     "C-r" winner-redo)
+
   (after evil-surround)
   (global-evil-surround-mode))
+
 (setq evil-want-keybinding nil)
 (evil-mode)
 
@@ -254,7 +252,13 @@ flex style."
 (after with-editor)
 (add-hook 'eshell-mode-hook #'with-editor-export-editor)
 (add-hook 'vterm-mode-hook #'with-editor-export-editor)
+;; (after exec-path-from-shell)
+;; (exec-path-from-shell-initialize)
 (setenv "PAGER" "cat")
+
+(after tramp
+  ;; https://www.reddit.com/r/GUIX/comments/uco6fg/comment/i6c407x
+  (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
 
 (bind global "C-c e" eshell)
 (setc eshell-hist-ignoredups t
@@ -370,7 +374,7 @@ flex style."
           magit-save-repository-buffers 'dontask
           magit-no-confirm '(stage-all-changes))
     (add-to-list 'display-buffer-alist
-                 '("magit-diff: .*" (display-buffer-at-bottom display-buffer-pop-up-window))))
+                 '("magit-diff:" (display-buffer-at-bottom display-buffer-pop-up-window))))
   (bind global "C-c g" magit-file-dispatch))
 
 
@@ -386,7 +390,7 @@ flex style."
   (when (executable-find "rg")
     (grep-apply-setting
      'grep-find-command
-     '("rg --no-heading --after-filename --max-columns=800 --glob='' '\\b\\b' " . 64))))
+     '("rg --no-heading --max-columns=800 --glob='' '\\b\\b' " . 57))))
 (bind global "C-c s" grep-find)
 
 (setc Man-notify-method 'pushy)
@@ -411,10 +415,140 @@ flex style."
   (setc password-gen-length 32))
 (bind global "C-c p" password-gen)
 
-
-;;; System specific initiation (yes, there's more...)
+(when (equal system-name "guix")
+  (custom-set-faces
+   '(default ((t (:family "JetBrains Mono NL" :height 185))))
+   '(fixed-pitch ((t (:family "JetBrains Mono NL" :height 190))))
+   '(variable-pitch ((t (:family "Baskerville" :height 195))))))
 
-(require (intern system-name) nil t)
+(when (executable-find "pdflatex")
+  (after tex
+    (after auctex)
+    (setc latex-run-command "pdflatex"
+          TeX-auto-save t
+          TeX-parse-self t
+          TeX-save-query nil
+          TeX-PDF-mode t
+          TeX-view-program-selection '((output-pdf "PDF Tools"))
+          TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view))
+          TeX-source-correlate-start-server t)
+    (setc doc-view-continuous t)
+    (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)))
+
+(when (equal system-name "guix")
+  (after erc
+    (setc erc-fill-function 'erc-fill-static
+          erc-fill-static-center 14
+          erc-fill-column (- (/ (frame-width) 2) 3)
+          erc-hide-list '("JOIN" "PART" "QUIT")
+          erc-auto-query 'bury
+          erc-kill-server-buffer-on-quit t
+          erc-kill-queries-on-quit t
+          erc-kill-buffer-on-part t
+          erc-disable-ctcp-replies t
+          erc-prompt (lambda () (format "%s>" (buffer-name)))
+          erc-user-mode "+iR"
+          erc-server "irc.libera.chat"
+          erc-port "6697")
+    (erc-spelling-mode)))
+
+(when (equal system-name "guix")
+  (after nov)
+  (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode)))
+
+(when (equal system-name "guix")
+  (after pdf-tools)
+  (pdf-loader-install))
+
+(when (eq window-system 'x)
+  (after exwm
+    (setc focus-follows-mouse t)
+
+    (defun my-exwm-set-buffer-name ()
+      "Make a nicer title and file name for the buffer"
+      (exwm-workspace-rename-buffer
+       (setq-local exwm-title
+                   (concat
+                    exwm-class-name
+                    "<"
+                    (if (<= (length exwm-title) 80)
+                        exwm-title
+                      (concat (substring exwm-title 0 79) "…"))
+                    ">"))))
+
+    (defun my-gtk-launch ()
+      "Launch an X application via `gtk-launch'."
+      (interactive)
+      (require 'xdg)
+      (let* ((extention "\\.desktop$")
+             (dirs (mapcar (lambda (dir) (expand-file-name "applications" dir))
+                           (cons (xdg-data-home) (xdg-data-dirs))))
+             (apps (cl-loop for dir in dirs
+                            if (file-exists-p dir)
+                            append (cl-loop for file in (directory-files dir nil extention)
+                                            collect (replace-regexp-in-string extention "" file)))))
+        (call-process "gtk-launch" nil 0 nil (completing-read "Launch: " apps))))
+
+    (add-hook 'exwm-update-class-hook #'my-exwm-set-buffer-name)
+    (add-hook 'exwm-update-title-hook #'my-exwm-set-buffer-name)
+
+    (setc exwm-workspace-show-all-buffers t)
+    (setc exwm-layout-show-all-buffers t)
+    (setc exwm-input-simulation-keys
+          `(([?\C-a] . [home])
+            ([?\C-e] . [end])
+            ([?\C-y] . [?\C-v])
+            ([?\C-w] . [?\C-x])         ;;TODO: Correct conflict with evil-window.
+            ([?\M-w] . [?\C-c])
+            ([?\C-s] . [?\C-f])
+            ([?\C-v] . [next])
+            ([?\M-v] . [prior])
+            ([?\C-p] . [up])
+            ([?\C-n] . [down])
+            ([?\C-b] . [left])
+            ([?\C-f] . [right])
+            ([?\M-b] . [C-left])
+            ([?\M-f] . [C-right])
+            ([?\C-d] . [delete])
+            ([?\C-k] . [S-end delete])
+            ([?\C-x ?h] . [?\C-a])
+
+            ;; MacOS style
+            ([?\s-c] . [?\C-c])
+            ([?\s-x] . [?\C-x])
+            ([?\s-v] . [?\C-v])
+            ([?\s-a] . [?\C-a])
+
+            ;; Chrome
+            ([?\s-b] . [\C-S-a])        ; Search tabs
+            ([?\s-y] . [\C-S-v])        ; Paste without formatting
+            ([?\C-x ?r ?m] . [\C-d])    ; Bookmark page
+            ([?\s-k] . [\C-w])          ; Close current tab
+            ([?\C-x ?\C-s] . [?\C-s])   ; Save page
+
+            ([?\C-g] . [escape])))
+
+    (setc exwm-input-global-keys
+          `(([?\s-r] . exwm-reset)
+            ([?\s-o] . exwm-workspace-swap)
+            ([?\s-\s] . my-gtk-launch)))
+
+    (bind exwm-mode "C-q" exwm-input-send-next-key)
+
+    (with-eval-after-load 'evil
+      (add-to-list 'exwm-input-prefix-keys ?\C-w))
+
+    (after minibuffer-line
+      (setc minibuffer-line-format '(:eval global-mode-string))
+      (setc minibuffer-line-refresh-interval 1)
+      (setq mode-line-misc-info (delete '(global-mode-string ("" global-mode-string)) mode-line-misc-info))
+      (setc display-time-format "%F %R\t")
+      (display-time-mode))
+    (minibuffer-line-mode)
+
+    (menu-bar-mode -1))
+
+  (exwm-enable))
 
 
 ;;; init.el ends here
