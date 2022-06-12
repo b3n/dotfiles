@@ -7,18 +7,18 @@
 
 ;;; Code:
 
-(require 'helpers)
+(require 'early-init)
 
 
 ;;; Basic settings
+
+(setc auto-revert-avoid-polling t)
 
 (setc custom-file (make-temp-file "emacs-custom-"))
 
 (after package
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
-  (setc package-archive-priorities '(("gnu" . 2) ("nongnu" . 1)))
-  (unless package-archive-contents
-    (package-refresh-contents)))
+  (setc package-archive-priorities '(("gnu" . 9) ("nongnu" . 8))))
 
 (setc initial-buffer-choice "~/todo.org")
 (setc initial-scratch-message nil)
@@ -41,22 +41,26 @@
 
 (setc tab-always-indent 'complete)
 
-(setc auto-save-default t)
 (setc auto-save-visited-interval 60)
+(auto-save-visited-mode 1)
+
 (setc backup-by-copying t)
 (setc backup-directory-alist
         `((,tramp-file-name-regexp . nil)
           ("." . ,(expand-file-name "backups" user-emacs-directory))))
-(setc confirm-kill-emacs 'yes-or-no-p)
 (setc delete-old-versions t)
-(setc enable-dir-local-variables nil)
-(setc enable-local-eval nil)
-(setc enable-local-variables nil)
 (setc kept-new-versions 10)
 (setc vc-make-backup-files t)
 (setc version-control t)
+
+(setc confirm-kill-emacs 'yes-or-no-p)
 (setc view-read-only t)
-(auto-save-visited-mode 1)
+(setc scroll-error-top-bottom 1)
+
+;; Security
+(setq enable-dir-local-variables nil)
+(setc enable-local-eval nil)
+(setc enable-local-variables nil)
 
 (after isearch
   (setc isearch-lazy-count t)
@@ -84,7 +88,7 @@
 
   (bind icomplete-fido-mode
     "M-DEL" my-icomplete-root
-    ;; "M-<return>" icomplete-fido-exit
+    ;; "M-<return>" icomplete-fido-exit ;; Use M-j instead
     "C-r" nil
     "C-s" nil)
 
@@ -93,7 +97,7 @@
 (fido-mode 1)
 
 (defun my-completion-styles ()
-"Override the default completion style.
+  "Override the default completion style.
 
 This has to happen in a hook, because `fido-mode' also uses a hook to set the
 flex style."
@@ -108,11 +112,11 @@ flex style."
 
 (minibuffer-electric-default-mode 1)
 
-(after restricto
-  (bind minibuffer-local-completion
-    "SPC" restricto-narrow
-    "S-SPC" restricto-widen))
-(restricto-mode)
+;; (after restricto
+;;   (restricto-mode)
+;;   (bind minibuffer-local-completion
+;;     "SPC" restricto-narrow
+;;     "S-SPC" restricto-widen))
 
 (file-name-shadow-mode 1)
 
@@ -120,15 +124,22 @@ flex style."
 (setc history-length 1000)
 (savehist-mode 1)
 
-(after minibuffer-repeat)
-(add-hook 'minibuffer-setup-hook #'minibuffer-repeat-save)
-(bind global "C-c m" minibuffer-repeat)
+(after minibuffer-repeat
+  (add-hook 'minibuffer-setup-hook #'minibuffer-repeat-save)
+  (bind global "C-c m" minibuffer-repeat))
 
 
 
 ;;; Theme and display options
 
+(after frame
+  (window-divider-mode 1))
+
+(after display-fill-column-indicator
+  (display-fill-column-indicator-mode 1))
+
 (after modus-themes
+  (modus-themes-load-themes)
   (setc modus-themes-bold-constructs t)
   (setc modus-themes-headings '((1 1.3) (2 1.1) (t t)))
   (setc modus-themes-mixed-fonts t)
@@ -139,7 +150,7 @@ flex style."
     ;; Set a light theme during work hours, otherwise dark.
     (run-at-time "09:00" daily #'modus-themes-load-operandi)
     (run-at-time "17:30" daily #'modus-themes-load-vivendi)))
-(modus-themes-load-themes)
+
 
 ;; Helps to visualise wrapped and hidden lines
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
@@ -153,18 +164,23 @@ flex style."
 (add-hook 'before-save-hook #'delete-trailing-whitespace)
 
 (after vundo
+  (bind global "C-x u" vundo)
+
   (setc vundo-glyph-alist vundo-unicode-symbols))
-(bind global "C-x u" vundo)
 
 (bind global [remap dabbrev-expand] hippie-expand)
 (after yasnippet
+  (yas-global-mode)
+
   (after yasnippet-snippets)
   (bind yas-minor-mode [tab] nil)
   (delete 'try-expand-list hippie-expand-try-functions-list)
   (add-to-list 'hippie-expand-try-functions-list #'yas-hippie-try-expand))
-(yas-global-mode)
 
 (after evil
+  (setq evil-want-keybinding nil)
+  (evil-mode)
+
   (setc evil-disable-insert-state-bindings t)
   (setc evil-default-state 'insert)
   (setc evil-emacs-state-modes nil)
@@ -202,11 +218,8 @@ flex style."
     "C-/" winner-undo
     "C-r" winner-redo)
 
-  (after evil-surround)
-  (global-evil-surround-mode))
-
-(setq evil-want-keybinding nil)
-(evil-mode)
+  (after evil-surround
+    (global-evil-surround-mode)))
 
 
 ;;; Window and buffer management
@@ -218,16 +231,18 @@ flex style."
                 display-buffer-same-window
                 display-buffer-pop-up-window))))
 
-(bind global "C-x C-b" ibuffer)
+(setc help-window-select t)
+
+(bind global [remap list-buffer] ibuffer)
 
 (winner-mode)
 
-(after same-mode-buffer)
-(bind global
-  [mode-line mouse-4] same-mode-buffer-previous
-  "C-<tab>" same-mode-buffer-previous
-  [mode-line mouse-5] same-mode-buffer-next
-  "C-S-<tab>" same-mode-buffer-next)
+(after same-mode-buffer
+  (bind global
+    [mode-line mouse-4] same-mode-buffer-previous
+    "C-<tab>" same-mode-buffer-previous
+    [mode-line mouse-5] same-mode-buffer-next
+    "C-S-<tab>" same-mode-buffer-next))
 
 (midnight-mode)
 
@@ -235,23 +250,27 @@ flex style."
 ;;; File management
 
 (after dired
-  (require 'dired-x)
-  (setc dired-listing-switches "-hal")
+  (setc dired-recursive-deletes 'always)
   (setc dired-dwim-target t)
+  (setc dired-listing-switches "-hal")
   (when (executable-find "xdg-open")
     (setc dired-guess-shell-alist-user '(("." "xdg-open"))))
-  (after async)
-  (add-hook 'dired-mode-hook #'dired-async-mode)
   (add-hook 'dired-mode-hook #'dired-hide-details-mode)
-  (add-hook 'dired-mode-hook #'hl-line-mode))
+  (add-hook 'dired-mode-hook #'hl-line-mode)
+
+  (require 'dired-x)
+  (setc dired-clean-confirm-killing-deleted-buffers nil)
+
+  (after async
+    (add-hook 'dired-mode-hook #'dired-async-mode)))
 
 
 
 ;;; Shell
 
-(after with-editor)
-(add-hook 'eshell-mode-hook #'with-editor-export-editor)
-(add-hook 'vterm-mode-hook #'with-editor-export-editor)
+(after with-editor
+  (add-hook 'eshell-mode-hook #'with-editor-export-editor)
+  (add-hook 'vterm-mode-hook #'with-editor-export-editor))
 ;; (after exec-path-from-shell)
 ;; (exec-path-from-shell-initialize)
 (setenv "PAGER" "cat")
@@ -261,9 +280,9 @@ flex style."
   (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
 
 (bind global "C-c e" eshell)
-(setc eshell-hist-ignoredups t
-      eshell-history-size 1000
-      eshell-destroy-buffer-when-process-dies t)
+(setc eshell-hist-ignoredups t)
+(setc eshell-history-size 1000)
+(setc eshell-destroy-buffer-when-process-dies t)
 
 (defun my-eshell-buffer-name ()
   "Include pwd in eshell prompt."
@@ -286,11 +305,12 @@ flex style."
   (apply #'make-term (format "in-term %s %s" prog args) prog nil args))
 
 (after vterm
-  (setc vterm-max-scrollback 100000
-        vterm-buffer-name-string "vterm<%s>")
+  (bind global "C-c v" vterm)
+
+  (setc vterm-max-scrollback 100000)
+  (setc vterm-buffer-name-string "vterm<%s>")
   (bind vterm-mode
     "C-<escape>" (lambda () (interactive) (vterm-send-bind (kbd "C-[")))))
-(bind global "C-c v" vterm)
 
 
 ;;; Programming
@@ -299,8 +319,8 @@ flex style."
 (add-hook 'prog-mode-hook #'flymake-mode)
 
 (after flymake
-  (setc flymake-no-changes-timeout nil
-        flymake-wrap-around nil))
+  (setc flymake-no-changes-timeout nil)
+  (setc flymake-wrap-around nil))
 
 (after eldoc
   (setc eldoc-echo-area-use-multiline-p nil))
@@ -314,25 +334,28 @@ flex style."
 
 (after eglot
   (bind eglot-mode
-    "C-c C-c" eglot-code-actions))
-(dolist (hook '(python-mode-hook java-mode-hook clojure-mode-hook))
-  (add-hook hook #'eglot-ensure))
+    "C-c C-c" eglot-code-actions)
+  (dolist (hook '(python-mode-hook java-mode-hook clojure-mode-hook))
+    (add-hook hook #'eglot-ensure)))
 
 (after elisp-mode
   (add-to-list 'elisp-flymake-byte-compile-load-path
                (expand-file-name "lisp" user-emacs-directory)))
+
+(after js
+  (setc js-indent-level 2))
 
 
 ;;; Writing and organization
 
 (add-hook 'text-mode-hook #'flyspell-mode)
 
-(after olivetti)
-(add-hook 'text-mode-hook #'olivetti-mode)
+(after olivetti
+  (add-hook 'text-mode-hook #'olivetti-mode))
 
-(after markdown-mode)
-(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
-(add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))
+(after markdown-mode
+  (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+  (add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode)))
 
 (after org
   (require 'org-habit)
@@ -341,26 +364,26 @@ flex style."
            ((agenda "")
             (todo "IN-PROGRESS")
             (todo "NEXT")
-            (todo "READING"))))
-        org-agenda-files '("~/todo/" "~/notes/books.org")
-        org-agenda-start-on-weekday nil
-        org-agenda-window-setup 'current-window
-        org-capture-templates
+            (todo "READING")))))
+  (setc org-agenda-files '("~/todo/" "~/notes/books.org"))
+  (setc org-agenda-start-on-weekday nil)
+  (setc org-agenda-window-setup 'current-window)
+  (setc org-capture-templates
         `(("t" "Todo" entry (file+headline "~/todo/inbox.org" "Inbox") "* TODO %?")
           ("n" "Note" entry
            (file ,(lambda () (format-time-string "~/tmp/%Y-%m-%d.org")))
-           "* %<%H:%M>\n%?\n"))
-        org-ellipsis "  ⬎ "
-        org-image-actual-width 300
-        org-link-frame-setup '((file . find-file))
-        org-log-done 'time
-        org-return-follows-link t
-        org-startup-folded 'content
-        org-startup-indented t
-        org-todo-keywords '((sequence "TODO" "IN-PROGRESS" "|" "DONE" "CANCELED"))))
-(bind global
-  "C-c a" org-agenda
-  "C-c c" org-capture)
+           "* %<%H:%M>\n%?\n")))
+  (setc org-ellipsis "  ⬎ ")
+  (setc org-image-actual-width 300)
+  (setc org-link-frame-setup '((file . find-file)))
+  (setc org-log-done 'time)
+  (setc org-return-follows-link t)
+  (setc org-startup-folded 'content)
+  (setc org-startup-indented t)
+  (setc org-todo-keywords '((sequence "TODO" "IN-PROGRESS" "|" "DONE" "CANCELED")))
+  (bind global
+    "C-c a" org-agenda
+    "C-c c" org-capture))
 
 
 ;;; Version control
@@ -370,9 +393,10 @@ flex style."
 
 (when (executable-find "git")
   (after magit
-    (setc magit-diff-refine-hunk t
-          magit-save-repository-buffers 'dontask
-          magit-no-confirm '(stage-all-changes))
+    (setc magit-diff-refine-hunk t)
+    (setc magit-save-repository-buffers 'dontask)
+    (setc magit-no-confirm '(stage-all-changes))
+    (setc magit-refresh-status-buffer nil)
     (add-to-list 'display-buffer-alist
                  '("magit-diff:" (display-buffer-at-bottom display-buffer-pop-up-window))))
   (bind global "C-c g" magit-file-dispatch))
@@ -382,38 +406,33 @@ flex style."
 
 (global-so-long-mode 1)
 
-(after vlf)
-(require 'vlf-setup)
+(after vlf
+  (require 'vlf-setup)
+  (add-to-list 'vlf-forbidden-modes-list 'pdf-view-mode))
 
 (after grep
   (setc grep-save-buffers 'dontask)
   (when (executable-find "rg")
     (grep-apply-setting
      'grep-find-command
-     '("rg --no-heading --max-columns=800 --glob='' '\\b\\b' " . 57))))
-(bind global "C-c s" grep-find)
+     '("rg --no-heading --max-columns=800 --glob='' '\\b\\b' " . 57)))
+  (bind global "C-c s" grep-find))
+
+(after find-file-in-project
+  (when (executable-find "fd")
+    (setc ffip-use-rust-fd t))
+  (bind global
+    "C-c F" find-file-in-project
+    "C-c f" find-file-in-project-by-selected))
 
 (setc Man-notify-method 'pushy)
 
 (setc calendar-week-start-day 1)
-(setc calendar-holidays
-      '((holiday-fixed 1 1 "New Year's Day")
-        (holiday-fixed 2 14 "Valentine's Day")
-        (holiday-fixed 3 17 "St. Patrick's Day")
-        (holiday-fixed 4 1 "April Fools' Day")
-        (holiday-easter-etc -47 "Pancake Day")
-        (holiday-easter-etc -21 "Mother's Day")
-        (holiday-easter-etc 0 "Easter Sunday")
-        (holiday-float 6 0 3 "Father's Day")
-        (holiday-fixed 10 31 "Halloween")
-        (holiday-fixed 12 24 "Christmas Eve")
-        (holiday-fixed 12 25 "Christmas Day")
-        (holiday-fixed 12 26 "Boxing Day")
-        (holiday-fixed 12 31 "New Year's Eve")))
 
 (after password-gen
-  (setc password-gen-length 32))
-(bind global "C-c p" password-gen)
+  (bind global "C-c p" password-gen))
+
+(after restclient)
 
 (when (equal system-name "guix")
   (custom-set-faces
@@ -424,41 +443,39 @@ flex style."
 (when (executable-find "pdflatex")
   (after tex
     (after auctex)
-    (setc latex-run-command "pdflatex"
-          TeX-auto-save t
-          TeX-parse-self t
-          TeX-save-query nil
-          TeX-PDF-mode t
-          TeX-view-program-selection '((output-pdf "PDF Tools"))
-          TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view))
-          TeX-source-correlate-start-server t)
-    (setc doc-view-continuous t)
-    (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)))
+    (setc latex-run-command "pdflatex")
+    (setc TeX-auto-save t)
+    (setc TeX-parse-self t)
+    (setc TeX-save-query nil)
+    (setc TeX-PDF-mode t)
+    (setc TeX-view-program-selection '((output-pdf "PDF Tools")))
+    (setc TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)))
+    (setc TeX-source-correlate-start-server t))
+    (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
+
+(after erc
+  (setc erc-fill-function 'erc-fill-static
+        erc-fill-static-center 14
+        erc-fill-column (- (/ (frame-width) 2) 3)
+        erc-hide-list '("JOIN" "PART" "QUIT")
+        erc-auto-query 'bury
+        erc-kill-server-buffer-on-quit t
+        erc-kill-queries-on-quit t
+        erc-kill-buffer-on-part t
+        erc-disable-ctcp-replies t
+        erc-prompt (lambda () (format "%s>" (buffer-name)))
+        erc-user-mode "+iR"
+        erc-server "irc.libera.chat"
+        erc-port "6697"))
 
 (when (equal system-name "guix")
-  (after erc
-    (setc erc-fill-function 'erc-fill-static
-          erc-fill-static-center 14
-          erc-fill-column (- (/ (frame-width) 2) 3)
-          erc-hide-list '("JOIN" "PART" "QUIT")
-          erc-auto-query 'bury
-          erc-kill-server-buffer-on-quit t
-          erc-kill-queries-on-quit t
-          erc-kill-buffer-on-part t
-          erc-disable-ctcp-replies t
-          erc-prompt (lambda () (format "%s>" (buffer-name)))
-          erc-user-mode "+iR"
-          erc-server "irc.libera.chat"
-          erc-port "6697")
-    (erc-spelling-mode)))
+  (after nov
+    (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))))
 
 (when (equal system-name "guix")
-  (after nov)
-  (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode)))
-
-(when (equal system-name "guix")
-  (after pdf-tools)
-  (pdf-loader-install))
+  (setc doc-view-continuous t)
+  (after pdf-tools
+    (pdf-loader-install)))
 
 (when (eq window-system 'x)
   (after exwm
@@ -518,10 +535,11 @@ flex style."
             ([?\s-x] . [?\C-x])
             ([?\s-v] . [?\C-v])
             ([?\s-a] . [?\C-a])
+            ([?\s-f] . [?\C-f])
+            ([?\s-y] . [\C-S-v])        ; Paste without formatting
 
             ;; Chrome
             ([?\s-b] . [\C-S-a])        ; Search tabs
-            ([?\s-y] . [\C-S-v])        ; Paste without formatting
             ([?\C-x ?r ?m] . [\C-d])    ; Bookmark page
             ([?\s-k] . [\C-w])          ; Close current tab
             ([?\C-x ?\C-s] . [?\C-s])   ; Save page
@@ -543,18 +561,15 @@ flex style."
       (setc minibuffer-line-refresh-interval 1)
       (setq mode-line-misc-info (delete '(global-mode-string ("" global-mode-string)) mode-line-misc-info))
       (setc display-time-format "%F %R\t")
-      (display-time-mode))
-    (minibuffer-line-mode)
+      (display-time-mode)
+      (minibuffer-line-mode))
 
-    (menu-bar-mode -1))
-
-  (exwm-enable))
+    (exwm-enable)))
 
 
 ;;; Confidential settings
 
-;; Anything I don't want committed goes in `private.el'
-(require 'private nil t)
+(require 'private (expand-file-name "private.el" user-emacs-directory) t)
 
 
 ;;; init.el ends here

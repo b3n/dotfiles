@@ -1,4 +1,6 @@
-;;; completion-in-buffer.el -- Set completion-in-region-function  -*- lexical-binding: t -*-
+;;; completion-in-buffer.el --- Set completion-in-region-function  -*- lexical-binding: t -*-
+
+;; Version: 0.1
 
 ;;; Commentary:
 
