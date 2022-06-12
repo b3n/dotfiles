@@ -38,14 +38,16 @@
 
 These can be installed via `my-install-uninstalled-packages'.")
 
-(defmacro after (package &rest body)
-  "Execute BODY after PACKAGE is loaded.
+(defmacro after (package &optional fun &rest body)
+  "Call FUN from PACKAGE, and eval BODY after load.
 
-If package is not installed, will add to `my-uninstalled-packages' for manual
+If package is not installed, add to `my-uninstalled-packages' for manual
 installation."
   (declare (indent defun))
   `(progn
-     (unless (or (require ',package nil t) (package-installed-p ',package))
+     (unless (or (ignore-errors ,(if (functionp fun) `(funcall ',fun ',package) fun))
+             (featurep ',package)
+             (package-installed-p ',package))
        (add-to-list 'my-uninstalled-packages ',package))
      (with-eval-after-load ',package ,@body)))
 

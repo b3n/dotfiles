@@ -3,11 +3,11 @@
 ;;; Commentary:
 
 ;; This is my personal Emacs configuration, it's unlikely to be useful to
-;; anyone else.  See also: `early-init.el'.
+;; anyone else.
 
 ;;; Code:
 
-(require 'early-init)
+(require 'early-init)  ;; To make Flymake happy
 
 
 ;;; Basic settings
@@ -16,11 +16,11 @@
 
 (setc custom-file (make-temp-file "emacs-custom-"))
 
-(after package
+(after package t
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
   (setc package-archive-priorities '(("gnu" . 9) ("nongnu" . 8))))
 
-(setc initial-buffer-choice "~/todo.org")
+(setc initial-major-mode 'fundamental-mode)
 (setc initial-scratch-message nil)
 
 ;; By default passwords were getting stored on disk unencrypted...
@@ -62,7 +62,7 @@
 (setc enable-local-eval nil)
 (setc enable-local-variables nil)
 
-(after isearch
+(after isearch t
   (setc isearch-lazy-count t)
   (setc lazy-highlight-cleanup nil))
 
@@ -77,7 +77,7 @@
 (setc enable-recursive-minibuffers t)
 (minibuffer-depth-indicate-mode 1)
 
-(after icomplete
+(after icomplete fido-mode
   (defun my-icomplete-root ()
     "Go to the project root in `find-file', or the parent dir."
     (interactive)
@@ -94,8 +94,6 @@
 
   (setc icomplete-prospects-height 1))
 
-(fido-mode 1)
-
 (defun my-completion-styles ()
   "Override the default completion style.
 
@@ -104,7 +102,7 @@ flex style."
   (setq-local completion-styles '(substring flex basic)))
 (add-hook 'minibuffer-setup-hook #'my-completion-styles 1)
 
-(after completion-in-buffer)
+(after completion-in-buffer require)
 
 (setc completion-category-overrides
         '((file (styles basic partial-completion flex))))
@@ -112,11 +110,10 @@ flex style."
 
 (minibuffer-electric-default-mode 1)
 
-;; (after restricto
-;;   (restricto-mode)
-;;   (bind minibuffer-local-completion
-;;     "SPC" restricto-narrow
-;;     "S-SPC" restricto-widen))
+(after restricto restricto-mode
+  (bind minibuffer-local-completion
+    "SPC" restricto-narrow
+    "S-SPC" restricto-widen))
 
 (file-name-shadow-mode 1)
 
@@ -124,7 +121,7 @@ flex style."
 (setc history-length 1000)
 (savehist-mode 1)
 
-(after minibuffer-repeat
+(after minibuffer-repeat require
   (add-hook 'minibuffer-setup-hook #'minibuffer-repeat-save)
   (bind global "C-c m" minibuffer-repeat))
 
@@ -132,14 +129,13 @@ flex style."
 
 ;;; Theme and display options
 
-(after frame
+(after frame require
   (window-divider-mode 1))
 
-(after display-fill-column-indicator
-  (display-fill-column-indicator-mode 1))
+(after display-fill-column-indicator require
+  (global-display-fill-column-indicator-mode 1))
 
-(after modus-themes
-  (modus-themes-load-themes)
+(after modus-themes (modus-themes-load-themes)
   (setc modus-themes-bold-constructs t)
   (setc modus-themes-headings '((1 1.3) (2 1.1) (t t)))
   (setc modus-themes-mixed-fonts t)
@@ -163,24 +159,18 @@ flex style."
 
 (add-hook 'before-save-hook #'delete-trailing-whitespace)
 
-(after vundo
-  (bind global "C-x u" vundo)
-
+(after vundo (bind global "C-x u" vundo)
   (setc vundo-glyph-alist vundo-unicode-symbols))
 
 (bind global [remap dabbrev-expand] hippie-expand)
-(after yasnippet
-  (yas-global-mode)
-
-  (after yasnippet-snippets)
+(after yasnippet yas-global-mode
+  (after yasnippet-snippets require)
   (bind yas-minor-mode [tab] nil)
   (delete 'try-expand-list hippie-expand-try-functions-list)
   (add-to-list 'hippie-expand-try-functions-list #'yas-hippie-try-expand))
 
-(after evil
-  (setq evil-want-keybinding nil)
-  (evil-mode)
-
+(setq evil-want-keybinding nil)
+(after evil evil-mode
   (setc evil-disable-insert-state-bindings t)
   (setc evil-default-state 'insert)
   (setc evil-emacs-state-modes nil)
@@ -218,8 +208,7 @@ flex style."
     "C-/" winner-undo
     "C-r" winner-redo)
 
-  (after evil-surround
-    (global-evil-surround-mode)))
+  (after evil-surround global-evil-surround-mode))
 
 
 ;;; Window and buffer management
@@ -237,7 +226,7 @@ flex style."
 
 (winner-mode)
 
-(after same-mode-buffer
+(after same-mode-buffer require
   (bind global
     [mode-line mouse-4] same-mode-buffer-previous
     "C-<tab>" same-mode-buffer-previous
@@ -249,7 +238,7 @@ flex style."
 
 ;;; File management
 
-(after dired
+(after dired t
   (setc dired-recursive-deletes 'always)
   (setc dired-dwim-target t)
   (setc dired-listing-switches "-hal")
@@ -261,21 +250,20 @@ flex style."
   (require 'dired-x)
   (setc dired-clean-confirm-killing-deleted-buffers nil)
 
-  (after async
-    (add-hook 'dired-mode-hook #'dired-async-mode)))
+  (after async (add-hook 'dired-mode-hook #'dired-async-mode)))
 
 
 
 ;;; Shell
 
-(after with-editor
-  (add-hook 'eshell-mode-hook #'with-editor-export-editor)
-  (add-hook 'vterm-mode-hook #'with-editor-export-editor))
-;; (after exec-path-from-shell)
+(after with-editor (progn
+                     (add-hook 'eshell-mode-hook #'with-editor-export-editor)
+                     (add-hook 'vterm-mode-hook #'with-editor-export-editor)))
+;; (after exec-path-from-shell require)
 ;; (exec-path-from-shell-initialize)
 (setenv "PAGER" "cat")
 
-(after tramp
+(after tramp require
   ;; https://www.reddit.com/r/GUIX/comments/uco6fg/comment/i6c407x
   (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
 
@@ -304,7 +292,7 @@ flex style."
   "Run shell command PROG after args ARGS in term buffer."
   (apply #'make-term (format "in-term %s %s" prog args) prog nil args))
 
-(after vterm
+(after vterm require
   (bind global "C-c v" vterm)
 
   (setc vterm-max-scrollback 100000)
@@ -318,31 +306,30 @@ flex style."
 (add-hook 'prog-mode-hook #'flyspell-prog-mode)
 (add-hook 'prog-mode-hook #'flymake-mode)
 
-(after flymake
+(after flymake require
   (setc flymake-no-changes-timeout nil)
   (setc flymake-wrap-around nil))
 
-(after eldoc
+(after eldoc require
   (setc eldoc-echo-area-use-multiline-p nil))
 
-(after csv-mode)
+(after csv-mode require)
 
-(after clojure-mode
-  (after cider)
-  (after flymake-kondor)
+(after clojure-mode require
+  (after cider require)
+  (after flymake-kondor require)
   (add-hook 'clojure-mode-hook #'flymake-kondor-setup))
 
-(after eglot
+(after eglot (dolist (hook '(python-mode-hook java-mode-hook clojure-mode-hook))
+               (add-hook hook #'eglot-ensure))
   (bind eglot-mode
-    "C-c C-c" eglot-code-actions)
-  (dolist (hook '(python-mode-hook java-mode-hook clojure-mode-hook))
-    (add-hook hook #'eglot-ensure)))
+    "C-c C-c" eglot-code-actions))
 
-(after elisp-mode
+(after elisp-mode t
   (add-to-list 'elisp-flymake-byte-compile-load-path
                (expand-file-name "lisp" user-emacs-directory)))
 
-(after js
+(after js t
   (setc js-indent-level 2))
 
 
@@ -350,14 +337,13 @@ flex style."
 
 (add-hook 'text-mode-hook #'flyspell-mode)
 
-(after olivetti
-  (add-hook 'text-mode-hook #'olivetti-mode))
+(after olivetti (add-hook 'text-mode-hook #'olivetti-mode))
 
-(after markdown-mode
-  (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
-  (add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode)))
+(after markdown-mode (progn
+                       (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+                       (add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))))
 
-(after org
+(after org t
   (require 'org-habit)
   (setc org-agenda-custom-commands
         '((" " "My agenda"
@@ -392,45 +378,41 @@ flex style."
 (delete '(vc-mode vc-mode) mode-line-format)
 
 (when (executable-find "git")
-  (after magit
+  (after magit (bind global "C-c g" magit-file-dispatch)
     (setc magit-diff-refine-hunk t)
     (setc magit-save-repository-buffers 'dontask)
     (setc magit-no-confirm '(stage-all-changes))
     (setc magit-refresh-status-buffer nil)
     (add-to-list 'display-buffer-alist
-                 '("magit-diff:" (display-buffer-at-bottom display-buffer-pop-up-window))))
-  (bind global "C-c g" magit-file-dispatch))
+                 '("magit-diff:" (display-buffer-at-bottom display-buffer-pop-up-window)))))
 
 
 ;;; Miscellaneous (to be categorised)
 
 (global-so-long-mode 1)
 
-(after vlf
+(after vlf require
   (require 'vlf-setup)
   (add-to-list 'vlf-forbidden-modes-list 'pdf-view-mode))
 
-(after grep
+(after grep (bind global "C-c s" grep-find)
   (setc grep-save-buffers 'dontask)
   (when (executable-find "rg")
     (grep-apply-setting
      'grep-find-command
-     '("rg --no-heading --max-columns=800 --glob='' '\\b\\b' " . 57)))
-  (bind global "C-c s" grep-find))
+     '("rg --no-heading --max-columns=800 --glob='' '\\b\\b' " . 57))))
 
-(after find-file-in-project
+(after find-file-in-project (bind global
+                              "C-c F" find-file-in-project
+                              "C-c f" find-file-in-project-by-selected)
   (when (executable-find "fd")
-    (setc ffip-use-rust-fd t))
-  (bind global
-    "C-c F" find-file-in-project
-    "C-c f" find-file-in-project-by-selected))
+    (setc ffip-use-rust-fd t)))
 
 (setc Man-notify-method 'pushy)
 
 (setc calendar-week-start-day 1)
 
-(after password-gen
-  (bind global "C-c p" password-gen))
+(after password-gen (bind global "C-c p" password-gen))
 
 (after restclient)
 
@@ -441,8 +423,8 @@ flex style."
    '(variable-pitch ((t (:family "Baskerville" :height 195))))))
 
 (when (executable-find "pdflatex")
-  (after tex
-    (after auctex)
+  (after tex nil
+    (after auctex require)
     (setc latex-run-command "pdflatex")
     (setc TeX-auto-save t)
     (setc TeX-parse-self t)
@@ -453,7 +435,7 @@ flex style."
     (setc TeX-source-correlate-start-server t))
     (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
 
-(after erc
+(after erc t
   (setc erc-fill-function 'erc-fill-static
         erc-fill-static-center 14
         erc-fill-column (- (/ (frame-width) 2) 3)
@@ -469,16 +451,14 @@ flex style."
         erc-port "6697"))
 
 (when (equal system-name "guix")
-  (after nov
-    (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))))
+  (after nov (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))))
 
 (when (equal system-name "guix")
   (setc doc-view-continuous t)
-  (after pdf-tools
-    (pdf-loader-install)))
+  (after pdf-tools pdf-loader-install))
 
 (when (eq window-system 'x)
-  (after exwm
+  (after exwm exwm-enable
     (setc focus-follows-mouse t)
 
     (defun my-exwm-set-buffer-name ()
@@ -556,15 +536,12 @@ flex style."
     (with-eval-after-load 'evil
       (add-to-list 'exwm-input-prefix-keys ?\C-w))
 
-    (after minibuffer-line
+    (after minibuffer-line minibuffer-line-mode
       (setc minibuffer-line-format '(:eval global-mode-string))
       (setc minibuffer-line-refresh-interval 1)
       (setq mode-line-misc-info (delete '(global-mode-string ("" global-mode-string)) mode-line-misc-info))
       (setc display-time-format "%F %R\t")
-      (display-time-mode)
-      (minibuffer-line-mode))
-
-    (exwm-enable)))
+      (display-time-mode))))
 
 
 ;;; Confidential settings
