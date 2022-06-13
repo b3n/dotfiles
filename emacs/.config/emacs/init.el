@@ -12,70 +12,82 @@
 
 ;;; Basic settings
 
-(setc auto-revert-avoid-polling t)
+(after auto-revert t
+  (setc auto-revert-avoid-polling t))
 
-(setc custom-file (make-temp-file "emacs-custom-"))
+(after cus-edit t
+  (setc custom-file (make-temp-file "emacs-custom-")))
 
 (after package t
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
-  (setc package-archive-priorities '(("gnu" . 9) ("nongnu" . 8))))
+  (setc package-archive-priorities '(("gnu" . 9) ("nongnu" . 5) ("melpa" . 1))))
 
-(setc initial-major-mode 'fundamental-mode)
-(setc initial-scratch-message nil)
+(after startup t
+  (setc initial-major-mode 'fundamental-mode)
+  (setc initial-scratch-message nil))
 
-;; By default passwords were getting stored on disk unencrypted...
-(setc auth-sources
-        `(,(expand-file-name "authinfo.gpg" user-emacs-directory) ;;TODO: Fix this
+(after auth-source t
+  ;; Use a `.gpg' file by default to keep authentication sources encrypted.
+  (setc auth-sources
+        `(,(expand-file-name "authinfo.gpg" user-emacs-directory)
           ,(expand-file-name "authinfo" temporary-file-directory)
-          "~/.netrc"))
+          "~/.netrc")))
 
-(add-hook 'text-mode-hook #'turn-on-visual-line-mode)
-(setc completion-show-help nil)
-(setc async-shell-command-buffer 'rename-buffer)
-(setc save-interprogram-paste-before-kill t)
-(column-number-mode)
+(after simple t
+  (add-hook 'text-mode-hook #'turn-on-visual-line-mode)
+  (setc completion-show-help nil)
+  (setc async-shell-command-buffer 'rename-buffer)
+  (setc save-interprogram-paste-before-kill t)
+  (column-number-mode))
 
-(save-place-mode 1)
+(after saveplace t
+  (save-place-mode 1))
 
-(setc uniquify-buffer-name-style 'forward)
+(after uniquify t
+  (setc uniquify-buffer-name-style 'forward))
 
-(setc tab-always-indent 'complete)
+(after indent t
+  (setc tab-always-indent 'complete))
 
-(setc auto-save-visited-interval 60)
-(auto-save-visited-mode 1)
+(after files t
+  (setc auto-save-visited-interval 60)
+  (auto-save-visited-mode 1)
 
-(setc backup-by-copying t)
-(setc backup-directory-alist
+  (setc backup-by-copying t)
+  (setc backup-directory-alist
         `((,tramp-file-name-regexp . nil)
           ("." . ,(expand-file-name "backups" user-emacs-directory))))
-(setc delete-old-versions t)
-(setc kept-new-versions 10)
-(setc vc-make-backup-files t)
-(setc version-control t)
+  (setc delete-old-versions t)
+  (setc kept-new-versions 10)
+  (setc vc-make-backup-files t)
+  (setc version-control t)
 
-(setc confirm-kill-emacs 'yes-or-no-p)
-(setc view-read-only t)
-(setc scroll-error-top-bottom 1)
+  (setc confirm-kill-emacs 'yes-or-no-p)
+  (setc view-read-only t)
 
-;; Security
-(setq enable-dir-local-variables nil)
-(setc enable-local-eval nil)
-(setc enable-local-variables nil)
+  ;; Security
+  (setq enable-dir-local-variables nil)
+  (setc enable-local-eval nil)
+  (setc enable-local-variables nil))
+
+(after window t
+  (setc scroll-error-top-bottom 1))
 
 (after isearch t
   (setc isearch-lazy-count t)
   (setc lazy-highlight-cleanup nil))
 
-(setc narrow-to-defun-include-comments t)
-(put 'narrow-to-defun 'disabled nil)
-(put 'narrow-to-page 'disabled nil)
-(put 'narrow-to-region 'disabled nil)
+(after emacs t
+  (setc narrow-to-defun-include-comments t)
+  (put 'narrow-to-defun 'disabled nil)
+  (put 'narrow-to-page 'disabled nil)
+  (put 'narrow-to-region 'disabled nil))
 
 
 ;;; Minibuffer and completions
 
-(setc enable-recursive-minibuffers t)
-(minibuffer-depth-indicate-mode 1)
+(after mb-depth (setc enable-recursive-minibuffers t)
+  (minibuffer-depth-indicate-mode 1))
 
 (after icomplete fido-mode
   (defun my-icomplete-root ()
@@ -94,32 +106,31 @@
 
   (setc icomplete-prospects-height 1))
 
-(defun my-completion-styles ()
-  "Override the default completion style.
+(after minibuffer t
+  (defun my-completion-styles ()
+    "Override the default completion style.
 
 This has to happen in a hook, because `fido-mode' also uses a hook to set the
 flex style."
-  (setq-local completion-styles '(substring flex basic)))
-(add-hook 'minibuffer-setup-hook #'my-completion-styles 1)
+    (setq-local completion-styles '(substring flex basic)))
+  (add-hook 'minibuffer-setup-hook #'my-completion-styles 1)
 
-(after completion-in-buffer require)
+  (after completion-in-buffer require)
 
-(setc completion-category-overrides
+  (setc completion-category-overrides
         '((file (styles basic partial-completion flex))))
-(setc completions-detailed t)
+  (setc completions-detailed t))
 
-(minibuffer-electric-default-mode 1)
+(after minibuf-eldef (minibuffer-electric-default-mode 1))
 
 (after restricto restricto-mode
   (bind minibuffer-local-completion
     "SPC" restricto-narrow
     "S-SPC" restricto-widen))
 
-(file-name-shadow-mode 1)
+(after rfn-eshadow (file-name-shadow-mode 1))
 
-(setc history-delete-duplicates t)
-(setc history-length 1000)
-(savehist-mode 1)
+(after savehist (savehist-mode 1))
 
 (after minibuffer-repeat require
   (add-hook 'minibuffer-setup-hook #'minibuffer-repeat-save)
@@ -129,48 +140,45 @@ flex style."
 
 ;;; Theme and display options
 
-(after frame require
-  (window-divider-mode 1))
-
-(after display-fill-column-indicator require
-  (global-display-fill-column-indicator-mode 1))
+(after display-fill-column-indicator global-display-fill-column-indicator-mode)
 
 (after modus-themes (modus-themes-load-themes)
   (setc modus-themes-bold-constructs t)
+  (setc modus-themes-slanted-constructs t)
   (setc modus-themes-headings '((1 1.3) (2 1.1) (t t)))
   (setc modus-themes-mixed-fonts t)
-  (setc modus-themes-mode-line '(accented))
+  (setc modus-themes-mode-line '(3d accented))
   (setc modus-themes-org-blocks 'gray-background)
-  (setc modus-themes-slanted-constructs t)
   (let ((daily (* 60 60 24)))
     ;; Set a light theme during work hours, otherwise dark.
     (run-at-time "09:00" daily #'modus-themes-load-operandi)
     (run-at-time "17:30" daily #'modus-themes-load-vivendi)))
 
 
-;; Helps to visualise wrapped and hidden lines
-(add-hook 'prog-mode-hook #'display-line-numbers-mode)
-(setq-default display-line-numbers-widen t)
+(after display-line-numbers (add-hook 'prog-mode-hook #'display-line-numbers-mode)
+  (setq-default display-line-numbers-widen t))
 
 
 ;;; Text editing
 
-(setc sentence-end-double-space nil)
+(after paragraphs t
+  (setc sentence-end-double-space nil))
 
-(add-hook 'before-save-hook #'delete-trailing-whitespace)
+(after simple t
+  (add-hook 'before-save-hook #'delete-trailing-whitespace))
 
 (after vundo (bind global "C-x u" vundo)
   (setc vundo-glyph-alist vundo-unicode-symbols))
 
-(bind global [remap dabbrev-expand] hippie-expand)
 (after yasnippet yas-global-mode
+  (delete 'try-expand-list hippie-expand-try-functions-list)
   (after yasnippet-snippets require)
   (bind yas-minor-mode [tab] nil)
-  (delete 'try-expand-list hippie-expand-try-functions-list)
+  (bind global [remap dabbrev-expand] hippie-expand)
   (add-to-list 'hippie-expand-try-functions-list #'yas-hippie-try-expand))
 
-(setq evil-want-keybinding nil)
-(after evil evil-mode
+(after evil (progn (setq evil-want-keybinding nil)
+                   (evil-mode 1))
   (setc evil-disable-insert-state-bindings t)
   (setc evil-default-state 'insert)
   (setc evil-emacs-state-modes nil)
@@ -213,6 +221,9 @@ flex style."
 
 ;;; Window and buffer management
 
+(after tab-bar t
+  (setc tab-bar-show 1))
+
 (setc display-buffer-alist
         '(("\*Register Preview\*" (display-buffer-pop-up-window))
           ("\*Async Shell Command\*" (display-buffer-no-window))
@@ -226,12 +237,11 @@ flex style."
 
 (winner-mode)
 
-(after same-mode-buffer require
-  (bind global
-    [mode-line mouse-4] same-mode-buffer-previous
-    "C-<tab>" same-mode-buffer-previous
-    [mode-line mouse-5] same-mode-buffer-next
-    "C-S-<tab>" same-mode-buffer-next))
+(after same-mode-buffer (bind global
+                          [mode-line mouse-4] same-mode-buffer-previous
+                          "C-<tab>" same-mode-buffer-previous
+                          [mode-line mouse-5] same-mode-buffer-next
+                          "C-S-<tab>" same-mode-buffer-next))
 
 (midnight-mode)
 
@@ -343,7 +353,9 @@ flex style."
                        (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
                        (add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))))
 
-(after org t
+(after org (bind global
+             "C-c a" org-agenda
+             "C-c c" org-capture)
   (require 'org-habit)
   (setc org-agenda-custom-commands
         '((" " "My agenda"
@@ -356,6 +368,8 @@ flex style."
   (setc org-agenda-window-setup 'current-window)
   (setc org-capture-templates
         `(("t" "Todo" entry (file+headline "~/todo/inbox.org" "Inbox") "* TODO %?")
+          ("b" "Books" entry (file+headline "~/notes/books.org" "Unsorted")
+           "* TO-READ %x%?%^{author}p" :refile-targets ((nil . (:maxlevel . 2))))
           ("n" "Note" entry
            (file ,(lambda () (format-time-string "~/tmp/%Y-%m-%d.org")))
            "* %<%H:%M>\n%?\n")))
@@ -366,10 +380,7 @@ flex style."
   (setc org-return-follows-link t)
   (setc org-startup-folded 'content)
   (setc org-startup-indented t)
-  (setc org-todo-keywords '((sequence "TODO" "IN-PROGRESS" "|" "DONE" "CANCELED")))
-  (bind global
-    "C-c a" org-agenda
-    "C-c c" org-capture))
+  (setc org-todo-keywords '((sequence "TODO" "IN-PROGRESS" "|" "DONE" "CANCELED"))))
 
 
 ;;; Version control
@@ -436,19 +447,19 @@ flex style."
     (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
 
 (after erc t
-  (setc erc-fill-function 'erc-fill-static
-        erc-fill-static-center 14
-        erc-fill-column (- (/ (frame-width) 2) 3)
-        erc-hide-list '("JOIN" "PART" "QUIT")
-        erc-auto-query 'bury
-        erc-kill-server-buffer-on-quit t
-        erc-kill-queries-on-quit t
-        erc-kill-buffer-on-part t
-        erc-disable-ctcp-replies t
-        erc-prompt (lambda () (format "%s>" (buffer-name)))
-        erc-user-mode "+iR"
-        erc-server "irc.libera.chat"
-        erc-port "6697"))
+  (setc erc-fill-function 'erc-fill-static)
+  (setc erc-fill-static-center 14)
+  (setc erc-fill-column (- (/ (frame-width) 2) 3))
+  (setc erc-hide-list '("JOIN" "PART" "QUIT"))
+  (setc erc-auto-query 'bury)
+  (setc erc-kill-server-buffer-on-quit t)
+  (setc erc-kill-queries-on-quit t)
+  (setc erc-kill-buffer-on-part t)
+  (setc erc-disable-ctcp-replies t)
+  (setc erc-prompt (lambda () (format "%s>" (buffer-name))))
+  (setc erc-user-mode "+iR")
+  (setc erc-server "irc.libera.chat")
+  (setc erc-port "6697"))
 
 (when (equal system-name "guix")
   (after nov (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))))
@@ -492,12 +503,12 @@ flex style."
     (setc exwm-workspace-show-all-buffers t)
     (setc exwm-layout-show-all-buffers t)
     (setc exwm-input-simulation-keys
-          `(([?\C-a] . [home])
+          '(([?\C-a] . [home])
             ([?\C-e] . [end])
-            ([?\C-y] . [?\C-v])
-            ([?\C-w] . [?\C-x])         ;;TODO: Correct conflict with evil-window.
-            ([?\M-w] . [?\C-c])
-            ([?\C-s] . [?\C-f])
+            ([?\C-y] . [C-S-v])       ; Paste without formatting
+            ([?\C-w] . [C-x])         ;;TODO: Correct conflict with evil-window.
+            ([?\M-w] . [C-c])
+            ([?\C-s] . [C-f])
             ([?\C-v] . [next])
             ([?\M-v] . [prior])
             ([?\C-p] . [up])
@@ -508,21 +519,21 @@ flex style."
             ([?\M-f] . [C-right])
             ([?\C-d] . [delete])
             ([?\C-k] . [S-end delete])
-            ([?\C-x ?h] . [?\C-a])
+            ([?\C-x ?h] . [C-a])
 
             ;; MacOS style
-            ([?\s-c] . [?\C-c])
-            ([?\s-x] . [?\C-x])
-            ([?\s-v] . [?\C-v])
-            ([?\s-a] . [?\C-a])
-            ([?\s-f] . [?\C-f])
-            ([?\s-y] . [\C-S-v])        ; Paste without formatting
+            ([?\s-a] . [C-a])
+            ([?\s-c] . [C-c])
+            ([?\s-f] . [C-f])
+            ([?\s-l] . [C-l])
+            ([?\s-v] . [C-v])
+            ([?\s-x] . [C-x])
 
             ;; Chrome
-            ([?\s-b] . [\C-S-a])        ; Search tabs
-            ([?\C-x ?r ?m] . [\C-d])    ; Bookmark page
-            ([?\s-k] . [\C-w])          ; Close current tab
-            ([?\C-x ?\C-s] . [?\C-s])   ; Save page
+            ([?\s-b] . [C-S-a])        ; Search tabs
+            ([?\s-k] . [C-w])          ; Close current tab
+            ([?\C-x ?r ?m] . [C-d])    ; Bookmark page
+            ([?\C-x ?\C-s] . [C-s])   ; Save page
 
             ([?\C-g] . [escape])))
 
@@ -535,6 +546,8 @@ flex style."
 
     (with-eval-after-load 'evil
       (add-to-list 'exwm-input-prefix-keys ?\C-w))
+
+    (window-divider-mode 1)
 
     (after minibuffer-line minibuffer-line-mode
       (setc minibuffer-line-format '(:eval global-mode-string))

@@ -17,12 +17,14 @@
 (setq fast-but-imprecise-scrolling t)
 (setq frame-inhibit-implied-resize t)
 (setq frame-title-format '("%b — %F"))
-(setq indicate-buffer-boundaries 'right)
+(setq history-delete-duplicates t)
+(setq history-length 1000)
 (setq mouse-autoselect-window t)
 (setq visible-bell t)
 
 (setq-default fill-column 80)
 (setq-default indent-tabs-mode nil)
+(setq-default indicate-buffer-boundaries 'right)
 (setq-default tab-width 4)
 
 (tool-bar-mode -1)
@@ -34,25 +36,33 @@
 ;;; Helpers for package configuration
 
 (defvar my-uninstalled-packages nil
-  "List of configured packages that have not been installed.
+  "List of packages configured with `after' that have not been installed.
 
 These can be installed via `my-install-uninstalled-packages'.")
 
-(defmacro after (package &optional fun &rest body)
-  "Call FUN from PACKAGE, and eval BODY after load.
+(defmacro after (package &optional trigger &rest body)
+  "Call TRIGGER function from PACKAGE, and eval BODY after load.
 
-If package is not installed, add to `my-uninstalled-packages' for manual
-installation."
+The idea is that TRIGGER sets up a trigger (e.g. a binding or hook) to load the
+PACKAGE, and once loaded BODY is executed.
+
+TRIGGER can be a function, or elisp expression. If it is a function, it is
+passed the package symbol as its argument (useful for `require'). It should
+return non-nil if the trigger is successfully setup, and nil or error otherwise.
+
+Note that this does not install packages. If the package is not installed, it is
+added to `my-uninstalled-packages' for manual installation."
   (declare (indent defun))
   `(progn
-     (unless (or (ignore-errors ,(if (functionp fun) `(funcall ',fun ',package) fun))
-             (featurep ',package)
-             (package-installed-p ',package))
-       (add-to-list 'my-uninstalled-packages ',package))
+     (unless (or (ignore-errors ,(if (functionp trigger) `(funcall ',trigger ',package) trigger))
+                 ;;(featurep ',package)
+                 (package-installed-p ',package))
+       (add-to-list 'my-uninstalled-packages ',package)
+       (display-warning 'my-emacs (format "Package `%s' is not installed" ',package)))
      (with-eval-after-load ',package ,@body)))
 
 (defun my-install-uninstalled-packages ()
-  "Install any uninstalled packages."
+  "Install all packages in `my-uninstalled-packages'."
   (interactive)
   (package-refresh-contents)
   (mapc #'my--package-install my-uninstalled-packages)
@@ -80,11 +90,12 @@ remote package archive."
 (defmacro bind (mode &rest defs)
   "Define key DEFS in MODE."
   (declare (indent defun))
-  `(progn
+  `(commandp ;; Return value so it can be used as `TRIGGER' in `after'
+    (progn
      ,@(cl-loop for (key def) on defs by 'cddr
                 collect `(define-key ,(intern (format "%s-map" mode))
                            ,(if (stringp key) (kbd key) key)
-                           #',def))))
+                           #',def)))))
 
 
 (provide 'early-init)
