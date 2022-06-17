@@ -22,10 +22,6 @@
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
   (setc package-archive-priorities '(("gnu" . 9) ("nongnu" . 5) ("melpa" . 1))))
 
-(after startup t
-  (setc initial-major-mode 'fundamental-mode)
-  (setc initial-scratch-message nil))
-
 (after auth-source t
   ;; Use a `.gpg' file by default to keep authentication sources encrypted.
   (setc auth-sources
@@ -34,9 +30,12 @@
           "~/.netrc")))
 
 (after simple t
-  (add-hook 'text-mode-hook #'turn-on-visual-line-mode)
   (setc completion-show-help nil)
+
   (setc async-shell-command-buffer 'rename-buffer)
+  (add-to-list 'display-buffer-alist
+               '("\*Async Shell Command\*" (display-buffer-no-window)))
+
   (setc save-interprogram-paste-before-kill t)
   (column-number-mode))
 
@@ -90,19 +89,20 @@
   (minibuffer-depth-indicate-mode 1))
 
 (after icomplete fido-mode
-  (defun my-icomplete-root ()
-    "Go to the project root in `find-file', or the parent dir."
-    (interactive)
-    (if (and (eq (icomplete--category) 'file) (project-current))
-        (progn (delete-minibuffer-contents)
-               (insert (project-root (project-current))))
-      (call-interactively #'icomplete-fido-backward-updir)))
+  (with-eval-after-load 'project
+    (defun my-icomplete-root ()
+      "Go to the project root in `find-file', or the parent dir."
+      (interactive)
+      (if (and (eq (icomplete--category) 'file) (project-current))
+          (progn (delete-minibuffer-contents)
+                 (insert (project-root (project-current))))
+        (call-interactively #'icomplete-fido-backward-updir)))
 
-  (bind icomplete-fido-mode
-    "M-DEL" my-icomplete-root
-    ;; "M-<return>" icomplete-fido-exit ;; Use M-j instead
-    "C-r" nil
-    "C-s" nil)
+    (bind icomplete-fido-mode
+      "M-DEL" my-icomplete-root))
+
+  (define-key icomplete-fido-mode-map (kbd "C-r") nil)
+  (define-key icomplete-fido-mode-map (kbd "C-s") nil)
 
   (setc icomplete-prospects-height 1))
 
@@ -140,14 +140,14 @@ flex style."
 
 ;;; Theme and display options
 
-(after display-fill-column-indicator global-display-fill-column-indicator-mode)
+(after display-fill-column-indicator (hook prog-mode display-fill-column-indicator-mode))
 
 (after modus-themes (modus-themes-load-themes)
   (setc modus-themes-bold-constructs t)
-  (setc modus-themes-slanted-constructs t)
+  (setc modus-themes-italic-constructs t)
   (setc modus-themes-headings '((1 1.3) (2 1.1) (t t)))
   (setc modus-themes-mixed-fonts t)
-  (setc modus-themes-mode-line '(3d accented))
+  (setc modus-themes-mode-line '(3d))
   (setc modus-themes-org-blocks 'gray-background)
   (let ((daily (* 60 60 24)))
     ;; Set a light theme during work hours, otherwise dark.
@@ -155,7 +155,7 @@ flex style."
     (run-at-time "17:30" daily #'modus-themes-load-vivendi)))
 
 
-(after display-line-numbers (add-hook 'prog-mode-hook #'display-line-numbers-mode)
+(after display-line-numbers (hook prog-mode display-line-numbers-mode)
   (setq-default display-line-numbers-widen t))
 
 
@@ -165,19 +165,20 @@ flex style."
   (setc sentence-end-double-space nil))
 
 (after simple t
+  (add-hook 'text-mode-hook #'turn-on-visual-line-mode)
   (add-hook 'before-save-hook #'delete-trailing-whitespace))
 
 (after vundo (bind global "C-x u" vundo)
   (setc vundo-glyph-alist vundo-unicode-symbols))
 
-(after yasnippet yas-global-mode
+(after yasnippet (yas-global-mode)
   (delete 'try-expand-list hippie-expand-try-functions-list)
   (after yasnippet-snippets require)
-  (bind yas-minor-mode [tab] nil)
+  (define-key yas-minor-mode-map [tab] nil)
   (bind global [remap dabbrev-expand] hippie-expand)
   (add-to-list 'hippie-expand-try-functions-list #'yas-hippie-try-expand))
 
-(after evil (progn (setq evil-want-keybinding nil)
+(after evil (progn (setc evil-want-keybinding nil)
                    (evil-mode 1))
   (setc evil-disable-insert-state-bindings t)
   (setc evil-default-state 'insert)
@@ -194,8 +195,7 @@ flex style."
   (setc evil-want-Y-yank-to-eol t)
   (setc evil-want-minibuffer t)
 
-  (bind evil-insert-state
-    "C-w" evil-window-map)
+  (define-key evil-insert-state-map (kbd "C-w") 'evil-window-map)
   (bind evil-motion-state
     "RET" nil
     "<down-mouse-1>" nil
@@ -260,47 +260,48 @@ flex style."
   (require 'dired-x)
   (setc dired-clean-confirm-killing-deleted-buffers nil)
 
-  (after async (add-hook 'dired-mode-hook #'dired-async-mode)))
+  (after async (hook dired-mode dired-async-mode)))
 
 
 
 ;;; Shell
 
 (after with-editor (progn
-                     (add-hook 'eshell-mode-hook #'with-editor-export-editor)
-                     (add-hook 'vterm-mode-hook #'with-editor-export-editor)))
+                     (hook eshell-mode with-editor-export-editor)
+                     (hook vterm-mode with-editor-export-editor)))
 ;; (after exec-path-from-shell require)
 ;; (exec-path-from-shell-initialize)
 (setenv "PAGER" "cat")
 
-(after tramp require
+(after tramp t
   ;; https://www.reddit.com/r/GUIX/comments/uco6fg/comment/i6c407x
-  (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
+  (when (equal (system-name) "guix")
+    (add-to-list 'tramp-remote-path 'tramp-own-remote-path)))
 
-(bind global "C-c e" eshell)
-(setc eshell-hist-ignoredups t)
-(setc eshell-history-size 1000)
-(setc eshell-destroy-buffer-when-process-dies t)
+(after eshell (bind global "C-c e" eshell)
+  (setc eshell-hist-ignoredups t)
+  (setc eshell-history-size 1000)
+  (setc eshell-destroy-buffer-when-process-dies t)
 
-(defun my-eshell-buffer-name ()
-  "Include pwd in eshell prompt."
-  (rename-buffer (concat "*eshell*<" (eshell/pwd) ">") t))
-(add-hook 'eshell-prompt-load-hook #'my-eshell-buffer-name)
-(add-hook 'eshell-directory-change-hook #'my-eshell-buffer-name)
+  (defun my-eshell-buffer-name ()
+    "Include pwd in eshell prompt."
+    (rename-buffer (concat "*eshell*<" (eshell/pwd) ">") t))
+  (add-hook 'eshell-prompt-load-hook #'my-eshell-buffer-name)
+  (add-hook 'eshell-directory-change-hook #'my-eshell-buffer-name)
 
-(defun my-make-field ()
-  "Make text in front of the point a field."
-  (let ((inhibit-read-only t))
-    (add-text-properties
-     (line-beginning-position)
-     (point)
-     (list 'field t
-           'rear-nonsticky t))))
-(add-hook 'eshell-after-prompt-hook #'my-make-field)
+  (defun my-make-field ()
+    "Make text in front of the point a field."
+    (let ((inhibit-read-only t))
+      (add-text-properties
+       (line-beginning-position)
+       (point)
+       (list 'field t
+             'rear-nonsticky t))))
+  (add-hook 'eshell-after-prompt-hook #'my-make-field)
 
-(defun eshell/in-term (prog &rest args)
-  "Run shell command PROG after args ARGS in term buffer."
-  (apply #'make-term (format "in-term %s %s" prog args) prog nil args))
+  (defun eshell/in-term (prog &rest args)
+    "Run shell command PROG after args ARGS in term buffer."
+    (apply #'make-term (format "in-term %s %s" prog args) prog nil args)))
 
 (after vterm require
   (bind global "C-c v" vterm)
@@ -325,12 +326,13 @@ flex style."
 
 (after csv-mode require)
 
-(after clojure-mode require
+(after clojure-mode nil
   (after cider require)
-  (after flymake-kondor require)
-  (add-hook 'clojure-mode-hook #'flymake-kondor-setup))
+  (after flymake-kondor (hook clojure-mode flymake-kondor-setup)))
 
-(after eglot (dolist (hook '(python-mode-hook java-mode-hook clojure-mode-hook))
+(after eglot nil
+  ;; TODO: Improve `hook' macro to work with this use case
+  (dolist (hook '(python-mode-hook java-mode-hook clojure-mode-hook))
                (add-hook hook #'eglot-ensure))
   (bind eglot-mode
     "C-c C-c" eglot-code-actions))
@@ -345,15 +347,16 @@ flex style."
 
 ;;; Writing and organization
 
-(add-hook 'text-mode-hook #'flyspell-mode)
+(hook text-mode flyspell-mode)
 
-(after olivetti (add-hook 'text-mode-hook #'olivetti-mode))
+(after olivetti (hook text-mode olivetti-mode))
 
 (after markdown-mode (progn
-                       (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
-                       (add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))))
+                       (auto-mode md markdown-mode)
+                       (auto-mode "README\\.md" gfm-mode)))
 
 (after org (bind global
+             "C-c l" org-store-link
              "C-c a" org-agenda
              "C-c c" org-capture)
   (require 'org-habit)
@@ -398,7 +401,7 @@ flex style."
                  '("magit-diff:" (display-buffer-at-bottom display-buffer-pop-up-window)))))
 
 
-;;; Miscellaneous (to be categorised)
+;;; Miscellaneous (to be categorized)
 
 (global-so-long-mode 1)
 
@@ -427,7 +430,7 @@ flex style."
 
 (after restclient)
 
-(when (equal system-name "guix")
+(when (equal (system-name) "guix")
   (custom-set-faces
    '(default ((t (:family "JetBrains Mono NL" :height 185))))
    '(fixed-pitch ((t (:family "JetBrains Mono NL" :height 190))))
@@ -444,7 +447,7 @@ flex style."
     (setc TeX-view-program-selection '((output-pdf "PDF Tools")))
     (setc TeX-view-program-list '(("PDF Tools" TeX-pdf-tools-sync-view)))
     (setc TeX-source-correlate-start-server t))
-    (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
+  (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
 
 (after erc t
   (setc erc-fill-function 'erc-fill-static)
@@ -461,28 +464,34 @@ flex style."
   (setc erc-server "irc.libera.chat")
   (setc erc-port "6697"))
 
-(when (equal system-name "guix")
-  (after nov (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))))
+(when (equal (system-name) "guix")
+  (after nov (auto-mode epub nov-mode)))
 
-(when (equal system-name "guix")
-  (setc doc-view-continuous t)
-  (after pdf-tools pdf-loader-install))
+(when (equal (system-name) "guix")
+  (after pdf-tools pdf-loader-install
+    (setc doc-view-continuous t)))
 
 (when (eq window-system 'x)
-  (after exwm exwm-enable
-    (setc focus-follows-mouse t)
+  (setc focus-follows-mouse t)
+  (after exwm (exwm-enable)
+
+    (defun my--string-shorten (string)
+      (if (<= (length string) 80)
+          string
+        (concat (substring string 0 70) "…")))
 
     (defun my-exwm-set-buffer-name ()
-      "Make a nicer title and file name for the buffer"
+      "Rename the buffer to include the title."
       (exwm-workspace-rename-buffer
-       (setq-local exwm-title
-                   (concat
-                    exwm-class-name
-                    "<"
-                    (if (<= (length exwm-title) 80)
-                        exwm-title
-                      (concat (substring exwm-title 0 79) "…"))
-                    ">"))))
+       (if exwm-title
+           (thread-last exwm-title
+                        (replace-regexp-in-string "\s+-[^-]*$" "")
+                        my--string-shorten
+                        (format "%s<%s>" exwm-class-name))
+         exwm-class-name)))
+
+    (add-hook 'exwm-update-class-hook #'my-exwm-set-buffer-name)
+    (add-hook 'exwm-update-title-hook #'my-exwm-set-buffer-name)
 
     (defun my-gtk-launch ()
       "Launch an X application via `gtk-launch'."
@@ -497,8 +506,10 @@ flex style."
                                             collect (replace-regexp-in-string extention "" file)))))
         (call-process "gtk-launch" nil 0 nil (completing-read "Launch: " apps))))
 
-    (add-hook 'exwm-update-class-hook #'my-exwm-set-buffer-name)
-    (add-hook 'exwm-update-title-hook #'my-exwm-set-buffer-name)
+    (defun my-sleep ()
+      "ZZzzzzz"
+      (interactive)
+      (message (shell-command-to-string "sleep 1 ; loginctl suspend ; slock")))
 
     (setc exwm-workspace-show-all-buffers t)
     (setc exwm-layout-show-all-buffers t)
@@ -506,9 +517,9 @@ flex style."
           '(([?\C-a] . [home])
             ([?\C-e] . [end])
             ([?\C-y] . [C-S-v])       ; Paste without formatting
-            ([?\C-w] . [C-x])         ;;TODO: Correct conflict with evil-window.
+            ;;([?\C-w] . [C-x])         ;;TODO: Correct conflict with evil-window.
             ([?\M-w] . [C-c])
-            ([?\C-s] . [C-f])
+            ([?\C-s] . [C-f return])
             ([?\C-v] . [next])
             ([?\M-v] . [prior])
             ([?\C-p] . [up])
@@ -530,9 +541,9 @@ flex style."
             ([?\s-x] . [C-x])
 
             ;; Chrome
-            ([?\s-b] . [C-S-a])        ; Search tabs
-            ([?\s-k] . [C-w])          ; Close current tab
-            ([?\C-x ?r ?m] . [C-d])    ; Bookmark page
+            ([?\s-b] . [C-S-a])       ; Search tabs
+            ([?\s-k] . [C-w])         ; Close current tab
+            ([?\C-x ?r ?m] . [C-d])   ; Bookmark page
             ([?\C-x ?\C-s] . [C-s])   ; Save page
 
             ([?\C-g] . [escape])))
@@ -540,7 +551,8 @@ flex style."
     (setc exwm-input-global-keys
           `(([?\s-r] . exwm-reset)
             ([?\s-o] . exwm-workspace-swap)
-            ([?\s-\s] . my-gtk-launch)))
+            ([?\s-\s] . my-gtk-launch)
+            ([?\s-S] . my-sleep)))
 
     (bind exwm-mode "C-q" exwm-input-send-next-key)
 
@@ -552,7 +564,8 @@ flex style."
     (after minibuffer-line minibuffer-line-mode
       (setc minibuffer-line-format '(:eval global-mode-string))
       (setc minibuffer-line-refresh-interval 1)
-      (setq mode-line-misc-info (delete '(global-mode-string ("" global-mode-string)) mode-line-misc-info))
+      (setq mode-line-misc-info
+            (delete '(global-mode-string ("" global-mode-string)) mode-line-misc-info))
       (setc display-time-format "%F %R\t")
       (display-time-mode))))
 
