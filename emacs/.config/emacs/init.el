@@ -473,7 +473,7 @@ flex style."
 
 (when (eq window-system 'x)
   (setc focus-follows-mouse t)
-  (after exwm (exwm-enable)
+  (after exwm (require 'exwm-randr)
 
     (defun my--string-shorten (string)
       (if (<= (length string) 80)
@@ -554,6 +554,9 @@ flex style."
             ([?\s-\s] . my-gtk-launch)
             ([?\s-S] . my-sleep)))
 
+
+    (setc exwm-randr-workspace-monitor-plist '(0 "HDMI-2" 1 "DP-1"))
+
     (bind exwm-mode "C-q" exwm-input-send-next-key)
 
     (with-eval-after-load 'evil
@@ -567,7 +570,9 @@ flex style."
       (setq mode-line-misc-info
             (delete '(global-mode-string ("" global-mode-string)) mode-line-misc-info))
       (setc display-time-format "%F %R\t")
-      (display-time-mode))))
+      (display-time-mode))
+
+    (exwm-randr-enable)))
 
 
 ;;; Confidential settings
