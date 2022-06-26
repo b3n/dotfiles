@@ -15,16 +15,17 @@
 
 (defcustom password-gen-length
   nil
-  "The length of passwords, or nil to ask"
+  "The default length of passwords, or nil to ask"
   :type 'integer)
 
 ;;;###autoload
-(defun password-gen ()
+(defun password-gen (length)
   "Generate a password."
-  (interactive)
+  (interactive "p")
   ;;TODO: Use `auth-sources'
   (unless (boundp 'password-gen-password)
     (setq password-gen-password (read-passwd "Master: ")))
+  (let ((length (if (> length 1) length nil)))
   (gui-set-selection 'CLIPBOARD
                      (substring
                       (shell-command-to-string
@@ -33,7 +34,7 @@
                         (shell-quote-argument password-gen-password) " "
                         (shell-quote-argument (read-passwd "Password: "))))
                       0
-                      (or password-gen-length (read-number "Length: ")))))
+                      (or length password-gen-length (read-number "Length: "))))))
 
 (provide 'password-gen)
 

@@ -22,7 +22,6 @@
 (setq initial-major-mode 'fundamental-mode)
 (setq initial-scratch-message nil)
 (setq mouse-autoselect-window t)
-(setq visible-bell t)
 
 (setq-default fill-column 80)
 (setq-default indent-tabs-mode nil)
@@ -42,7 +41,7 @@
 
 These can be installed via `my-install-uninstalled-packages'.")
 
-(defmacro after (package &optional trigger &rest body)
+(defmacro cfg (package &optional trigger &rest body)
   "Call TRIGGER function from PACKAGE, and eval BODY after load.
 
 The idea is that TRIGGER sets up a trigger (e.g. a binding or hook) to load the
@@ -56,7 +55,9 @@ Note that this does not install packages. If the package is not installed, it is
 added to `my-uninstalled-packages' for manual installation."
   (declare (indent defun))
   `(progn
-     (unless (or (ignore-errors ,(if (functionp trigger) `(funcall ',trigger ',package) trigger))
+     (unless (or (ignore-errors ,(if (functionp trigger)
+                                     `(funcall ',trigger ',package)
+                                   trigger))
                  (featurep ',package)
                  (package-installed-p ',package))
        (add-to-list 'my-uninstalled-packages ',package)
@@ -104,10 +105,10 @@ like `setq', but using `customize-set-variable'."
   `(when (commandp #',mode)
      (add-to-list 'auto-mode-alist '(,(format "\\.%s\\'" ext) . ,mode))))
 
-(defmacro hook (mode fun)
+(defmacro hook (mode fun &optional depth local)
   "Add function FUN to MODE's hook."
   `(when (functionp #',fun)
-     (add-hook ',(intern (format "%s-hook" mode)) #',fun)))
+     (add-hook ',(intern (format "%s-hook" mode)) #',fun ,depth ,local)))
 
 
 (provide 'early-init)
