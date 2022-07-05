@@ -14,24 +14,27 @@
 ;;; Basic settings
 
 (setq create-lockfiles nil)
-(setq fast-but-imprecise-scrolling t)
-(setq frame-inhibit-implied-resize t)
 (setq frame-title-format '("%b — %F"))
 (setq history-delete-duplicates t)
-(setq history-length 1000)
+(setq history-length 9999)
 (setq initial-major-mode 'fundamental-mode)
 (setq initial-scratch-message nil)
 (setq mouse-autoselect-window t)
+(setq tab-always-indent 'complete)
+(setq narrow-to-defun-include-comments t)
 
 (setq-default fill-column 80)
 (setq-default indent-tabs-mode nil)
 (setq-default indicate-buffer-boundaries 'right)
 (setq-default tab-width 4)
 
-(menu-bar-mode -1)
-(scroll-bar-mode -1)
 (tool-bar-mode -1)
+
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
+
+(put 'narrow-to-defun 'disabled nil)
+(put 'narrow-to-page 'disabled nil)
+(put 'narrow-to-region 'disabled nil)
 
 
 ;;; Helpers for package configuration
@@ -47,12 +50,12 @@ These can be installed via `my-install-uninstalled-packages'.")
 The idea is that TRIGGER sets up a trigger (e.g. a binding or hook) to load the
 PACKAGE, and once loaded BODY is executed.
 
-TRIGGER can be a function, or elisp expression. If it is a function, it is
-passed the package symbol as its argument (useful for `require'). It should
+TRIGGER can be a function, or elisp expression.  If it is a function, it is
+passed the package symbol as its argument (useful for `require').  It should
 return non-nil if the package is installed, and nil or error otherwise.
 
-Note that this does not install packages. If the package is not installed, it is
-added to `my-uninstalled-packages' for manual installation."
+Note that this does not install packages.  If the package is not installed, it
+is added to `my-uninstalled-packages' for manual installation."
   (declare (indent defun))
   `(progn
      (unless (or (ignore-errors ,(if (functionp trigger)
@@ -94,7 +97,7 @@ like `setq', but using `customize-set-variable'."
   (declare (indent defun))
   `(progn
      ,@(cl-loop for (key def) on defs by 'cddr
-                collect `(when (commandp #',def)
+                collect `(when (or (commandp #',def) (boundp ',def))
                            (define-key
                              ,(intern (format "%s-map" mode))
                              ,(if (stringp key) (kbd key) key)

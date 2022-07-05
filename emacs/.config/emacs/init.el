@@ -12,9 +12,6 @@
 
 ;;; Basic settings
 
-(cfg auto-revert t
-  (setc auto-revert-avoid-polling t))
-
 (cfg cus-edit t
   (setc custom-file (make-temp-file "emacs-custom-")))
 
@@ -45,9 +42,6 @@
 (cfg uniquify t
   (setc uniquify-buffer-name-style 'forward))
 
-(cfg indent t
-  (setc tab-always-indent 'complete))
-
 (cfg files t
   (setc auto-save-visited-interval 60)
   (auto-save-visited-mode 1)
@@ -69,12 +63,6 @@
   (setc enable-local-eval nil)
   (setc enable-local-variables nil))
 
-(cfg emacs t
-  (setc narrow-to-defun-include-comments t)
-  (put 'narrow-to-defun 'disabled nil)
-  (put 'narrow-to-page 'disabled nil)
-  (put 'narrow-to-region 'disabled nil))
-
 
 ;;; Search
 
@@ -90,14 +78,13 @@
     (grep-apply-setting
      'grep-find-command
      '("rg --no-heading ")))
-  (cfg wgrep (require 'wgrep)))
+  (cfg wgrep require))
 
 (cfg find-file-in-project (bind global
                               "C-c F" find-file-in-project
                               "C-c f" find-file-in-project-by-selected)
   (when (executable-find "fd")
     (setc ffip-use-rust-fd t)))
-
 
 
 ;;; Minibuffer and completions
@@ -118,8 +105,8 @@
     (bind icomplete-fido-mode
       "M-DEL" my-icomplete-root))
 
-  (define-key icomplete-fido-mode-map (kbd "C-r") nil)
-  (define-key icomplete-fido-mode-map (kbd "C-s") nil)
+  (bind icomplete-fido-mode "C-r" nil)
+  (bind icomplete-fido-mode "C-S" nil)
 
   (setc icomplete-prospects-height 1))
 
@@ -131,10 +118,6 @@ This has to happen in a hook, because `fido-mode' also uses a hook to set the
 flex style."
     (setq-local completion-styles '(substring flex basic)))
   (hook minibuffer-setup my-completion-styles 1)
-
-  ;;TODO: Trialing company mode. If I decide to switch to it, then remove this
-  ;; package.
-  ;;(cfg completion-in-buffer require)
 
   (setc completion-category-overrides
         '((file (styles basic partial-completion flex))))
@@ -151,14 +134,11 @@ flex style."
 
 (cfg savehist (savehist-mode))
 
-(cfg minibuffer-repeat (require 'minibuffer-repeat)
+(cfg minibuffer-repeat require
   (hook minibuffer-setup minibuffer-repeat-save)
   (bind global "C-c m" minibuffer-repeat))
 
-(cfg company (global-company-mode) ;;TODO: Do I want to keep this?
-  ;(setc company-idle-delay 0)
-  ;(setc company-show-numbers t)
-)
+(cfg company (global-company-mode))
 
 
 ;;; Theme and display options
@@ -201,7 +181,7 @@ flex style."
 (cfg yasnippet (yas-global-mode)
   (delete 'try-expand-list hippie-expand-try-functions-list)
   (cfg yasnippet-snippets require)
-  (define-key yas-minor-mode-map (kbd "TAB") nil)
+  (bind yas-minor-mode "TAB" nil)
   (bind global [remap dabbrev-expand] hippie-expand)
   (add-to-list 'hippie-expand-try-functions-list #'yas-hippie-try-expand))
 
@@ -222,8 +202,8 @@ flex style."
   (setc evil-want-Y-yank-to-eol t)
   (setc evil-want-minibuffer t)
 
-  (define-key evil-insert-state-map (kbd "C-w") 'evil-window-map)
   (bind evil-insert-state
+    "C-w" evil-window-map
     "C-o" evil-execute-in-normal-state)
   (bind evil-motion-state
     "RET" nil
@@ -249,8 +229,6 @@ flex style."
 (cfg window t
   (setc scroll-error-top-bottom 1))
 
-;;TODO: Add a way for tabs to have independent buffers (e.g. buffers created in
-;; one tab do not show in the buffer-list for another tab).
 (cfg tab-bar t
   (setc tab-bar-show 1))
 
@@ -313,7 +291,7 @@ flex style."
 
 (cfg eshell (bind global "C-c e" eshell)
   (setc eshell-hist-ignoredups t)
-  (setc eshell-history-size 1000)
+  (setc eshell-history-size 9999)
   (setc eshell-destroy-buffer-when-process-dies t)
 
   (setenv "PAGER" "cat")
@@ -339,8 +317,7 @@ flex style."
     "Run shell command PROG after args ARGS in term buffer."
     (apply #'make-term (format "in-term %s %s" prog args) prog nil args)))
 
-(cfg vterm require
-  (bind global "C-c v" vterm)
+(cfg vterm (bind global "C-c v" vterm)
 
   (setc vterm-max-scrollback 100000)
   (setc vterm-buffer-name-string "vterm<%s>")
@@ -350,14 +327,13 @@ flex style."
 
 ;;; Programming
 
-(hook prog-mode flyspell-prog-mode)
-(hook prog-mode flymake-mode)
+(cfg flyspell (hook prog-mode flyspell-prog-mode))
 
-(cfg flymake require
+(cfg flymake (hook prog-mode flymake-mode)
   (setc flymake-no-changes-timeout nil)
   (setc flymake-wrap-around nil))
 
-(cfg eldoc require
+(cfg eldoc t
   (setc eldoc-echo-area-use-multiline-p nil))
 
 (cfg csv-mode require)
@@ -486,7 +462,7 @@ flex style."
   (cfg nov (auto-mode epub nov-mode)))
 
 (when (equal (system-name) "guix")
-  (cfg pdf-tools (pdf-loader-install)
+  (cfg pdf-tools (pdf-tools-install)
     (hook pdf-view-mode (lambda () (setq-local evil-insert-state-cursor '(nil))))
     (setc pdf-view-use-scaling t)
     (setq-default pdf-view-display-size 'fit-page)
@@ -495,6 +471,7 @@ flex style."
 (when (eq window-system 'x)
   (setc focus-follows-mouse t)
   (cfg exwm (require 'exwm-randr)
+    (menu-bar-mode -1)
 
     (defun my--string-shorten (string)
       (if (<= (length string) 80)
