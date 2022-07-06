@@ -77,7 +77,7 @@
   (when (executable-find "rg")
     (grep-apply-setting
      'grep-find-command
-     '("rg --no-heading ")))
+     '("rg --no-heading --max-columns=999 ")))
   (cfg wgrep require))
 
 (cfg find-file-in-project (bind global
