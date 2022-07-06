@@ -17,7 +17,7 @@
 
 (cfg package t
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
-  (setc package-archive-priorities '(("gnu" . 9) ("nongnu" . 5) ("melpa" . 1))))
+  (setc package-archive-priorities '(("gnu" . 2) ("nongnu" . 1) ("melpa" . -1))))
 
 (cfg auth-source t
   ;; Use a `.gpg' file by default to keep authentication sources encrypted.
