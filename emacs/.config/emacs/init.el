@@ -346,7 +346,7 @@ flex style."
 
 (cfg eglot commandp
   ;; TODO: Improve `hook' macro to work with this use case
-  (dolist (hook '(python-mode-hook java-mode-hook clojure-mode-hook))
+  (dolist (hook '(python-mode-hook java-mode-hook clojure-mode-hook javascript-mode))
                (add-hook hook #'eglot-ensure))
   (bind eglot-mode
     "C-c C-c" eglot-code-actions))
