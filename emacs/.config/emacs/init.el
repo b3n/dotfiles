@@ -75,9 +75,11 @@
 (cfg grep (bind global "C-c s" grep-find)
   (setc grep-save-buffers 'dontask)
   (when (executable-find "rg")
-    (grep-apply-setting
-     'grep-find-command
-     '("rg --no-heading --max-columns=999 ")))
+    (let* ((rg "rg --no-heading --max-columns=200 --max-columns-preview --smart-case --fixed-strings '' .")
+					 (point (- (length rg) 2)))
+      (grep-apply-setting
+       'grep-find-command
+       `(,rg . ,point))))
   (cfg wgrep require))
 
 (cfg find-file-in-project (bind global
