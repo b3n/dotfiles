@@ -408,6 +408,7 @@ flex style."
 
 (when (executable-find "git")
   (cfg magit (bind global "C-c g" magit-file-dispatch)
+    (setc git-commit-fill-column 72)
     (setc magit-diff-refine-hunk t)
     (setc magit-save-repository-buffers 'dontask)
     (setc magit-no-confirm '(stage-all-changes))
