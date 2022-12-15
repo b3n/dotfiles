@@ -244,7 +244,7 @@ flex style."
 (cfg help t
   (setc help-window-select t))
 
-(cfg ibuffer (bind global [remap list-buffer] ibuffer))
+(cfg ibuffer (bind global [remap list-buffers] ibuffer))
 
 (cfg winner (winner-mode)
   (cfg evil evil-window-map
