@@ -158,11 +158,7 @@ flex style."
   (setc modus-themes-italic-constructs t)
   (setc modus-themes-headings '((1 1.3) (2 1.1) (t t)))
   (setc modus-themes-mixed-fonts t)
-  (setc modus-themes-mode-line '(3d accented))
-  (setc modus-themes-org-blocks 'gray-background)
-  (let ((daily (* 60 60 24)))
-    (setq my-light-theme-timer (run-at-time "06:00" daily #'modus-themes-load-operandi))
-    (setq my-dark-theme-timer (run-at-time "20:00" daily #'modus-themes-load-vivendi))))
+  (setc modus-themes-org-blocks 'gray-background))
 
 (cfg display-line-numbers (hook prog-mode display-line-numbers-mode)
   (setq-default display-line-numbers-widen t))
