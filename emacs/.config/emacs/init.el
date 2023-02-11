@@ -145,11 +145,11 @@ flex style."
 
 ;;; Theme and display options
 
-(when (equal (system-name) "guix")
+(when (equal (system-name) "framework")
   (custom-set-faces
-   '(default ((t (:family "JetBrains Mono NL" :height 110))))
-   '(fixed-pitch ((t (:family "JetBrains Mono NL" :height 115))))
-   '(variable-pitch ((t (:family "DejaVu Serif" :height 130))))))
+   '(default ((t (:family "JetBrains Mono NL" :height 100))))
+   '(fixed-pitch ((t (:family "JetBrains Mono NL" :height 105))))
+   '(variable-pitch ((t (:family "DejaVu Serif" :height 120))))))
 
 (cfg display-fill-column-indicator (hook prog-mode display-fill-column-indicator-mode))
 
@@ -284,7 +284,7 @@ flex style."
 
 (cfg tramp t
   ;; https://www.reddit.com/r/GUIX/comments/uco6fg/comment/i6c407x
-  (when (equal (system-name) "guix")
+  (when (equal (system-name) "framework")
     (add-to-list 'tramp-remote-path 'tramp-own-remote-path)))
 
 (cfg eshell (bind global "C-c e" eshell)
@@ -457,10 +457,10 @@ flex style."
   (setc erc-server "irc.libera.chat")
   (setc erc-port "6697"))
 
-(when (equal (system-name) "guix")
+(when (equal (system-name) "framework")
   (cfg nov (auto-mode epub nov-mode)))
 
-(when (equal (system-name) "guix")
+(when (equal (system-name) "framework")
   (cfg pdf-tools (pdf-tools-install)
     (hook pdf-view-mode (lambda () (setq-local evil-insert-state-cursor '(nil))))
     (setc pdf-view-use-scaling t)
@@ -551,7 +551,10 @@ flex style."
       (setq mode-line-misc-info
             (delete '(global-mode-string ("" global-mode-string)) mode-line-misc-info))
       (setc display-time-format "%F %R\t")
-      (display-time-mode))
+
+      (when (equal (system-name) "framework")
+        (display-time-mode)
+        (display-battery-mode)))
 
     (setc exwm-randr-workspace-monitor-plist '(0 "DP-1" 1 "HDMI-2"))
 
