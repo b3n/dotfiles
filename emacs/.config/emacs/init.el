@@ -490,18 +490,7 @@ flex style."
     (hook exwm-update-class my-exwm-set-buffer-name)
     (hook exwm-update-title my-exwm-set-buffer-name)
 
-    (defun my-gtk-launch ()
-      "Launch an X application via `gtk-launch'."
-      (interactive)
-      (require 'xdg)
-      (let* ((extention "\\.desktop$")
-             (dirs (mapcar (lambda (dir) (expand-file-name "applications" dir))
-                           (cons (xdg-data-home) (xdg-data-dirs))))
-             (apps (cl-loop for dir in dirs
-                            if (file-exists-p dir)
-                            append (cl-loop for file in (directory-files dir nil extention)
-                                            collect (replace-regexp-in-string extention "" file)))))
-        (call-process "gtk-launch" nil 0 nil (completing-read "Launch: " apps))))
+
 
     (defun my-sleep ()
       "Zzz"
@@ -548,7 +537,6 @@ flex style."
     (setc exwm-input-global-keys
           `(([?\s-r] . exwm-reset)
             ([?\s-o] . exwm-workspace-swap)
-            ([?\s-\s] . my-gtk-launch)
             ([?\s-S] . my-sleep)))
 
 
