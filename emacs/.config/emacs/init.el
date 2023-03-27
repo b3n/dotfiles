@@ -350,6 +350,8 @@ flex style."
   (cfg cider require)
   (cfg flymake-kondor (hook clojure-mode flymake-kondor-setup)))
 
+(cfg json-mode nil)
+
 (cfg eglot commandp
   ;; TODO: Improve `hook' macro to work with this use case
   (dolist (hook '(python-mode-hook java-mode-hook clojure-mode-hook javascript-mode))
