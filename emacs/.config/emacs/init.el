@@ -219,7 +219,19 @@ flex style."
     "C-f" other-frame
     "f" other-frame)
 
-  (cfg evil-surround global-evil-surround-mode))
+  (cfg evil-surround global-evil-surround-mode)
+
+  (cfg evil-numbers require
+		(bind evil-normal-state
+			"+" evil-numbers/inc-at-pt
+			"-" evil-numbers/dec-at-pt)
+		(bind evil-visual-state
+			"+" evil-numbers/inc-at-pt-incremental
+			"-" evil-numbers/dec-at-pt-incremental))
+
+	(cfg evil-matchit global-evil-matchit-mode)
+
+	(cfg evil-exchange (evil-exchange-install)))
 
 
 ;;; Window and buffer management
