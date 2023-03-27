@@ -533,10 +533,18 @@ flex style."
 
             ([?\C-g] . [escape])))
 
+    (defun my-exec (cmd)
+      (lambda ()
+        (interactive)
+        (start-process-shell-command cmd nil cmd)))
+
     (setc exwm-input-global-keys
           `(([?\s-r] . exwm-reset)
             ([?\s-o] . exwm-workspace-swap)
             ([?\s-S] . my-sleep)))
+            ([XF86AudioMute] . ,(my-exec "amixer set Master toggle"))
+            ([XF86AudioRaiseVolume] . ,(my-exec "amixer sset Master 2%+"))
+            ([XF86AudioLowerVolume] . ,(my-exec "amixer sset Master 2%-"))))
 
 
     (bind exwm-mode "C-q" exwm-input-send-next-key)
