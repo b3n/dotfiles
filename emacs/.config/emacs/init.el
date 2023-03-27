@@ -288,39 +288,37 @@ flex style."
     (add-to-list 'tramp-remote-path 'tramp-own-remote-path)))
 
 (cfg eshell (bind global "C-c e" eshell)
+  (setc eshell-destroy-buffer-when-process-dies t)
   (setc eshell-hist-ignoredups t)
   (setc eshell-history-size 9999)
-  (setc eshell-destroy-buffer-when-process-dies t)
+  (setc eshell-scroll-to-bottom-on-input 'this)
+  (setc eshell-input-filter
+        (lambda (str)
+          (not (or (string= "" str) (string-prefix-p " " str)))))
+  (setc eshell-prompt-function (lambda () ";; "))
+  (setc eshell-prompt-regexp ";; ")
 
   (setenv "PAGER" "cat")
   (cfg with-editor (hook eshell-mode with-editor-export-editor))
 
   (defun my-eshell-buffer-name ()
-    "Include pwd in eshell prompt."
-    (rename-buffer (concat "*eshell*<" (eshell/pwd) ">") t))
+    "Eshell buffer name."
+    (rename-buffer
+     (concat "*eshell*<" (eshell/pwd) ">")
+     t))
+  (defun my-eshell-buffer-name-cmd ()
+    "Append command name to eshell buffer name."
+    (rename-buffer
+     (concat (buffer-name) (concat "<" eshell-last-command-name ">"))
+     t))
   (hook eshell-prompt-load my-eshell-buffer-name)
-  (hook eshell-directory-change my-eshell-buffer-name)
+  (hook eshell-prepare-command my-eshell-buffer-name-cmd)
+  (hook eshell-post-command my-eshell-buffer-name)
 
-  (defun my-make-field ()
-    "Make text in front of the point a field."
-    (let ((inhibit-read-only t))
-      (add-text-properties
-       (line-beginning-position)
-       (point)
-       (list 'field t
-             'rear-nonsticky t))))
-  (hook eshell-after-prompt my-make-field)
-
-  (defun eshell/in-term (prog &rest args)
-    "Run shell command PROG after args ARGS in term buffer."
-    (apply #'make-term (format "in-term %s %s" prog args) prog nil args)))
-
-(cfg vterm (bind global "C-c v" vterm)
-
-  (setc vterm-max-scrollback 100000)
-  (setc vterm-buffer-name-string "vterm<%s>")
-  (bind vterm-mode
-    "C-<escape>" (lambda () (interactive) (vterm-send-bind (kbd "C-[")))))
+  (cfg eat (hook eshell-load eat-eshell-mode)
+    (setc eshell-visual-commands nil)
+    (setenv "TERM" "xterm-256color")
+    (setc eat-term-scrollback-size 100000)))
 
 
 ;;; Programming
