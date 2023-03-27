@@ -423,7 +423,8 @@ flex style."
 
 (setc calendar-week-start-day 1)
 
-(cfg password-gen (bind global "C-c p" password-gen))
+(cfg password-gen (bind global "C-c p" password-gen)
+  (setc password-gen-length 32))
 
 (cfg restclient)
 
