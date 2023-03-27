@@ -252,9 +252,9 @@ flex style."
 
 (cfg same-mode-buffer (bind global
                           [mode-line mouse-4] same-mode-buffer-previous
-                          "C-<tab>" same-mode-buffer-previous
+                          "s-`" same-mode-buffer-previous
                           [mode-line mouse-5] same-mode-buffer-next
-                          "C-S-<tab>" same-mode-buffer-next))
+                          "s-~" same-mode-buffer-next))
 
 (cfg midnight (midnight-mode))
 
